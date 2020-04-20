@@ -1,23 +1,23 @@
 package data.dataKeeper;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.TreeMap;
-
-import phaseAnalyzer.commons.PhaseCollector;
-import tableClustering.clusterExtractor.commons.ClusterCollector;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import data.dataPPL.pplSQLSchema.PPLTable;
 import data.dataPPL.pplTransition.AtomicChange;
 import data.dataPPL.pplTransition.PPLTransition;
 import data.dataPPL.pplTransition.TableChange;
 import data.dataProccessing.Worker;
+import phaseAnalyzer.commons.PhaseCollector;
+import tableClustering.clusterExtractor.commons.ClusterCollector;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.TreeMap;
 
 /* Refactor! Problem: Data Class */
 
 public class GlobalDataKeeper {
 
-	private TreeMap<String,PPLSchema> allPPLSchemas = null;
+	protected TreeMap<String,PPLSchema> allPPLSchemas = null; //ATTENTION::HAS BEEN CHANGED TO PROTECTED
 	private TreeMap<String,PPLTable> allTables = null;
 	private ArrayList<AtomicChange> atomicChanges = null;
 	private TreeMap<String,TableChange> tableChanges = null;
