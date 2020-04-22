@@ -49,23 +49,23 @@ public class FakeGlobalDataKeeper extends GlobalDataKeeper{
         allPPLSchemas.put("Fake Version 2", fakeSchema2);
         allPPLSchemas.put("Fake Version 3", fakeSchema3);
 
-        FakePPLTransition newfakeTransition=new FakePPLTransition("oldschema0","newschema0",001);
+        PPLTransition ppLTransition = new PPLTransition("oldschema0", "newschema0", 001);
 
-        AtomicChange newfakeAtomic=new AtomicChange("t0","birth","integer","oldschema0","newschema0",001);
+        AtomicChange atomicChange = new AtomicChange("t0", "birth", "integer", "oldschema0", "newschema0", 001);
 
-        ArrayList<AtomicChange> fakeList = new ArrayList<AtomicChange>();
-        fakeList.add(newfakeAtomic);
+        ArrayList<AtomicChange> atomicChangeList = new ArrayList<AtomicChange>();
+        atomicChangeList.add(atomicChange);
 
-        TreeMap<Integer, ArrayList<AtomicChange>> fakeChangesTree = new TreeMap<Integer, ArrayList<AtomicChange>>();
-        fakeChangesTree.put(0,fakeList);
+        TreeMap<Integer, ArrayList<AtomicChange>> atomicChangesTree = new TreeMap<Integer, ArrayList<AtomicChange>>();
+        atomicChangesTree.put(0, atomicChangeList);
 
-        TableChange newfakeChanges  = new FakeTableChanges("t0",fakeChangesTree);
+        TableChange tableChanges = new TableChange("t0", atomicChangesTree);
 
-        ArrayList<TableChange> fakeTableChangesList = new ArrayList<>();
-        fakeTableChangesList.add(newfakeChanges);
+        ArrayList<TableChange> tableChangesList = new ArrayList<>();
+        tableChangesList.add(tableChanges);
 
-        newfakeTransition.setTableChanges(fakeTableChangesList);
-        allPPLTransitions.put(0,newfakeTransition);
+        ppLTransition.setTableChanges(tableChangesList);
+        allPPLTransitions.put(0, ppLTransition);
 
     }
 }
