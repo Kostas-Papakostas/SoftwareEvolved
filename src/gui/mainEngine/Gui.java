@@ -1,6 +1,7 @@
 package gui.mainEngine;
 
 //try to extract relationship beetween gui and pplSchema and pplTransition
+import data.dataPPL.pplSQLSchema.PPLSchema;
 import gui.dialogs.CreateProjectJDialog;
 import gui.dialogs.EnlargeTable;
 import gui.dialogs.ParametersJDialog;
@@ -199,12 +200,10 @@ public class Gui extends JFrame implements ActionListener{
 	 * Create the frame.
 	 */
 	public Gui() {
-	    
+	    /**DUPLICATED CODE SHOULD EXTRACT METHODS********/
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setResizable(false);
-		
-	
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -219,8 +218,7 @@ public class Gui extends JFrame implements ActionListener{
 				CreateProjectJDialog createProjectDialog=new CreateProjectJDialog("","","","","","");
 
 				createProjectDialog.setModal(true);
-				
-				
+
 				createProjectDialog.setVisible(true);
 				
 				if(createProjectDialog.getConfirmation()){
@@ -1000,7 +998,8 @@ public class Gui extends JFrame implements ActionListener{
 		        
 		        c.setForeground(fr);
 		        setOpaque(true);
-		      
+
+		        /***SHOULD EXTRACT METHODS***/
 		        if(column==wholeColZoomArea && wholeColZoomArea!=0){
 		        	
 		        	String description="Transition ID:"+table.getColumnName(column)+"\n";
@@ -1022,6 +1021,7 @@ public class Gui extends JFrame implements ActionListener{
 	        		c.setBackground(cl);
 	        		return c;
 		        }
+		        /***SHOULD EXTRACT METHOD***/
 		        else if(selectedColumnZoomArea==0){
 		    		
 		        	if (isSelected){
@@ -2768,7 +2768,18 @@ public class Gui extends JFrame implements ActionListener{
 			    	
 			    }
 		 });
-		 
+
+		 PPLSchema temp = ((PPLSchema) globalDataKeeper.getAllPPLSchemas().values().toArray()[0]);
+		 PPLSchema temp2 = ((PPLSchema) globalDataKeeper.getAllPPLSchemas().values().toArray()[1]);
+
+		 System.out.println("lilili  "+temp);
+		 System.out.println("lilili  "+temp2);
+
+		 System.out.println("lalalalalala"+temp.getTableAt(0).getName());
+		 System.out.println("lalalalalala"+temp.getTableAt(1).getName());
+		 System.out.println("lalalalalala"+temp.getTableAt(2).getName());
+		 System.out.println("lalalalalala"+temp.getTableAt(3).getName());
+
 		 tablesTree.addMouseListener(new MouseAdapter() {
 				@Override
 				   public void mouseReleased(MouseEvent e) {

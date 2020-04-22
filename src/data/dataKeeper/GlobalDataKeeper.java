@@ -22,7 +22,7 @@ public class GlobalDataKeeper {
 	private ArrayList<AtomicChange> atomicChanges = null;
 	private TreeMap<String,TableChange> tableChanges = null;
 	private TreeMap<String,TableChange> tableChangesForTwo = null;
-	private TreeMap<Integer,PPLTransition> allPPLTransitions = null;
+	protected TreeMap<Integer,PPLTransition> allPPLTransitions = null;
 	private ArrayList<PhaseCollector> phaseCollectors = null;
 	private ArrayList<ClusterCollector> clusterCollectors = null;
 
@@ -65,8 +65,6 @@ public class GlobalDataKeeper {
 		setAllTableChanges(w.getAllTableChanges());
 		setAtomicChanges(w.getAtomicChanges());
 		setDataFolder(w.getDataFolder());
-		
-
 		
 	}
 	
