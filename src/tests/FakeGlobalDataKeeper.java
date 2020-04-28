@@ -44,14 +44,18 @@ public class FakeGlobalDataKeeper extends GlobalDataKeeper{
         FakePPLSchema fakeSchema2 = new FakePPLSchema(fakePPLTable);
         FakePPLSchema fakeSchema3 = new FakePPLSchema(fakePPLTable);
 
+
         allPPLSchemas.put("Fake Version 0", fakeSchema0);
         allPPLSchemas.put("Fake Version 1", fakeSchema1);
         allPPLSchemas.put("Fake Version 2", fakeSchema2);
         allPPLSchemas.put("Fake Version 3", fakeSchema3);
 
+
         PPLTransition ppLTransition = new PPLTransition("oldschema0", "newschema0", 001);
 
+
         AtomicChange atomicChange = new AtomicChange("t0", "birth", "integer", "oldschema0", "newschema0", 001);
+
 
         ArrayList<AtomicChange> atomicChangeList = new ArrayList<AtomicChange>();
         atomicChangeList.add(atomicChange);
@@ -65,7 +69,8 @@ public class FakeGlobalDataKeeper extends GlobalDataKeeper{
         tableChangesList.add(tableChanges);
 
         ppLTransition.setTableChanges(tableChangesList);
-        allPPLTransitions.put(0, ppLTransition);
 
+        allPPLTransitions.put(0, ppLTransition);
+        allTables=fakePPLTable;
     }
 }
