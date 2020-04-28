@@ -69,6 +69,7 @@ import javax.swing.tree.TreePath;
 import org.antlr.v4.runtime.RecognitionException;
 
 import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;
+import sun.management.snmp.jvmmib.JVM_MANAGEMENT_MIBOidTable;
 import tableClustering.clusterExtractor.engine.TableClusteringMainEngine;
 import tableClustering.clusterValidator.engine.ClusterValidatorMainEngine;
 import data.dataKeeper.GlobalDataKeeper;
@@ -1920,6 +1921,14 @@ public class Gui extends JFrame implements ActionListener {
         lifeTimePanel.add(tmpScrollPaneZoomArea);
     }
 
+    private JvTable setTableWidth(JvTable tmpLifeTimeTable, int colIndex, int preferedWidth) {
+        tmpLifeTimeTable.getColumnModel().getColumn(colIndex).setPreferredWidth(preferedWidth);
+        tmpLifeTimeTable.getColumnModel().getColumn(colIndex).setMaxWidth(preferedWidth);
+        tmpLifeTimeTable.getColumnModel().getColumn(colIndex).setMinWidth(preferedWidth);
+
+        return tmpLifeTimeTable;
+    }
+
     //TODO from here down
     private void makeDetailedTable(String[] columns, String[][] rows, final boolean levelized) {
 
@@ -1932,32 +1941,39 @@ public class Gui extends JFrame implements ActionListener {
         if (levelized == true) {
             for (int i = 0; i < tmpLifeTimeTable.getColumnCount(); i++) {
                 if (i == 0) {
-                    tmpLifeTimeTable.getColumnModel().getColumn(0).setPreferredWidth(150);
-                    tmpLifeTimeTable.getColumnModel().getColumn(0).setMaxWidth(150);
-                    tmpLifeTimeTable.getColumnModel().getColumn(0).setMinWidth(150);
+                    /**Refactored: Extracted Method**/
+                    setTableWidth(tmpLifeTimeTable,0,150);
                 } else {
                     if (tmpLifeTimeTable.getColumnName(i).contains("v")) {
+                        /**Refactored: Extracted Method**/
+                        setTableWidth(tmpLifeTimeTable,i,100);
+                        /*
                         tmpLifeTimeTable.getColumnModel().getColumn(i).setPreferredWidth(100);
                         tmpLifeTimeTable.getColumnModel().getColumn(i).setMaxWidth(100);
-                        tmpLifeTimeTable.getColumnModel().getColumn(i).setMinWidth(100);
+                        tmpLifeTimeTable.getColumnModel().getColumn(i).setMinWidth(100);*/
                     } else {
-                        tmpLifeTimeTable.getColumnModel().getColumn(i).setPreferredWidth(25);
+
+                        /**Refactored: Extracted Method**/
+                        setTableWidth(tmpLifeTimeTable,i,25);
+
+                        /*tmpLifeTimeTable.getColumnModel().getColumn(i).setPreferredWidth(25);
                         tmpLifeTimeTable.getColumnModel().getColumn(i).setMaxWidth(25);
-                        tmpLifeTimeTable.getColumnModel().getColumn(i).setMinWidth(25);
+                        tmpLifeTimeTable.getColumnModel().getColumn(i).setMinWidth(25);*/
                     }
                 }
             }
         } else {
             for (int i = 0; i < tmpLifeTimeTable.getColumnCount(); i++) {
                 if (i == 0) {
-                    tmpLifeTimeTable.getColumnModel().getColumn(0).setPreferredWidth(150);
-                    tmpLifeTimeTable.getColumnModel().getColumn(0).setMaxWidth(150);
-                    tmpLifeTimeTable.getColumnModel().getColumn(0).setMinWidth(150);
+                    /**Refactored: Extracted Method**/
+                    setTableWidth(tmpLifeTimeTable,0,150);
                 } else {
+                    /**Refactored: Extracted Method**/
+                    setTableWidth(tmpLifeTimeTable,i,20);
 
-                    tmpLifeTimeTable.getColumnModel().getColumn(i).setPreferredWidth(20);
+                    /*tmpLifeTimeTable.getColumnModel().getColumn(i).setPreferredWidth(20);
                     tmpLifeTimeTable.getColumnModel().getColumn(i).setMaxWidth(20);
-                    tmpLifeTimeTable.getColumnModel().getColumn(i).setMinWidth(20);
+                    tmpLifeTimeTable.getColumnModel().getColumn(i).setMinWidth(20);*/
 
                 }
             }
@@ -2112,6 +2128,7 @@ public class Gui extends JFrame implements ActionListener {
         detailedDialog.setVisible(true);
 
     }
+
 
     private class RowListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent event) {
