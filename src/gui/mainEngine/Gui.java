@@ -2,6 +2,7 @@ package gui.mainEngine;
 
 //try to extract relationship beetween gui and pplSchema and pplTransition
 import data.dataPPL.pplSQLSchema.PPLSchema;
+import gui.actionListeners.FileController;
 import gui.dialogs.CreateProjectJDialog;
 import gui.dialogs.EnlargeTable;
 import gui.dialogs.ParametersJDialog;
@@ -69,7 +70,6 @@ import javax.swing.tree.TreePath;
 import org.antlr.v4.runtime.RecognitionException;
 
 import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;
-import sun.management.snmp.jvmmib.JVM_MANAGEMENT_MIBOidTable;
 import tableClustering.clusterExtractor.engine.TableClusteringMainEngine;
 import tableClustering.clusterValidator.engine.ClusterValidatorMainEngine;
 import data.dataKeeper.GlobalDataKeeper;
@@ -87,7 +87,7 @@ public class Gui extends JFrame implements ActionListener {
     private JPanel lifeTimePanel = new JPanel();
     private JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
-    private MyTableModel detailedModel = null;
+    protected MyTableModel detailedModel = null;
     private MyTableModel generalModel = null;
     private MyTableModel zoomModel = null;
 
@@ -99,7 +99,7 @@ public class Gui extends JFrame implements ActionListener {
     private JScrollPane tmpScrollPaneZoomArea = new JScrollPane();
 
     private ArrayList<Integer> selectedRows = new ArrayList<Integer>();
-    private GlobalDataKeeper globalDataKeeper = null;
+    protected GlobalDataKeeper globalDataKeeper = null;
 
     private String[] finalColumns = null;
     private String[][] finalRows = null;
@@ -113,7 +113,7 @@ public class Gui extends JFrame implements ActionListener {
 
     private Integer[] segmentSize = new Integer[4];
     private Integer[] segmentSizeZoomArea = new Integer[4];
-    private Integer[] segmentSizeDetailedTable = new Integer[3];
+    protected Integer[] segmentSizeDetailedTable = new Integer[3];
 
     private Float timeWeight = null;
     private Float changeWeight = null;
@@ -165,7 +165,9 @@ public class Gui extends JFrame implements ActionListener {
     private JButton undoButton;
     private JMenu mnProject;
     private JMenuItem mntmInfo;
-
+    
+    protected static FileController fileController = new FileController();
+    
     /**
      * Launch the application.
      */
@@ -215,9 +217,13 @@ public class Gui extends JFrame implements ActionListener {
 
                     File file = createProjectDialog.getFile();
                     System.out.println(file.toString());
-                    project = file.getName();
+                    //TODO some kind of test? It the same with load project
+                    fileController.createProjectAction(Gui.this, file);
+                    
+                    /*project = file.getName();
                     String fileName = file.toString();
                     System.out.println("!!" + project);
+                    
 
                     try {
                         importData(fileName);
@@ -228,7 +234,7 @@ public class Gui extends JFrame implements ActionListener {
 
                         JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
                         return;
-                    }
+                    }*/
 
                 }
 
@@ -239,35 +245,11 @@ public class Gui extends JFrame implements ActionListener {
         JMenuItem mntmLoadProject = new JMenuItem("Load Project");
         mntmLoadProject.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-
-                String fileName = null;
                 File dir = new File("filesHandler/inis");
                 JFileChooser fcOpen1 = new JFileChooser();
                 fcOpen1.setCurrentDirectory(dir);
                 int returnVal = fcOpen1.showDialog(Gui.this, "Open");
-
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-                    File file = fcOpen1.getSelectedFile();
-                    System.out.println(file.toString());
-                    project = file.getName();
-                    fileName = file.toString();
-                    System.out.println("!!" + project);
-
-                } else {
-                    return;
-                }
-                try {
-                    importData(fileName);
-                } catch (IOException e) {
-                    JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
-                    return;
-                } catch (RecognitionException e) {
-
-                    JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
-                    return;
-                }
-
+                fileController.loadProjectAction(Gui.this, returnVal == JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
             }
         });
         mnFile.add(mntmLoadProject);
@@ -290,39 +272,9 @@ public class Gui extends JFrame implements ActionListener {
                     fileName = file.toString();
                     System.out.println("!!" + project);
 
-                    BufferedReader br;
+                    
                     try {
-                        br = new BufferedReader(new FileReader(fileName));
-                        String line;
-
-                        while (true) {
-                            line = br.readLine();
-                            if (line == null)
-                                break;
-                            if (line.contains("Project-name")) {
-                                String[] projectNameTable = line.split(":");
-                                projectName = projectNameTable[1];
-                            } else if (line.contains("Dataset-txt")) {
-                                String[] datasetTxtTable = line.split(":");
-                                datasetTxt = datasetTxtTable[1];
-                            } else if (line.contains("Input-csv")) {
-                                String[] inputCsvTable = line.split(":");
-                                inputCsv = inputCsvTable[1];
-                            } else if (line.contains("Assessement1-output")) {
-                                String[] outputAss1 = line.split(":");
-                                outputAssessment1 = outputAss1[1];
-                            } else if (line.contains("Assessement2-output")) {
-                                String[] outputAss2 = line.split(":");
-                                outputAssessment2 = outputAss2[1];
-                            } else if (line.contains("Transition-xml")) {
-                                String[] transitionXmlTable = line.split(":");
-                                transitionsFile = transitionXmlTable[1];
-                            }
-
-                        }
-                        ;
-
-                        br.close();
+                        readProject(fileName);
                     } catch (FileNotFoundException e1) {
                         e1.printStackTrace();
                     } catch (IOException e) {
@@ -345,7 +297,10 @@ public class Gui extends JFrame implements ActionListener {
 
                         file = createProjectDialog.getFile();
                         System.out.println(file.toString());
-                        project = file.getName();
+                        //TODO check if is correct
+                        fileController.editProjectAction(Gui.this, file);
+                        
+                        /*project = file.getName();
                         fileName = file.toString();
                         System.out.println("!!" + project);
 
@@ -358,7 +313,7 @@ public class Gui extends JFrame implements ActionListener {
 
                             JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
                             return;
-                        }
+                        }*/
 
                     }
 
@@ -367,6 +322,7 @@ public class Gui extends JFrame implements ActionListener {
                 }
 
             }
+
         });
         mnFile.add(mntmEditProject);
 
@@ -377,15 +333,12 @@ public class Gui extends JFrame implements ActionListener {
         mntmShowLifetimeTable.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (!(currentProject == null)) {
-                    TableConstructionAllSquaresIncluded table = new TableConstructionAllSquaresIncluded(
-                            globalDataKeeper);
+                    TableConstructionAllSquaresIncluded table = new TableConstructionAllSquaresIncluded(globalDataKeeper);
                     final String[] columns = table.constructColumns();
                     final String[][] rows = table.constructRows();
                     segmentSizeDetailedTable = table.getSegmentSize();
                     tabbedPane.setSelectedIndex(0);
                     makeDetailedTable(columns, rows, true);
-                    /* Dump data for testing */
-                    detailedModel.dumpData("./Dump Files Refactored/detailedModel_Atlas.txt");
                 } else {
                     JOptionPane.showMessageDialog(null, "Select a Project first");
                     return;
@@ -1930,7 +1883,7 @@ public class Gui extends JFrame implements ActionListener {
     }
 
     //TODO from here down
-    private void makeDetailedTable(String[] columns, String[][] rows, final boolean levelized) {
+    protected void makeDetailedTable(String[] columns, String[][] rows, final boolean levelized) {
 
         detailedModel = new MyTableModel(columns, rows);
 
@@ -2158,40 +2111,9 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
-    private void importData(String fileName) throws IOException, RecognitionException {
+    public void importData(String fileName) throws IOException, RecognitionException {
 
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-
-        String line;
-
-        while (true) {
-            line = br.readLine();
-            if (line == null)
-                break;
-            if (line.contains("Project-name")) {
-                String[] projectNameTable = line.split(":");
-                projectName = projectNameTable[1];
-            } else if (line.contains("Dataset-txt")) {
-                String[] datasetTxtTable = line.split(":");
-                datasetTxt = datasetTxtTable[1];
-            } else if (line.contains("Input-csv")) {
-                String[] inputCsvTable = line.split(":");
-                inputCsv = inputCsvTable[1];
-            } else if (line.contains("Assessement1-output")) {
-                String[] outputAss1 = line.split(":");
-                outputAssessment1 = outputAss1[1];
-            } else if (line.contains("Assessement2-output")) {
-                String[] outputAss2 = line.split(":");
-                outputAssessment2 = outputAss2[1];
-            } else if (line.contains("Transition-xml")) {
-                String[] transitionXmlTable = line.split(":");
-                transitionsFile = transitionXmlTable[1];
-            }
-
-        }
-        ;
-
-        br.close();
+        readProject(fileName);
 
         System.out.println("Project Name:" + projectName);
         System.out.println("Dataset txt:" + datasetTxt);
@@ -2208,10 +2130,6 @@ public class Gui extends JFrame implements ActionListener {
 
         fillTable();
         fillTree();
-
-        /* Dump data for testing */
-        generalModel.dumpData("./Dump Files Refactored/generalModel_Atlas.txt");
-        zoomModel.dumpData("./Dump Files Refactored/zoomModel_Atlas.txt");
 
         currentProject = fileName;
 
@@ -2561,9 +2479,60 @@ public class Gui extends JFrame implements ActionListener {
         sideMenu.repaint();
 
     }
+    
+    private void readProject(String fileName) throws FileNotFoundException, IOException {
+        BufferedReader br;
+        br = new BufferedReader(new FileReader(fileName));
+        String line;
+
+        while (true) {
+            line = br.readLine();
+            if (line == null)
+                break;
+            if (line.contains("Project-name")) {
+                String[] projectNameTable = line.split(":");
+                projectName = projectNameTable[1];
+            } else if (line.contains("Dataset-txt")) {
+                String[] datasetTxtTable = line.split(":");
+                datasetTxt = datasetTxtTable[1];
+            } else if (line.contains("Input-csv")) {
+                String[] inputCsvTable = line.split(":");
+                inputCsv = inputCsvTable[1];
+            } else if (line.contains("Assessement1-output")) {
+                String[] outputAss1 = line.split(":");
+                outputAssessment1 = outputAss1[1];
+            } else if (line.contains("Assessement2-output")) {
+                String[] outputAss2 = line.split(":");
+                outputAssessment2 = outputAss2[1];
+            } else if (line.contains("Transition-xml")) {
+                String[] transitionXmlTable = line.split(":");
+                transitionsFile = transitionXmlTable[1];
+            }
+
+        }
+        ;
+
+        br.close();
+    }
 
     public void setDescription(String descr) {
         descriptionText.setText(descr);
     }
 
+    
+    //for testing
+    public MyTableModel getGeneralModel() {
+        return generalModel;
+    }
+    
+    //for testing
+    public MyTableModel getZoomModel() {
+        return zoomModel;
+    }
+    
+    //for testing
+    public MyTableModel getDetailedModel() {
+        return detailedModel;
+    }
+    
 }

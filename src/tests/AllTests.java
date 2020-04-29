@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ AllPPLTransitionTest.class, MyTableModelTest.class, TreeConstructionGeneralTest.class })
+@SuiteClasses({ AllPPLTransitionTest.class, LoadUseCaseTest.class, TreeConstructionGeneralTest.class })
 public class AllTests {
 
 }

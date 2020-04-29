@@ -1,13 +1,16 @@
 package tests;
 
 import gui.treeElements.TreeConstructionGeneral;
-import org.junit.jupiter.api.Test;
+
+import static org.junit.Assert.assertEquals;
 
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
 
+import org.junit.Test;
+
 //import org.junit.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 //import static org.junit.Assert.assertEquals;
 
@@ -33,9 +36,9 @@ public class TreeConstructionGeneralTest {
         JTree result = testTreeCostructionManual.constructTree();
         TreeModel model = result.getModel();
 
-        //String [][]temp= {{"t0"}};
-        System.out.println(fakeKeeper.constructDescriptionPLDPhases(0,"t0"));
-        assertEquals(descriptionExpectedResult,fakeKeeper.constructDescriptionPLDPhases(0,"t0"));
+        String [][]temp= {{"t0"}};
+
+        assertEquals(descriptionExpectedResult,fakeKeeper.constructDescriptionZoomAreaPhasesColumn(temp,0));
         assertEquals(expectedResult, getTreeText(model, model.getRoot(), ""));
     }
 
