@@ -1,9 +1,8 @@
 package gui.tableElements.commons;
 
+import javax.swing.table.AbstractTableModel;
 import java.io.FileWriter;
 import java.io.IOException;
-
-import javax.swing.table.AbstractTableModel;
 
 public class MyTableModel extends AbstractTableModel {
 	

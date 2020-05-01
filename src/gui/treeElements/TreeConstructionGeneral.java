@@ -1,14 +1,13 @@
 package gui.treeElements;
 
-import java.util.Map;
-import java.util.TreeMap;
-
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-
 import data.dataKeeper.GlobalDataKeeper;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import data.dataPPL.pplSQLSchema.PPLTable;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class TreeConstructionGeneral {
 
@@ -41,6 +40,10 @@ public class TreeConstructionGeneral {
 		
 		return treeToConstruct;
 		
+	}
+
+	public GlobalDataKeeper getDataKeeper(){
+		return this.dataKeeper;
 	}
 	
 }

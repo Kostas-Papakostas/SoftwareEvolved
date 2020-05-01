@@ -19,7 +19,7 @@ public class TableConstructionZoomArea implements PldConstruction {
 	private TreeMap<String,PPLTable> selectedTables = new TreeMap<String,PPLTable>();
 	private ArrayList<String> sSelectedTables = new ArrayList<String>();
 	private TreeMap<Integer,PPLTransition> pplTransitions = new TreeMap<Integer,PPLTransition>();
-	private GlobalDataKeeper globalDataKeeper = new GlobalDataKeeper();
+	private GlobalDataKeeper globalDataKeeper; //= new GlobalDataKeeper();
 	private int selectedColumn;
 
 	private int columnsNumber=0;

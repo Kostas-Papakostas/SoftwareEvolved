@@ -8,7 +8,7 @@ public class PPLTransition {
 	private String oldSchema;
 	private String newSchema;
 	private int pplTransitionID;
-	private ArrayList<TableChange> tableChanges = new ArrayList<TableChange>();
+	protected ArrayList<TableChange> tableChanges = new ArrayList<TableChange>();
 	
 	public PPLTransition(String tmpOldSchema, String tmpNewSchema,int pplTransitionID){
 		
