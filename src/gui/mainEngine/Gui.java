@@ -3,14 +3,13 @@ package gui.mainEngine;
 //try to extract relationship beetween gui and pplSchema and pplTransition
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import gui.actionListeners.FileController;
-import gui.dialogs.CreateProjectJDialog;
+import gui.actionListeners.TableController;
 import gui.dialogs.EnlargeTable;
 import gui.dialogs.ParametersJDialog;
 import gui.dialogs.ProjectInfoDialog;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 import gui.tableElements.tableConstructors.PldConstruction;
-import gui.tableElements.tableConstructors.TableConstructionAllSquaresIncluded;
 import gui.tableElements.tableConstructors.TableConstructionClusterTablesPhasesZoomA;
 import gui.tableElements.tableConstructors.TableConstructionIDU;
 import gui.tableElements.tableConstructors.TableConstructionPhases;
@@ -30,11 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,7 +38,6 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -67,8 +61,6 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.tree.TreePath;
 
-import org.antlr.v4.runtime.RecognitionException;
-
 import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;
 import tableClustering.clusterExtractor.engine.TableClusteringMainEngine;
 import tableClustering.clusterValidator.engine.ClusterValidatorMainEngine;
@@ -87,7 +79,6 @@ public class Gui extends JFrame implements ActionListener {
     private JPanel lifeTimePanel = new JPanel();
     private JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
-    protected MyTableModel detailedModel = null;
     private MyTableModel generalModel = null;
     private MyTableModel zoomModel = null;
 
@@ -113,7 +104,6 @@ public class Gui extends JFrame implements ActionListener {
 
     private Integer[] segmentSize = new Integer[4];
     private Integer[] segmentSizeZoomArea = new Integer[4];
-    protected Integer[] segmentSizeDetailedTable = new Integer[3];
 
     private Float timeWeight = null;
     private Float changeWeight = null;
@@ -150,7 +140,7 @@ public class Gui extends JFrame implements ActionListener {
     private JButton showThisToPopup;
 
     private int[] selectedRowsFromMouse;
-    private int selectedColumn = -1;
+    protected int selectedColumn = -1;
     private int selectedColumnZoomArea = -1;
     private int wholeCol = -1;
     private int wholeColZoomArea = -1;
@@ -167,6 +157,7 @@ public class Gui extends JFrame implements ActionListener {
     private JMenuItem mntmInfo;
     
     protected FileController fileController = FileController.getInstance();
+    protected TableController tableController = TableController.getInstance();
     
     /**
      * Launch the application.
@@ -206,21 +197,40 @@ public class Gui extends JFrame implements ActionListener {
         JMenuItem mntmShowLifetimeTable = new JMenuItem("Show Full Detailed LifeTime Table");
         mntmShowLifetimeTable.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                createFullDetailedLifeTable();
-            }
+                
+                tableController.createFullDetailedLifeTable(selectedColumn);
+                tabbedPane.setSelectedIndex(0);
+                
+                JvTable tmpLifeTimeTable = tableController.getTmpLifeTimeTable();
+                tmpLifeTimeTable.setOpaque(true);
 
-            private void createFullDetailedLifeTable() {
-                if (!(currentProject == null)) {
-                    TableConstructionAllSquaresIncluded table = new TableConstructionAllSquaresIncluded(globalDataKeeper);
-                    final String[] columns = table.constructColumns();
-                    final String[][] rows = table.constructRows();
-                    segmentSizeDetailedTable = table.getSegmentSize();
-                    tabbedPane.setSelectedIndex(0);
-                    makeDetailedTable(columns, rows, true);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Select a Project first");
-                    return;
-                }
+                tmpLifeTimeTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                tmpLifeTimeTable.getSelectionModel().addListSelectionListener(new RowListener());
+                tmpLifeTimeTable.getColumnModel().getSelectionModel().addListSelectionListener(new ColumnListener());
+
+                JScrollPane detailedScrollPane = new JScrollPane();
+                detailedScrollPane.setViewportView(tmpLifeTimeTable);
+                detailedScrollPane.setAlignmentX(0);
+                detailedScrollPane.setAlignmentY(0);
+                detailedScrollPane.setBounds(0, 0, 1280, 650);
+                detailedScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                detailedScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+                detailedScrollPane.setCursor(getCursor());
+
+                JDialog detailedDialog = new JDialog();
+                detailedDialog.setBounds(100, 100, 1300, 700);
+
+                JPanel panelToAdd = new JPanel();
+
+                GroupLayout gl_panel = new GroupLayout(panelToAdd);
+                gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING));
+                gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING));
+                panelToAdd.setLayout(gl_panel);
+
+                panelToAdd.add(detailedScrollPane);
+                detailedDialog.getContentPane().add(panelToAdd);
+                detailedDialog.setVisible(true);
             }
         });
         
@@ -231,23 +241,28 @@ public class Gui extends JFrame implements ActionListener {
                 if (!(currentProject == null)) {
                     zoomInButton.setVisible(true);
                     zoomOutButton.setVisible(true);
-                    TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
-                    final String[] columns = table.constructColumns();
-                    final String[][] rows = table.constructRows();
-                    segmentSizeZoomArea = table.getSegmentSize();
-                    System.out.println("Schemas: " + globalDataKeeper.getAllPPLSchemas().size());
-                    System.out.println("C: " + columns.length + " R: " + rows.length);
-
-                    finalColumnsZoomArea = columns;
-                    finalRowsZoomArea = rows;
-                    tabbedPane.setSelectedIndex(0);
-                    makeGeneralTableIDU();
+                    createPLD();
+                    //tabbedPane.setSelectedIndex(0);
                     fillTree();
 
                 } else {
                     JOptionPane.showMessageDialog(null, "Select a Project first");
                     return;
                 }
+            }
+            //TODO extracted to be moved
+            private void createPLD() {
+                TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
+                final String[] columns = table.constructColumns();
+                final String[][] rows = table.constructRows();
+                segmentSizeZoomArea = table.getSegmentSize();
+                System.out.println("Schemas: " + globalDataKeeper.getAllPPLSchemas().size());
+                System.out.println("C: " + columns.length + " R: " + rows.length);
+
+                finalColumnsZoomArea = columns;
+                finalRowsZoomArea = rows;
+                tabbedPane.setSelectedIndex(0);
+                makeGeneralTableIDU();
             }
         });
         mnTable.add(mntmShowGeneralLifetimeIDU);
@@ -631,6 +646,7 @@ public class Gui extends JFrame implements ActionListener {
         
     }
 
+    
     private void createFileJMenu(JMenuBar menuBar) {
         JMenu mnFile = new JMenu("File");
         menuBar.add(mnFile);
@@ -669,6 +685,7 @@ public class Gui extends JFrame implements ActionListener {
         mnFile.add(mntmEditProject);
     }
     
+    
     protected void getInfoFromFileController() {
         project = fileController.getProject();
         projectName = fileController.getProjectName();
@@ -680,6 +697,7 @@ public class Gui extends JFrame implements ActionListener {
         currentProject = fileController.getCurrentProject();
         globalDataKeeper = fileController.getGlobalDataKeeper();
     }
+    
     
     private void makeGeneralTableIDU() {
 
@@ -1791,201 +1809,7 @@ public class Gui extends JFrame implements ActionListener {
         lifeTimePanel.add(tmpScrollPaneZoomArea);
     }
 
-    private JvTable setTableWidth(JvTable tmpLifeTimeTable, int colIndex, int preferedWidth) {
-        tmpLifeTimeTable.getColumnModel().getColumn(colIndex).setPreferredWidth(preferedWidth);
-        tmpLifeTimeTable.getColumnModel().getColumn(colIndex).setMaxWidth(preferedWidth);
-        tmpLifeTimeTable.getColumnModel().getColumn(colIndex).setMinWidth(preferedWidth);
-
-        return tmpLifeTimeTable;
-    }
-
-    //TODO from here down
-    protected void makeDetailedTable(String[] columns, String[][] rows, final boolean levelized) {
-
-        detailedModel = new MyTableModel(columns, rows);
-
-        final JvTable tmpLifeTimeTable = new JvTable(detailedModel);
-
-        tmpLifeTimeTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-        if (levelized == true) {
-            for (int i = 0; i < tmpLifeTimeTable.getColumnCount(); i++) {
-                if (i == 0) {
-                    /**Refactored: Extracted Method**/
-                    setTableWidth(tmpLifeTimeTable,0,150);
-                } else {
-                    if (tmpLifeTimeTable.getColumnName(i).contains("v")) {
-                        /**Refactored: Extracted Method**/
-                        setTableWidth(tmpLifeTimeTable,i,100);
-                    } else {
-                        /**Refactored: Extracted Method**/
-                        setTableWidth(tmpLifeTimeTable,i,25);
-                    }
-                }
-            }
-        } else {
-            for (int i = 0; i < tmpLifeTimeTable.getColumnCount(); i++) {
-                if (i == 0) {
-                    /**Refactored: Extracted Method**/
-                    setTableWidth(tmpLifeTimeTable,0,150);
-                } else {
-                    /**Refactored: Extracted Method**/
-                    setTableWidth(tmpLifeTimeTable,i,20);
-                }
-            }
-        }
-
-        tmpLifeTimeTable.setName("LifeTimeTable");
-
-        tmpLifeTimeTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                    boolean hasFocus, int row, int column) {
-                final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
-                        column);
-
-                String tmpValue = (String) table.getValueAt(row, column);
-                String columnName = table.getColumnName(column);
-                Color fr = new Color(0, 0, 0);
-                c.setForeground(fr);
-
-                if (selectedColumn == 0) {
-                    if (isSelected) {
-                        Color cl = new Color(255, 69, 0, 100);
-
-                        c.setBackground(cl);
-
-                        return c;
-                    }
-                } else {
-                    if (isSelected && hasFocus) {
-
-                        c.setBackground(Color.YELLOW);
-                        return c;
-                    }
-
-                }
-
-                try {
-                    int numericValue = Integer.parseInt(tmpValue);
-                    Color insersionColor = null;
-
-                    if (columnName.equals("I")) {
-                        if (numericValue == 0) {
-                            insersionColor = new Color(255, 231, 186);
-                        } else if (numericValue > 0 && numericValue <= segmentSizeDetailedTable[0]) {
-
-                            insersionColor = new Color(193, 255, 193);
-                        } else if (numericValue > segmentSizeDetailedTable[0]
-                                && numericValue <= 2 * segmentSizeDetailedTable[0]) {
-                            insersionColor = new Color(84, 255, 159);
-                        } else if (numericValue > 2 * segmentSizeDetailedTable[0]
-                                && numericValue <= 3 * segmentSizeDetailedTable[0]) {
-
-                            insersionColor = new Color(0, 201, 87);
-                        } else {
-                            insersionColor = new Color(0, 100, 0);
-                        }
-                        c.setBackground(insersionColor);
-                    }
-
-                    if (columnName.equals("U")) {
-                        if (numericValue == 0) {
-                            insersionColor = new Color(255, 231, 186);
-                        } else if (numericValue > 0 && numericValue <= segmentSizeDetailedTable[1]) {
-
-                            insersionColor = new Color(176, 226, 255);
-                        } else if (numericValue > segmentSizeDetailedTable[1]
-                                && numericValue <= 2 * segmentSizeDetailedTable[1]) {
-                            insersionColor = new Color(92, 172, 238);
-                        } else if (numericValue > 2 * segmentSizeDetailedTable[1]
-                                && numericValue <= 3 * segmentSizeDetailedTable[1]) {
-
-                            insersionColor = new Color(28, 134, 238);
-                        } else {
-                            insersionColor = new Color(16, 78, 139);
-                        }
-                        c.setBackground(insersionColor);
-                    }
-
-                    if (columnName.equals("D")) {
-                        if (numericValue == 0) {
-                            insersionColor = new Color(255, 231, 186);
-                        } else if (numericValue > 0 && numericValue <= segmentSizeDetailedTable[2]) {
-
-                            insersionColor = new Color(255, 106, 106);
-                        } else if (numericValue > segmentSizeDetailedTable[2]
-                                && numericValue <= 2 * segmentSizeDetailedTable[2]) {
-                            insersionColor = new Color(255, 0, 0);
-                        } else if (numericValue > 2 * segmentSizeDetailedTable[2]
-                                && numericValue <= 3 * segmentSizeDetailedTable[2]) {
-
-                            insersionColor = new Color(205, 0, 0);
-                        } else {
-                            insersionColor = new Color(139, 0, 0);
-                        }
-                        c.setBackground(insersionColor);
-                    }
-
-                    return c;
-                } catch (Exception e) {
-
-                    if (tmpValue.equals("")) {
-                        c.setBackground(Color.black);
-                        return c;
-                    } else {
-                        if (columnName.contains("v")) {
-                            c.setBackground(Color.lightGray);
-                            if (levelized == false) {
-                                setToolTipText(columnName);
-                            }
-                        } else {
-                            Color tableNameColor = new Color(205, 175, 149);
-                            c.setBackground(tableNameColor);
-                        }
-                        return c;
-                    }
-
-                }
-            }
-        });
-
-        tmpLifeTimeTable.setOpaque(true);
-
-        tmpLifeTimeTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        tmpLifeTimeTable.getSelectionModel().addListSelectionListener(new RowListener());
-        tmpLifeTimeTable.getColumnModel().getSelectionModel().addListSelectionListener(new ColumnListener());
-
-        JScrollPane detailedScrollPane = new JScrollPane();
-        detailedScrollPane.setViewportView(tmpLifeTimeTable);
-        detailedScrollPane.setAlignmentX(0);
-        detailedScrollPane.setAlignmentY(0);
-        detailedScrollPane.setBounds(0, 0, 1280, 650);
-        detailedScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        detailedScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-
-        detailedScrollPane.setCursor(getCursor());
-
-        JDialog detailedDialog = new JDialog();
-        detailedDialog.setBounds(100, 100, 1300, 700);
-
-        JPanel panelToAdd = new JPanel();
-
-        GroupLayout gl_panel = new GroupLayout(panelToAdd);
-        gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING));
-        gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING));
-        panelToAdd.setLayout(gl_panel);
-
-        panelToAdd.add(detailedScrollPane);
-        detailedDialog.getContentPane().add(panelToAdd);
-        detailedDialog.setVisible(true);
-
-    }
-
-
+    
     private class RowListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent event) {
             if (event.getValueIsAdjusting()) {
@@ -1999,6 +1823,7 @@ public class Gui extends JFrame implements ActionListener {
         }
     }
 
+    
     private class ColumnListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent event) {
             if (event.getValueIsAdjusting()) {
@@ -2008,12 +1833,14 @@ public class Gui extends JFrame implements ActionListener {
         }
     }
 
+    
     @Override
     public void actionPerformed(ActionEvent arg0) {
         // TODO Auto-generated method stub
 
     }
 
+    
     public void fillTable() {
         TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
         final String[] columns = table.constructColumns();
@@ -2072,6 +1899,7 @@ public class Gui extends JFrame implements ActionListener {
         System.out.println("Tables:" + globalDataKeeper.getAllPPLTables().size());
     }
 
+    
     public void optimize() throws IOException {
 
         String lalaString = "Birth Weight:" + "\tDeath Weight:" + "\tChange Weight:" + "\tTotal Cohesion:"
@@ -2116,6 +1944,7 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    
     public void getExternalValidityReport() throws IOException {
 
         String lalaString = "Birth Weight:" + "\tDeath Weight:" + "\tChange Weight:" + "\n";
@@ -2169,6 +1998,7 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    
     public void fillTree() {
 
         TreeConstructionGeneral tc = new TreeConstructionGeneral(globalDataKeeper);
@@ -2236,6 +2066,7 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    
     public void fillPhasesTree() {
 
         TreeConstructionPhases tc = new TreeConstructionPhases(globalDataKeeper);
@@ -2289,6 +2120,7 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    
     public void fillClustersTree() {
 
         TreeConstructionPhasesWithClusters tc = new TreeConstructionPhasesWithClusters(globalDataKeeper);
@@ -2343,6 +2175,7 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    
     public void setDescription(String descr) {
         descriptionText.setText(descr);
     }
@@ -2356,15 +2189,6 @@ public class Gui extends JFrame implements ActionListener {
     //for testing
     public MyTableModel getZoomModel() {
         return zoomModel;
-    }
-    
-    //for testing
-    public MyTableModel getDetailedModel() {
-        return detailedModel;
-    }
-
-    public void setGlobalDataKeeper(GlobalDataKeeper globalDataKeeper) {
-        this.globalDataKeeper = globalDataKeeper;
     }
     
 }
