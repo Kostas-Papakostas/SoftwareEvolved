@@ -61,10 +61,6 @@ public class TableController {
             final String[] columns = table.constructColumns();
             final String[][] rows = table.constructRows();
             segmentSizeDetailedTable = table.getSegmentSize();
-            
-            //This is not needed here
-            //tabbedPane.setSelectedIndex(0);
-            
             makeDetailedTable(columns, rows, true, selectedColumn);
         } else {
             JOptionPane.showMessageDialog(null, "Select a Project first");
@@ -231,8 +227,8 @@ public class TableController {
     }
 
     
+    /* TODO
     
-    /*TODO move it
     public void createPLD() {
         GlobalDataKeeper globalDataKeeper = fileController.getGlobalDataKeeper();
         TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
@@ -548,8 +544,7 @@ public class TableController {
         lifeTimePanel.setCursor(getCursor());
         lifeTimePanel.add(tmpScrollPaneZoomArea);
 
-    }
-    */
+    }*/
     
     
     public JvTable getTmpLifeTimeTable() {

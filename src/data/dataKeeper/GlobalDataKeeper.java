@@ -19,7 +19,6 @@ import javax.swing.JTable;
 
 public class GlobalDataKeeper {
     //Refactor: Implemented Singleton Pattern
-    private static GlobalDataKeeper singleInstance = null;
     protected TreeMap<String, PPLSchema> allPPLSchemas = null; // ATTENTION::HAS BEEN CHANGED TO PROTECTED
     private TreeMap<String, PPLTable> allTables = null;
     private ArrayList<AtomicChange> atomicChanges = null;
@@ -33,7 +32,7 @@ public class GlobalDataKeeper {
     private String filename = null;
     private String transitionsFile = "";
 
-    protected GlobalDataKeeper(String fl, String transitionsFile) {
+    public GlobalDataKeeper(String fl, String transitionsFile) {
         allPPLSchemas = new TreeMap<String, PPLSchema>();
         allTables = new TreeMap<String, PPLTable>();
         atomicChanges = new ArrayList<AtomicChange>();
@@ -47,15 +46,8 @@ public class GlobalDataKeeper {
     }
 
 
-    protected GlobalDataKeeper() {
+    public GlobalDataKeeper() {
         
-    }
-    
-    public static GlobalDataKeeper getInstance(String fl, String transitionsFile) {
-        if(singleInstance == null) {
-            singleInstance = new GlobalDataKeeper(fl, transitionsFile);
-        }
-        return singleInstance;
     }
     
     public void setData() {

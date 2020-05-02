@@ -180,8 +180,8 @@ public class FileController {
         System.out.println("Output Assessment1:" + outputAssessment1);
         System.out.println("Output Assessment2:" + outputAssessment2);
         System.out.println("Transitions File:" + transitionsFile);
-
-        globalDataKeeper = GlobalDataKeeper.getInstance(datasetTxt, transitionsFile);
+        
+        globalDataKeeper = new GlobalDataKeeper(datasetTxt, transitionsFile);
         globalDataKeeper.setData();
         System.out.println(globalDataKeeper.getAllPPLTables().size());
 
