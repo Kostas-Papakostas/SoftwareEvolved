@@ -18,7 +18,7 @@ import javax.swing.JTable;
 /* Refactor! Problem: Data Class */
 
 public class GlobalDataKeeper {
-
+    //Refactor: Implemented Singleton Pattern
     protected TreeMap<String, PPLSchema> allPPLSchemas = null; // ATTENTION::HAS BEEN CHANGED TO PROTECTED
     private TreeMap<String, PPLTable> allTables = null;
     private ArrayList<AtomicChange> atomicChanges = null;
@@ -45,10 +45,14 @@ public class GlobalDataKeeper {
         this.transitionsFile = transitionsFile;
     }
 
+
+<<<<<<< Updated upstream
+=======
     public GlobalDataKeeper() {
-
+        
     }
-
+    
+>>>>>>> Stashed changes
     public void setData() {
 
         Worker w = new Worker(filename, transitionsFile);

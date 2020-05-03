@@ -15,7 +15,11 @@ public class IDUTableRenderer extends DefaultTableCellRenderer{
 	private static final long serialVersionUID = 1L;
 	private String[][] finalRows;
 	private int wholeCol=-1;
+<<<<<<< Updated upstream
 	private GlobalDataKeeper globalDataKeeper = new GlobalDataKeeper();
+=======
+	private GlobalDataKeeper globalDataKeeper;// = new GlobalDataKeeper();
+>>>>>>> Stashed changes
 	private String description="";
 	private int selectedColumn;
 	//private ArrayList<String> selectedFromTree = new ArrayList<String>();

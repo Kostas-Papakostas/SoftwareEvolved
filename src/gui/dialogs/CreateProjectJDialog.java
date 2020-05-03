@@ -29,6 +29,7 @@ public class CreateProjectJDialog extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
+<<<<<<< Updated upstream
 	private JTextField textFieldProjectName;
 	private JTextField textFieldDatasetTxt;
 	private JTextField textFieldInputCsv;
@@ -37,6 +38,16 @@ public class CreateProjectJDialog extends JDialog {
 	private JTextField textFieldTransXml;
 	private File fileToCreate=null;
 	private boolean confirm=false;
+=======
+	protected JTextField textFieldProjectName;
+	protected JTextField textFieldDatasetTxt;
+	protected JTextField textFieldInputCsv;
+	protected JTextField textFieldAss1;
+	protected JTextField textFieldAss2;
+	protected JTextField textFieldTransXml;
+	protected File fileToCreate=null;
+	protected boolean confirm=false;
+>>>>>>> Stashed changes
 
 
 	/**
