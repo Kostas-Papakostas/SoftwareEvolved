@@ -46,13 +46,10 @@ public class GlobalDataKeeper {
     }
 
 
-<<<<<<< Updated upstream
-=======
     public GlobalDataKeeper() {
         
     }
     
->>>>>>> Stashed changes
     public void setData() {
 
         Worker w = new Worker(filename, transitionsFile);

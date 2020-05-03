@@ -1,14 +1,13 @@
 package tests;
 
-import static org.junit.Assert.*;
+import gui.tableElements.commons.MyTableModel;
+import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-<<<<<<< Updated upstream
-import org.junit.Test;
-=======
 //import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -39,23 +38,29 @@ public class CreateUseCaseTestTest {
 
         assertEquals(expectedContenrts,file1str);
     }
->>>>>>> Stashed changes
 
-public class CreateUseCaseTestTest {
 
     @Test
     public void testDumpData_generalModel(){
 
+        //FakeGui fakeGui = new FakeGui();
 
         String file1str = null;
+        String file2str = null;
+        String pathToOriginalFile = "./Dump Files Original/Load Use Case/generalModel_Atlas.txt";
+        String pathToRefactoredFile = "./Dump Files Refactored/Create Use Case/generalModel_Atlas.txt";
+
+        MyTableModel fakeGeneralModel = fakeGui.getGeneralModel();
+        fakeGeneralModel.dumpData(pathToRefactoredFile);
+
         try {
-            file1str = new String(Files.readAllBytes(Paths.get("./Dump Files Original/generalModel_Atlas.txt")));
+            file1str = new String(Files.readAllBytes(Paths.get(pathToOriginalFile)));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String file2str = null;
+
         try {
-            file2str = new String(Files.readAllBytes(Paths.get("./Dump Files Refactored/generalModel_Atlas.txt")));
+            file2str = new String(Files.readAllBytes(Paths.get(pathToRefactoredFile)));
         } catch (IOException e) {
             e.printStackTrace();
         }

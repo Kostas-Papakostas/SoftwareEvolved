@@ -1,22 +1,12 @@
 package gui.dialogs;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.GroupLayout;
+import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JTextField;
-
-import java.awt.event.ActionListener;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -29,16 +19,6 @@ public class CreateProjectJDialog extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
-<<<<<<< Updated upstream
-	private JTextField textFieldProjectName;
-	private JTextField textFieldDatasetTxt;
-	private JTextField textFieldInputCsv;
-	private JTextField textFieldAss1;
-	private JTextField textFieldAss2;
-	private JTextField textFieldTransXml;
-	private File fileToCreate=null;
-	private boolean confirm=false;
-=======
 	protected JTextField textFieldProjectName;
 	protected JTextField textFieldDatasetTxt;
 	protected JTextField textFieldInputCsv;
@@ -47,7 +27,6 @@ public class CreateProjectJDialog extends JDialog {
 	protected JTextField textFieldTransXml;
 	protected File fileToCreate=null;
 	protected boolean confirm=false;
->>>>>>> Stashed changes
 
 
 	/**

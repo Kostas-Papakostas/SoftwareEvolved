@@ -16,8 +16,17 @@ public class TableController {
     private static TableController singleInstance = null;
     private FileController fileController = FileController.getInstance();
     private GlobalDataKeeper globalDataKeeper;
-    private  int rowHeight;
-    private  int columnWidth;
+
+    public int getRowHeight() {
+        return rowHeight;
+    }
+
+    public int getColumnWidth() {
+        return columnWidth;
+    }
+
+    private int rowHeight;
+    private int columnWidth;
     private Integer[] segmentSizeZoomArea = new Integer[4];
     protected Integer[] segmentSizeDetailedTable = new Integer[3];
     protected MyTableModel detailedModel = null;
@@ -27,7 +36,9 @@ public class TableController {
     private JvTable tmpLifeTimeTable;
     private String[] finalColumnsZoomArea;
     private String[][] finalRowsZoomArea;
-    
+    private JvTable generalTable;
+    private MyTableModel generalModel;
+
     //Needed for Singleton Pattern
     private TableController() {
     
@@ -237,38 +248,42 @@ public class TableController {
         return zoomModel;
     }
 
-    public JvTable makeGeneralTableIDU(String[][] finalRowsZoomArea_p, String[] finalColumnsZoomArea_p, int rowHeight, int columnWidth, int wholeCol) {
+    public final JvTable makeGeneralTableIDU(String[][] finalRowsZoomArea_p, String[] finalColumnsZoomArea_p, int rowHeight, int columnWidth, int wholeCol) {
         finalRowsZoomArea=finalRowsZoomArea_p;
         finalColumnsZoomArea=finalColumnsZoomArea_p;
 
-        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea, fileController.getGlobalDataKeeper());
+        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea_p, fileController.getGlobalDataKeeper());
 
         finalRowsZoomArea = sorter.sortRows();
 
         int numberOfColumns = finalRowsZoomArea[0].length;
         int numberOfRows = finalRowsZoomArea.length;
 
-        String[][] rows = new String[numberOfRows][numberOfColumns];
+        this.rowHeight=rowHeight;
+        this.columnWidth=columnWidth;
+
+        String[][] aelrows = new String[numberOfRows][numberOfColumns];
 
         for (int i = 0; i < numberOfRows; i++) {
 
-            rows[i][0] = finalRowsZoomArea[i][0];
+            aelrows[i][0] = finalRowsZoomArea[i][0];
 
         }
 
-        zoomModel = new MyTableModel(finalColumnsZoomArea, rows);
+        zoomModel = new MyTableModel(finalColumnsZoomArea, aelrows);
 
-        final JvTable generalTable = new JvTable(zoomModel);
+        generalTable = new JvTable(zoomModel);
+        generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         if (rowHeight < 1) {
-            rowHeight = 1;
+            this.rowHeight = 1;
         }
         if (columnWidth < 1) {
-            columnWidth = 1;
+            this.columnWidth = 1;
         }
 
         for (int i = 0; i < generalTable.getRowCount(); i++) {
-            generalTable.setRowHeight(i, rowHeight);
+            generalTable.setRowHeight(i, this.rowHeight);
 
         }
 
@@ -280,7 +295,7 @@ public class TableController {
                 generalTable.getColumnModel().getColumn(0).setPreferredWidth(columnWidth);
 
             } else {
-                generalTable.getColumnModel().getColumn(i).setPreferredWidth(columnWidth);
+                generalTable.getColumnModel().getColumn(i).setPreferredWidth(this.columnWidth);
 
             }
         }
