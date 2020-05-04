@@ -1,5 +1,5 @@
 # SoftwareEvolved
-updatedCode branch: contains the refactored code  <***BRANCH MERGED TO master***>  </br>
+updatedCode branch: contains the refactored code</br>
 master branch: contains the original code</br>
 
 Till now changes had been made:</br>
