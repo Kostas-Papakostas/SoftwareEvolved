@@ -1,11 +1,9 @@
 package gui.mainEngine;
 
 //try to extract relationship beetween gui and pplSchema and pplTransition
-
 import data.dataKeeper.GlobalDataKeeper;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import data.dataSorters.PldRowSorter;
-
 import gui.actionListeners.FileController;
 import gui.actionListeners.TableController;
 import gui.dialogs.EnlargeTable;
@@ -13,9 +11,7 @@ import gui.dialogs.ParametersJDialog;
 import gui.dialogs.ProjectInfoDialog;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
-
 import gui.tableElements.tableConstructors.*;
-
 import gui.tableElements.tableRenderers.IDUHeaderTableRenderer;
 import gui.tableElements.tableRenderers.IDUTableRenderer;
 import gui.treeElements.TreeConstructionGeneral;
@@ -362,7 +358,6 @@ public class Gui extends JFrame implements ActionListener {
         lifeTimePanel.setCursor(getCursor());
         lifeTimePanel.add(tmpScrollPaneZoomArea);
     }
-
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -927,7 +922,6 @@ public class Gui extends JFrame implements ActionListener {
         int numberOfColumns = finalRows[0].length;
         int numberOfRows = finalRows.length;
 
-
         selectedRows = new ArrayList<Integer>();
 
         String[][] rows = new String[numberOfRows][numberOfColumns];
@@ -1256,7 +1250,6 @@ public class Gui extends JFrame implements ActionListener {
             System.out.println(tablesSelected.get(i));
         }
 
-
         PldConstruction table;
         if (selectedColumn == 0) {
             table = new TableConstructionClusterTablesPhasesZoomA(globalDataKeeper, tablesOfCluster);
@@ -1556,9 +1549,7 @@ public class Gui extends JFrame implements ActionListener {
                     if (isSelected) {
 
                         //Refactored: EXTRACT METHOD AND MOVE METHOD
-
                         finalRowsZoomArea = tableController.getFinalRowsZoomArea();
-
                         String description = globalDataKeeper.constructDescriptionZoomAreaClusterRow(row, finalRowsZoomArea[row][0]);
                         descriptionText.setText(description);
 
@@ -1575,7 +1566,6 @@ public class Gui extends JFrame implements ActionListener {
                         if (!table.getColumnName(column).contains("Table name")) {
 
                             //Refactored: EXTRACT METHOD AND MOVE METHOD
-
                             finalRowsZoomArea = tableController.getFinalRowsZoomArea();
                             description = globalDataKeeper.constructDescriptionZoomAreaClusterCell(table, row, column, tmpValue, finalRowsZoomArea[row][0]);
                             descriptionText.setText(description);
@@ -1780,12 +1770,10 @@ public class Gui extends JFrame implements ActionListener {
         finalColumnsZoomArea = columns;
         finalRowsZoomArea = rows;
         tabbedPane.setSelectedIndex(0);
-
         paintGeneralModel(tableController.makeGeneralTableIDU(finalRowsZoomArea,finalColumnsZoomArea,rowHeight,columnWidth,wholeCol ));
 
         finalRowsZoomArea = tableController.getFinalRowsZoomArea();
         finalColumnsZoomArea = tableController.getFinalColumnsZoomArea();
-
 
         timeWeight = (float) 0.5;
         changeWeight = (float) 0.5;
@@ -2123,6 +2111,7 @@ public class Gui extends JFrame implements ActionListener {
     
     //for testing
     public MyTableModel getZoomModel() {
+        zoomModel = tableController.getZoomModel();
         return zoomModel;
     }
     

@@ -2,15 +2,18 @@ package tests;
 
 
 
-import org.junit.Test;
+//import org.junit.Test;
 
 import gui.tableElements.commons.MyTableModel;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+//import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Kostakis on 20/4/2020.

@@ -1,47 +1,20 @@
 package gui.actionListeners;
 
-
 import data.dataKeeper.GlobalDataKeeper;
 import data.dataSorters.PldRowSorter;
-
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableCellRenderer;
-import data.dataKeeper.GlobalDataKeeper;
-import data.dataSorters.PldRowSorter;
-import gui.mainEngine.Gui;
-
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 import gui.tableElements.tableConstructors.TableConstructionAllSquaresIncluded;
 import gui.tableElements.tableConstructors.TableConstructionIDU;
 import gui.tableElements.tableRenderers.IDUHeaderTableRenderer;
 
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
-import gui.tableElements.tableRenderers.IDUTableRenderer;
-
-
 public class TableController {
     private static TableController singleInstance = null;
     private FileController fileController = FileController.getInstance();
-
     private GlobalDataKeeper globalDataKeeper;
 
     public int getRowHeight() {
@@ -54,7 +27,6 @@ public class TableController {
 
     private int rowHeight;
     private int columnWidth;
-
     private Integer[] segmentSizeZoomArea = new Integer[4];
     protected Integer[] segmentSizeDetailedTable = new Integer[3];
     protected MyTableModel detailedModel = null;
@@ -64,7 +36,6 @@ public class TableController {
     private JvTable tmpLifeTimeTable;
     private String[] finalColumnsZoomArea;
     private String[][] finalRowsZoomArea;
-
     private JvTable generalTable;
     private MyTableModel generalModel;
 
@@ -84,9 +55,7 @@ public class TableController {
     
     public void createFullDetailedLifeTable(final int selectedColumn) {
         if (!(fileController.getCurrentProject() == null)) {
-
             globalDataKeeper = fileController.getGlobalDataKeeper();
-
             TableConstructionAllSquaresIncluded table = new TableConstructionAllSquaresIncluded(globalDataKeeper);
             final String[] columns = table.constructColumns();
             final String[][] rows = table.constructRows();
@@ -256,11 +225,11 @@ public class TableController {
         
     }
 
+    
     //TODO
     
     public void createPLD() {
         globalDataKeeper = fileController.getGlobalDataKeeper();
-
         TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
         final String[] columns = table.constructColumns();
         final String[][] rows = table.constructRows();
@@ -270,7 +239,7 @@ public class TableController {
 
         finalColumnsZoomArea = columns;
         finalRowsZoomArea = rows;
-
+        
         //makeGeneralTableIDU(rowHeight,columnWidth,);
     }
 
@@ -289,6 +258,7 @@ public class TableController {
 
         int numberOfColumns = finalRowsZoomArea[0].length;
         int numberOfRows = finalRowsZoomArea.length;
+
         this.rowHeight=rowHeight;
         this.columnWidth=columnWidth;
 
@@ -326,6 +296,7 @@ public class TableController {
 
             } else {
                 generalTable.getColumnModel().getColumn(i).setPreferredWidth(this.columnWidth);
+
             }
         }
 
@@ -334,7 +305,6 @@ public class TableController {
         if (fileController.getGlobalDataKeeper().getPhaseCollectors() != null && wholeCol != -1 && wholeCol != 0) {
             start = fileController.getGlobalDataKeeper().getPhaseCollectors().get(0).getPhases().get(wholeCol - 1).getStartPos();
             end = fileController.getGlobalDataKeeper().getPhaseCollectors().get(0).getPhases().get(wholeCol - 1).getEndPos();
-
         }
 
         if (wholeCol != -1) {
@@ -349,6 +319,7 @@ public class TableController {
                 }
             }
         }
+
         // generalTable.setDefaultRenderer(Object.class, renderer);
 
         return generalTable;
