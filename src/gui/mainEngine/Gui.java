@@ -72,7 +72,7 @@ public class Gui extends JFrame implements ActionListener {
     private String[][] finalRowsZoomArea = null;
     private String[] firstLevelUndoColumnsZoomArea = null;
     private String[][] firstLevelUndoRowsZoomArea = null;
-    private String currentProject = null;
+    
     protected String project = null;
 
     private Integer[] segmentSize = new Integer[4];
@@ -89,12 +89,11 @@ public class Gui extends JFrame implements ActionListener {
     private Boolean preProcessingTime = null;
     private Boolean preProcessingChange = null;
 
-    private String projectName = "";
-    private String datasetTxt = "";
+    
     private String inputCsv = "";
     private String outputAssessment1 = "";
     private String outputAssessment2 = "";
-    private String transitionsFile = "";
+
     private ArrayList<String> selectedFromTree = new ArrayList<String>();
 
     private JTree tablesTree = new JTree();
@@ -445,30 +444,7 @@ public class Gui extends JFrame implements ActionListener {
         mntmInfo = new JMenuItem("Info");
         mntmInfo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-                if (!(currentProject == null)) {
-
-                    System.out.println("Project Name:" + projectName);
-                    System.out.println("Dataset txt:" + datasetTxt);
-                    System.out.println("Input Csv:" + inputCsv);
-                    System.out.println("Output Assessment1:" + outputAssessment1);
-                    System.out.println("Output Assessment2:" + outputAssessment2);
-                    System.out.println("Transitions File:" + transitionsFile);
-
-                    System.out.println("Schemas:" + globalDataKeeper.getAllPPLSchemas().size());
-                    System.out.println("Transitions:" + globalDataKeeper.getAllPPLTransitions().size());
-                    System.out.println("Tables:" + globalDataKeeper.getAllPPLTables().size());
-
-                    ProjectInfoDialog infoDialog = new ProjectInfoDialog(projectName, datasetTxt, inputCsv,
-                            transitionsFile, globalDataKeeper.getAllPPLSchemas().size(),
-                            globalDataKeeper.getAllPPLTransitions().size(), globalDataKeeper.getAllPPLTables().size());
-
-                    infoDialog.setVisible(true);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Select a Project first");
-                    return;
-                }
-
+                fileController.printInfo();
             }
         });
         mnProject.add(mntmInfo);
@@ -661,13 +637,9 @@ public class Gui extends JFrame implements ActionListener {
     
     protected void getInfoFromFileController() {
         project = fileController.getProject();
-        projectName = fileController.getProjectName();
-        datasetTxt = fileController.getDatasetTxt();
         inputCsv = fileController.getInputCsv();
         outputAssessment1 = fileController.getOutputAssessment1();
         outputAssessment2 = fileController.getOutputAssessment2();
-        transitionsFile = fileController.getTransitionsFile();
-        currentProject = fileController.getCurrentProject();
         globalDataKeeper = fileController.getGlobalDataKeeper();
     }
 

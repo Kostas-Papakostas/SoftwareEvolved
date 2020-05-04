@@ -2,6 +2,7 @@ package gui.actionListeners;
 
 import data.dataKeeper.GlobalDataKeeper;
 import gui.dialogs.CreateProjectJDialog;
+import gui.dialogs.ProjectInfoDialog;
 import gui.mainEngine.Gui;
 import org.antlr.v4.runtime.RecognitionException;
 
@@ -179,6 +180,31 @@ public class FileController {
 
         System.out.println(fileName);
         currentProject = fileName;
+    }
+    
+    public void printInfo() {
+        if (!(currentProject == null)) {
+
+            System.out.println("Project Name:" + projectName);
+            System.out.println("Dataset txt:" + datasetTxt);
+            System.out.println("Input Csv:" + inputCsv);
+            System.out.println("Output Assessment1:" + outputAssessment1);
+            System.out.println("Output Assessment2:" + outputAssessment2);
+            System.out.println("Transitions File:" + transitionsFile);
+
+            System.out.println("Schemas:" + globalDataKeeper.getAllPPLSchemas().size());
+            System.out.println("Transitions:" + globalDataKeeper.getAllPPLTransitions().size());
+            System.out.println("Tables:" + globalDataKeeper.getAllPPLTables().size());
+
+            ProjectInfoDialog infoDialog = new ProjectInfoDialog(projectName, datasetTxt, inputCsv,
+                    transitionsFile, globalDataKeeper.getAllPPLSchemas().size(),
+                    globalDataKeeper.getAllPPLTransitions().size(), globalDataKeeper.getAllPPLTables().size());
+
+            infoDialog.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Select a Project first");
+            return;
+        }
     }
     
     public GlobalDataKeeper getGlobalDataKeeper() {
