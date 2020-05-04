@@ -2,16 +2,15 @@
 package tests;
 
 import gui.tableElements.commons.MyTableModel;
-import org.junit.jupiter.api.Test;
 
-/**
- * used on Idea
- */
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.Test;
+
 
 /**used on idea*/
 

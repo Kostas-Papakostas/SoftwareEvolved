@@ -9,9 +9,6 @@ import java.io.File;
 
 public class FakeGui extends Gui{
     private static final long serialVersionUID = 1L;
-
-
-
     private File fileToReturn;
     private MyTableModel detailedModel;
     
@@ -25,17 +22,13 @@ public class FakeGui extends Gui{
     }
 
     public File createProject(){
-
         FakeCreateProjectJDialog createProjectDialog = new FakeCreateProjectJDialog("lala", "filesHandler/datasets/Atlas.txt", "filesHandler/input/atlas.csv", "filesHandler/output/atlas_Assessment1.txt", "filesHandler/output/atlas_Assessment1.txt", "filesHandler/transitions/atlasTransitions.xml");
-
         createProjectDialog.setModal(true);
-
-        createProjectDialog.setVisible(true);
+        createProjectDialog.triggerOkButton();
+        
         File file;
         if (true) {
-
             //createProjectDialog.setVisible(true);
-
             file = createProjectDialog.getFile();
             System.out.println(file.toString());
             //TODO some kind of test? It the same with load project
@@ -47,9 +40,7 @@ public class FakeGui extends Gui{
     }
     
     private void loadProject() {
-        //String fileName;
         File file = new File("filesHandler/inis/Atlas.ini");
-        //fileName = file.toString();
         fileController.loadProjectAction(true, file);
     }
 

@@ -27,11 +27,14 @@ public class CreateProjectJDialog extends JDialog {
 	protected JTextField textFieldTransXml;
 	protected File fileToCreate=null;
 	protected boolean confirm=false;
+	protected JButton okButton;
 
 
 	/**
 	 * Launch the application.
 	 */
+	
+	
 	
 	public CreateProjectJDialog(String projectName,String datasetTxt,String inputCsv,String ass1,String ass2,String transXml) {
 		
@@ -256,7 +259,7 @@ public class CreateProjectJDialog extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
@@ -367,5 +370,9 @@ public class CreateProjectJDialog extends JDialog {
 		
 		return confirm;
 	}
+	
+	public void triggerOkButton() {
+        okButton.doClick();
+    }
 	
 }

@@ -9,6 +9,8 @@ import java.io.IOException;
 
 public class FakeCreateProjectJDialog extends CreateProjectJDialog {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Launch the application.
      *
@@ -25,6 +27,7 @@ public class FakeCreateProjectJDialog extends CreateProjectJDialog {
         super(projectName, datasetTxt, inputCsv, ass1, ass2, transXml);
     }
 
+    //TODO not used?
     public void writeInFile(String projectName, String datasetTxt, String inputCsv, String ass1, String ass2, String transXml){
         confirm=true;
         setVisible(false);

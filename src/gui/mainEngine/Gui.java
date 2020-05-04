@@ -136,228 +136,6 @@ public class Gui extends JFrame implements ActionListener {
      * Launch the application.
      */
 
-    private void paintGeneralModel(JvTable generalTable) {
-        final IDUTableRenderer renderer = new IDUTableRenderer(Gui.this, finalRowsZoomArea, globalDataKeeper,
-                segmentSize);
-        generalTable.setDefaultRenderer(Object.class, renderer);
-
-        generalTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                                                           boolean hasFocus, int row, int column) {
-                final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
-                        column);
-
-                String tmpValue = finalRowsZoomArea[row][column];
-                String columnName = table.getColumnName(column);
-                Color fr = new Color(0, 0, 0);
-
-                c.setForeground(fr);
-                setOpaque(true);
-
-                if (column == wholeColZoomArea && wholeColZoomArea != 0) {
-
-                    // Refactored: EXTRACT METHOD and MOVE METHOD
-                    String description = globalDataKeeper.constructDescriptionZoomAreaColumn(table, column);
-
-                    descriptionText.setText(description);
-
-                    Color cl = new Color(255, 69, 0, 100);
-
-                    c.setBackground(cl);
-                    return c;
-                }
-
-                else if (selectedColumnZoomArea == 0) {
-
-                    if (isSelected) {
-                        Color cl = new Color(255, 69, 0, 100);
-                        c.setBackground(cl);
-
-                        // Refactored: EXTRACT METHOD and MOVE METHOD
-                        String description = globalDataKeeper.constructDescriptionZoomAreaRow(row,
-                                finalRowsZoomArea[row][0]);
-
-                        descriptionText.setText(description);
-
-                        return c;
-
-                    }
-                } else {
-
-                    if (selectedFromTree.contains(finalRowsZoomArea[row][0])) {
-
-                        Color cl = new Color(255, 69, 0, 100);
-
-                        c.setBackground(cl);
-
-                        return c;
-                    }
-
-                    if (isSelected && hasFocus) {
-
-                        String description = "";
-                        if (!table.getColumnName(column).contains("Table name")) {
-
-                            // Refactored: EXTRACT METHOD and MOVE METHOD
-                            description = globalDataKeeper.constructDescriptionZoomAreaCell(table, column, finalRowsZoomArea[row][0]);
-                            descriptionText.setText(description);
-                        }
-                        Color cl = new Color(255, 69, 0, 100);
-
-                        c.setBackground(cl);
-
-                        return c;
-                    }
-
-                }
-
-                try {
-                    int numericValue = Integer.parseInt(tmpValue);
-                    Color insersionColor = null;
-                    setToolTipText(Integer.toString(numericValue));
-
-                    if (numericValue == 0) {
-                        insersionColor = new Color(154, 205, 50, 200);
-                    } else if (numericValue > 0 && numericValue <= segmentSizeZoomArea[3]) {
-                        insersionColor = new Color(176, 226, 255);
-                    } else if (numericValue > segmentSizeZoomArea[3] && numericValue <= 2 * segmentSizeZoomArea[3]) {
-                        insersionColor = new Color(92, 172, 238);
-                    } else if (numericValue > 2 * segmentSizeZoomArea[3]
-                            && numericValue <= 3 * segmentSizeZoomArea[3]) {
-
-                        insersionColor = new Color(28, 134, 238);
-                    } else {
-                        insersionColor = new Color(16, 78, 139);
-                    }
-                    c.setBackground(insersionColor);
-
-                    return c;
-                } catch (Exception e) {
-
-                    if (tmpValue.equals("")) {
-                        c.setBackground(Color.GRAY);
-                        return c;
-                    } else {
-                        if (columnName.contains("v")) {
-                            c.setBackground(Color.lightGray);
-                            setToolTipText(columnName);
-                        } else {
-                            Color tableNameColor = new Color(205, 175, 149);
-                            c.setBackground(tableNameColor);
-                        }
-                        return c;
-                    }
-
-                }
-            }
-
-        });
-
-        generalTable.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-                if (e.getClickCount() == 1) {
-                    JTable target = (JTable) e.getSource();
-
-                    selectedRowsFromMouse = target.getSelectedRows();
-                    selectedColumnZoomArea = target.getSelectedColumn();
-                    renderer.setSelCol(selectedColumnZoomArea);
-                    target.getSelectedColumns();
-
-                    zoomAreaTable.repaint();
-                }
-
-            }
-        });
-
-        generalTable.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    System.out.println("Right Click");
-
-                    JTable target1 = (JTable) e.getSource();
-                    target1.getSelectedColumns();
-                    selectedRowsFromMouse = target1.getSelectedRows();
-                    System.out.println(target1.getSelectedColumns().length);
-                    System.out.println(target1.getSelectedRow());
-                    for (int rowsSelected = 0; rowsSelected < selectedRowsFromMouse.length; rowsSelected++) {
-                        System.out.println(generalTable.getValueAt(selectedRowsFromMouse[rowsSelected], 0));
-                    }
-                    final JPopupMenu popupMenu = new JPopupMenu();
-                    JMenuItem showDetailsItem = new JMenuItem("Clear Selection");
-                    showDetailsItem.addActionListener(new ActionListener() {
-
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            selectedFromTree = new ArrayList<String>();
-                            zoomAreaTable.repaint();
-                        }
-                    });
-                    popupMenu.add(showDetailsItem);
-                    popupMenu.show(generalTable, e.getX(), e.getY());
-
-                }
-
-            }
-        });
-
-        generalTable.getTableHeader().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                wholeColZoomArea = generalTable.columnAtPoint(e.getPoint());
-                renderer.setWholeCol(generalTable.columnAtPoint(e.getPoint()));
-                // String name = generalTable.getColumnName(wholeColZoomArea);
-                // System.out.println("Column index selected " + wholeColZoomArea + " " + name);
-                generalTable.repaint();
-            }
-        });
-
-        generalTable.getTableHeader().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    System.out.println("Right Click");
-
-                    final JPopupMenu popupMenu = new JPopupMenu();
-                    JMenuItem showDetailsItem = new JMenuItem("Clear Column Selection");
-                    showDetailsItem.addActionListener(new ActionListener() {
-
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            wholeColZoomArea = -1;
-                            renderer.setWholeCol(wholeColZoomArea);
-
-                            generalTable.repaint();
-                        }
-                    });
-                    popupMenu.add(showDetailsItem);
-                    popupMenu.show(generalTable, e.getX(), e.getY());
-
-                }
-
-            }
-
-        });
-
-        //stays back
-        zoomAreaTable = generalTable;
-        tmpScrollPaneZoomArea.setViewportView(zoomAreaTable);
-        tmpScrollPaneZoomArea.setAlignmentX(0);
-        tmpScrollPaneZoomArea.setAlignmentY(0);
-        tmpScrollPaneZoomArea.setBounds(300, 300, 950, 250);
-        tmpScrollPaneZoomArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        tmpScrollPaneZoomArea.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-
-        lifeTimePanel.setCursor(getCursor());
-        lifeTimePanel.add(tmpScrollPaneZoomArea);
-    }
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -434,51 +212,31 @@ public class Gui extends JFrame implements ActionListener {
         JMenuItem mntmShowGeneralLifetimeIDU = new JMenuItem("Show PLD");
         mntmShowGeneralLifetimeIDU.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                if (!(currentProject == null)) {
+                if(!(fileController.getCurrentProject() == null)) {
                     zoomInButton.setVisible(true);
                     zoomOutButton.setVisible(true);
-                    createPLD();
-                    //tabbedPane.setSelectedIndex(0);
+                    tabbedPane.setSelectedIndex(0);
+                    showingPld = true;
+                    zoomInButton.setVisible(true);
+                    zoomOutButton.setVisible(true);
+                    showThisToPopup.setVisible(true);
+                    
+                    tableController.createPLD(wholeCol);
+                    final JvTable generalTable = tableController.getGeneralTable();
+                    generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                    
+                    rowHeight = tableController.getRowHeight();
+                    columnWidth = tableController.getColumnWidth();
+                    finalRowsZoomArea = tableController.getFinalRowsZoomArea();
+                    finalColumnsZoomArea = tableController.getFinalColumnsZoomArea();
+                    segmentSizeZoomArea = tableController.getSegmentSizeZoomArea();
+                    paintGeneralModel(generalTable);
                     fillTree();
-
-
                 } else {
                     JOptionPane.showMessageDialog(null, "Select a Project first");
                     return;
                 }
             }
-            //TODO extracted to be moved
-            private void createPLD() {
-                TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
-                final String[] columns = table.constructColumns();
-                final String[][] rows = table.constructRows();
-                segmentSizeZoomArea = table.getSegmentSize();
-                System.out.println("Schemas: " + globalDataKeeper.getAllPPLSchemas().size());
-                System.out.println("C: " + columns.length + " R: " + rows.length);
-
-                finalColumnsZoomArea = columns;
-                finalRowsZoomArea = rows;
-                tabbedPane.setSelectedIndex(0);
-
-                //Part of generaleableIDU
-                showingPld = true;
-                zoomInButton.setVisible(true);
-                zoomOutButton.setVisible(true);
-                showThisToPopup.setVisible(true);
-
-                final JvTable generalTable = tableController.makeGeneralTableIDU(finalRowsZoomArea, finalColumnsZoomArea, rowHeight, columnWidth, wholeCol);
-                generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-                rowHeight=tableController.getRowHeight();
-                columnWidth = tableController.getColumnWidth();
-                finalRowsZoomArea = tableController.getFinalRowsZoomArea();
-                finalColumnsZoomArea = tableController.getFinalColumnsZoomArea();
-
-                paintGeneralModel(generalTable);
-
-            }
-
-
         });
         mnTable.add(mntmShowGeneralLifetimeIDU);
 
@@ -1218,6 +976,229 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+
+    private void paintGeneralModel(final JvTable generalTable) {
+        final IDUTableRenderer renderer = new IDUTableRenderer(Gui.this, finalRowsZoomArea, globalDataKeeper,
+                segmentSize);
+        generalTable.setDefaultRenderer(Object.class, renderer);
+
+        generalTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                                           boolean hasFocus, int row, int column) {
+                final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
+                        column);
+
+                String tmpValue = finalRowsZoomArea[row][column];
+                String columnName = table.getColumnName(column);
+                Color fr = new Color(0, 0, 0);
+
+                c.setForeground(fr);
+                setOpaque(true);
+
+                if (column == wholeColZoomArea && wholeColZoomArea != 0) {
+
+                    // Refactored: EXTRACT METHOD and MOVE METHOD
+                    String description = globalDataKeeper.constructDescriptionZoomAreaColumn(table, column);
+
+                    descriptionText.setText(description);
+
+                    Color cl = new Color(255, 69, 0, 100);
+
+                    c.setBackground(cl);
+                    return c;
+                }
+
+                else if (selectedColumnZoomArea == 0) {
+
+                    if (isSelected) {
+                        Color cl = new Color(255, 69, 0, 100);
+                        c.setBackground(cl);
+
+                        // Refactored: EXTRACT METHOD and MOVE METHOD
+                        String description = globalDataKeeper.constructDescriptionZoomAreaRow(row,
+                                finalRowsZoomArea[row][0]);
+
+                        descriptionText.setText(description);
+
+                        return c;
+
+                    }
+                } else {
+
+                    if (selectedFromTree.contains(finalRowsZoomArea[row][0])) {
+
+                        Color cl = new Color(255, 69, 0, 100);
+
+                        c.setBackground(cl);
+
+                        return c;
+                    }
+
+                    if (isSelected && hasFocus) {
+
+                        String description = "";
+                        if (!table.getColumnName(column).contains("Table name")) {
+
+                            // Refactored: EXTRACT METHOD and MOVE METHOD
+                            description = globalDataKeeper.constructDescriptionZoomAreaCell(table, column, finalRowsZoomArea[row][0]);
+                            descriptionText.setText(description);
+                        }
+                        Color cl = new Color(255, 69, 0, 100);
+
+                        c.setBackground(cl);
+
+                        return c;
+                    }
+
+                }
+
+                try {
+                    int numericValue = Integer.parseInt(tmpValue);
+                    Color insersionColor = null;
+                    setToolTipText(Integer.toString(numericValue));
+
+                    if (numericValue == 0) {
+                        insersionColor = new Color(154, 205, 50, 200);
+                    } else if (numericValue > 0 && numericValue <= segmentSizeZoomArea[3]) {
+                        insersionColor = new Color(176, 226, 255);
+                    } else if (numericValue > segmentSizeZoomArea[3] && numericValue <= 2 * segmentSizeZoomArea[3]) {
+                        insersionColor = new Color(92, 172, 238);
+                    } else if (numericValue > 2 * segmentSizeZoomArea[3]
+                            && numericValue <= 3 * segmentSizeZoomArea[3]) {
+
+                        insersionColor = new Color(28, 134, 238);
+                    } else {
+                        insersionColor = new Color(16, 78, 139);
+                    }
+                    c.setBackground(insersionColor);
+
+                    return c;
+                } catch (Exception e) {
+
+                    if (tmpValue.equals("")) {
+                        c.setBackground(Color.GRAY);
+                        return c;
+                    } else {
+                        if (columnName.contains("v")) {
+                            c.setBackground(Color.lightGray);
+                            setToolTipText(columnName);
+                        } else {
+                            Color tableNameColor = new Color(205, 175, 149);
+                            c.setBackground(tableNameColor);
+                        }
+                        return c;
+                    }
+
+                }
+            }
+
+        });
+
+        generalTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                if (e.getClickCount() == 1) {
+                    JTable target = (JTable) e.getSource();
+
+                    selectedRowsFromMouse = target.getSelectedRows();
+                    selectedColumnZoomArea = target.getSelectedColumn();
+                    renderer.setSelCol(selectedColumnZoomArea);
+                    target.getSelectedColumns();
+
+                    zoomAreaTable.repaint();
+                }
+
+            }
+        });
+
+        generalTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    System.out.println("Right Click");
+
+                    JTable target1 = (JTable) e.getSource();
+                    target1.getSelectedColumns();
+                    selectedRowsFromMouse = target1.getSelectedRows();
+                    System.out.println(target1.getSelectedColumns().length);
+                    System.out.println(target1.getSelectedRow());
+                    for (int rowsSelected = 0; rowsSelected < selectedRowsFromMouse.length; rowsSelected++) {
+                        System.out.println(generalTable.getValueAt(selectedRowsFromMouse[rowsSelected], 0));
+                    }
+                    final JPopupMenu popupMenu = new JPopupMenu();
+                    JMenuItem showDetailsItem = new JMenuItem("Clear Selection");
+                    showDetailsItem.addActionListener(new ActionListener() {
+
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            selectedFromTree = new ArrayList<String>();
+                            zoomAreaTable.repaint();
+                        }
+                    });
+                    popupMenu.add(showDetailsItem);
+                    popupMenu.show(generalTable, e.getX(), e.getY());
+
+                }
+
+            }
+        });
+
+        generalTable.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                wholeColZoomArea = generalTable.columnAtPoint(e.getPoint());
+                renderer.setWholeCol(generalTable.columnAtPoint(e.getPoint()));
+                // String name = generalTable.getColumnName(wholeColZoomArea);
+                // System.out.println("Column index selected " + wholeColZoomArea + " " + name);
+                generalTable.repaint();
+            }
+        });
+
+        generalTable.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    System.out.println("Right Click");
+
+                    final JPopupMenu popupMenu = new JPopupMenu();
+                    JMenuItem showDetailsItem = new JMenuItem("Clear Column Selection");
+                    showDetailsItem.addActionListener(new ActionListener() {
+
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            wholeColZoomArea = -1;
+                            renderer.setWholeCol(wholeColZoomArea);
+
+                            generalTable.repaint();
+                        }
+                    });
+                    popupMenu.add(showDetailsItem);
+                    popupMenu.show(generalTable, e.getX(), e.getY());
+
+                }
+
+            }
+
+        });
+
+        zoomAreaTable = generalTable;
+        tmpScrollPaneZoomArea.setViewportView(zoomAreaTable);
+        tmpScrollPaneZoomArea.setAlignmentX(0);
+        tmpScrollPaneZoomArea.setAlignmentY(0);
+        tmpScrollPaneZoomArea.setBounds(300, 300, 950, 250);
+        tmpScrollPaneZoomArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        tmpScrollPaneZoomArea.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+        lifeTimePanel.setCursor(getCursor());
+        lifeTimePanel.add(tmpScrollPaneZoomArea);
+    }
+    
     
     private void showSelectionToZoomArea(int selectedColumn) {
 

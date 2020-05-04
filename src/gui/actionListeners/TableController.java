@@ -17,13 +17,7 @@ public class TableController {
     private FileController fileController = FileController.getInstance();
     private GlobalDataKeeper globalDataKeeper;
 
-    public int getRowHeight() {
-        return rowHeight;
-    }
-
-    public int getColumnWidth() {
-        return columnWidth;
-    }
+   
 
     private int rowHeight;
     private int columnWidth;
@@ -228,7 +222,7 @@ public class TableController {
     
     //TODO
     
-    public void createPLD() {
+    public void createPLD(int wholeCol) {
         globalDataKeeper = fileController.getGlobalDataKeeper();
         TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
         final String[] columns = table.constructColumns();
@@ -240,19 +234,12 @@ public class TableController {
         finalColumnsZoomArea = columns;
         finalRowsZoomArea = rows;
         
-        //makeGeneralTableIDU(rowHeight,columnWidth,);
+        makeGeneralTableIDU(finalRowsZoomArea, finalColumnsZoomArea, rowHeight, columnWidth, wholeCol);
     }
 
 
-    public MyTableModel getZoomModel() {
-        return zoomModel;
-    }
-
-    public final JvTable makeGeneralTableIDU(String[][] finalRowsZoomArea_p, String[] finalColumnsZoomArea_p, int rowHeight, int columnWidth, int wholeCol) {
-        finalRowsZoomArea=finalRowsZoomArea_p;
-        finalColumnsZoomArea=finalColumnsZoomArea_p;
-
-        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea_p, fileController.getGlobalDataKeeper());
+    public JvTable makeGeneralTableIDU(String[][] finalRowsZoomArea, String[] finalColumnsZoomArea, int rowHeight, int columnWidth, int wholeCol) {
+        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea, fileController.getGlobalDataKeeper());
 
         finalRowsZoomArea = sorter.sortRows();
 
@@ -319,9 +306,8 @@ public class TableController {
                 }
             }
         }
-
-        // generalTable.setDefaultRenderer(Object.class, renderer);
-
+        this.finalRowsZoomArea = finalRowsZoomArea;
+        this.finalColumnsZoomArea = finalColumnsZoomArea;
         return generalTable;
     }
     
@@ -334,14 +320,32 @@ public class TableController {
     public MyTableModel getDetailedModel() {
         return detailedModel;
     }
-
     
+    public MyTableModel getZoomModel() {
+        return zoomModel;
+    }
+
     public String[] getFinalColumnsZoomArea() {
         return finalColumnsZoomArea;
     }
     
-    
     public String[][] getFinalRowsZoomArea(){
         return finalRowsZoomArea;
+    }
+    
+    public Integer[] getSegmentSizeZoomArea() {
+        return segmentSizeZoomArea;
+    }
+    
+    public JvTable getGeneralTable() {
+        return generalTable;
+    }
+    
+    public int getRowHeight() {
+        return rowHeight;
+    }
+    
+    public int getColumnWidth() {
+        return columnWidth;
     }
 }
