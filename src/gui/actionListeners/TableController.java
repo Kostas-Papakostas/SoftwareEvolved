@@ -31,7 +31,7 @@ public class TableController {
     private String[] finalColumnsZoomArea;
     private String[][] finalRowsZoomArea;
     private JvTable generalTable;
-    private MyTableModel generalModel;
+    //private MyTableModel generalModel;
 
     //Needed for Singleton Pattern
     private TableController() {
@@ -219,8 +219,6 @@ public class TableController {
         
     }
 
-    
-    //TODO
     
     public void createPLD(int wholeCol) {
         globalDataKeeper = fileController.getGlobalDataKeeper();

@@ -67,7 +67,7 @@ public class FileController {
         br.close();
     }
     
-    public void loadProjectAction(Boolean isApproved, File file) {
+    public void loadProject(Boolean isApproved, File file) {
         String fileName;
         
         if (isApproved) {
@@ -91,49 +91,13 @@ public class FileController {
         }
     }
     
-    public void createProjectAction(File file) {
-        loadProjectAction(true, file);
+    public void editProject(File file) {
+        loadProject(true, file);
     }
     
-    public void editProjectAction(File file) {
-        loadProjectAction(true, file);
-    }
-    
-    public void loadProject(Gui gui) {
-        File dir = new File("filesHandler/inis");
-        JFileChooser fcOpen1 = new JFileChooser();
-        fcOpen1.setCurrentDirectory(dir);
-        int returnVal = fcOpen1.showDialog(gui, "Open");
-        loadProjectAction(returnVal == JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
-    }
-    
-    public void createProject(Gui gui) {
-        CreateProjectJDialog createProjectDialog = new CreateProjectJDialog("", "", "", "", "", "");
-        createProjectDialog.setModal(true);
-        createProjectDialog.setVisible(true);
-
-        if (createProjectDialog.getConfirmation()) {
-
-            createProjectDialog.setVisible(false);
-            File file = createProjectDialog.getFile();
-            System.out.println(file.toString());
-            //TODO some kind of test? It the same with load project
-            createProjectAction(file);   
-        }
-    }
-    
-    public void editProject(Gui gui) {
-        String fileName = null;
-        File dir = new File("filesHandler/inis");
-        JFileChooser fcOpen1 = new JFileChooser();
-        fcOpen1.setCurrentDirectory(dir);
-        int returnVal = fcOpen1.showDialog(gui, "Open");
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fcOpen1.getSelectedFile();
-            System.out.println(file.toString());
+    public void readProjectAndPrintName(File file) {
             project = file.getName();
-            fileName = file.toString();
+            String fileName = file.toString();
             System.out.println("!!" + project);
 
             try {
@@ -144,24 +108,9 @@ public class FileController {
                 e.printStackTrace();
 
             }
-
+            
             System.out.println(projectName);
-            CreateProjectJDialog createProjectDialog = new CreateProjectJDialog(projectName, datasetTxt,
-                    inputCsv, outputAssessment1, outputAssessment2, transitionsFile);
 
-            createProjectDialog.setModal(true);
-            createProjectDialog.setVisible(true);
-            if (createProjectDialog.getConfirmation()) {
-                createProjectDialog.setVisible(false);
-                file = createProjectDialog.getFile();
-                System.out.println(file.toString());
-                //TODO check if is correct
-                editProjectAction(file);
-            }
-
-        } else {
-            return;
-        }
     }
     
     public void importData(String fileName) throws IOException, RecognitionException {
@@ -243,7 +192,7 @@ public class FileController {
         return currentProject;
     }
 
-    /**for testing purposes**/
+    /**for testing purposes**/ //TODO these should be deleted we have to test the real code used in app
     public String loadProjectAction(Gui gui, boolean isApproved, File file) {
         String fileName;
         String project;

@@ -1,18 +1,15 @@
 package gui.mainEngine;
 
-//try to extract relationship beetween gui and pplSchema and pplTransition
 import data.dataKeeper.GlobalDataKeeper;
 import data.dataPPL.pplSQLSchema.PPLSchema;
-import data.dataSorters.PldRowSorter;
 import gui.actionListeners.FileController;
 import gui.actionListeners.TableController;
+import gui.dialogs.CreateProjectJDialog;
 import gui.dialogs.EnlargeTable;
 import gui.dialogs.ParametersJDialog;
-import gui.dialogs.ProjectInfoDialog;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 import gui.tableElements.tableConstructors.*;
-import gui.tableElements.tableRenderers.IDUHeaderTableRenderer;
 import gui.tableElements.tableRenderers.IDUTableRenderer;
 import gui.treeElements.TreeConstructionGeneral;
 import gui.treeElements.TreeConstructionPhases;
@@ -36,16 +33,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 /* Refactor! Problem: Large Class, Long Method, Switch Statements, Comments, Duplicated Code */
 public class Gui extends JFrame implements ActionListener {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     private JPanel contentPane;
@@ -162,7 +156,7 @@ public class Gui extends JFrame implements ActionListener {
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
         
-        createFileJMenu(menuBar);
+        createJMenuFile(menuBar);
 
         JMenu mnTable = new JMenu("Table");
         menuBar.add(mnTable);
@@ -596,14 +590,23 @@ public class Gui extends JFrame implements ActionListener {
     }
 
     
-    private void createFileJMenu(JMenuBar menuBar) {
+    private void createJMenuFile(JMenuBar menuBar) {
         JMenu mnFile = new JMenu("File");
         menuBar.add(mnFile);
 
         JMenuItem mntmCreateProject = new JMenuItem("Create Project");
         mntmCreateProject.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                fileController.createProject(Gui.this);
+                CreateProjectJDialog createProjectDialog = new CreateProjectJDialog("", "", "", "", "", "");
+                createProjectDialog.setModal(true);
+                createProjectDialog.setVisible(true);
+                boolean isApproved = createProjectDialog.getConfirmation();
+                if (isApproved) {
+                    createProjectDialog.setVisible(false);
+                    File file = createProjectDialog.getFile();
+                    System.out.println(file.toString());
+                    fileController.loadProject(isApproved, file);   
+                }
                 getInfoFromFileController();
                 fillTable();
                 fillTree();
@@ -614,7 +617,12 @@ public class Gui extends JFrame implements ActionListener {
         JMenuItem mntmLoadProject = new JMenuItem("Load Project");
         mntmLoadProject.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                fileController.loadProject(Gui.this);
+                File dir = new File("filesHandler/inis");
+                JFileChooser fcOpen1 = new JFileChooser();
+                fcOpen1.setCurrentDirectory(dir);
+                int returnVal = fcOpen1.showDialog(Gui.this, "Open");
+                boolean isApproved = returnVal == JFileChooser.APPROVE_OPTION;
+                fileController.loadProject(isApproved, fcOpen1.getSelectedFile());
                 getInfoFromFileController();
                 fillTable();
                 fillTree();
@@ -625,7 +633,32 @@ public class Gui extends JFrame implements ActionListener {
         JMenuItem mntmEditProject = new JMenuItem("Edit Project");
         mntmEditProject.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                fileController.editProject(Gui.this);
+                File dir = new File("filesHandler/inis");
+                JFileChooser fcOpen1 = new JFileChooser();
+                fcOpen1.setCurrentDirectory(dir);
+                int returnVal = fcOpen1.showDialog(Gui.this, "Open");
+                
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fcOpen1.getSelectedFile();
+                    System.out.println(file.toString());
+                    fileController.readProjectAndPrintName(file);
+
+                    
+                    CreateProjectJDialog createProjectDialog = new CreateProjectJDialog(fileController.getProjectName(), fileController.getDatasetTxt(),
+                            inputCsv, outputAssessment1, outputAssessment2, fileController.getTransitionsFile());
+
+                    createProjectDialog.setModal(true);
+                    createProjectDialog.setVisible(true);
+                    if (createProjectDialog.getConfirmation()) {
+                        createProjectDialog.setVisible(false);
+                        file = createProjectDialog.getFile();
+                        System.out.println(file.toString());
+                        fileController.editProject(file);
+                    }
+
+                } else {
+                    return;
+                }
                 getInfoFromFileController();
                 fillTable();
                 fillTree();
@@ -699,7 +732,7 @@ public class Gui extends JFrame implements ActionListener {
                 if (column == wholeCol && wholeCol != 0) {
 
                     //Refactored: EXTRACT METHOD AND MOVE METHOD
-                    String description = globalDataKeeper.constructDescriptionPLDColumns(table, column);
+                    String description = globalDataKeeper.constructDescriptionPLDColumns(table.getColumnName(column), column);
 
                     descriptionText.setText(description);
 
@@ -743,11 +776,11 @@ public class Gui extends JFrame implements ActionListener {
                             if (finalRows[row][0].contains("Cluster")) {
 
                                 //Refactored: EXTRACT METHOD AND MOVE METHOD
-                                description = globalDataKeeper.constructDescriptionPLDCell(table, row, column, tmpValue, finalRows[row][0]);
+                                description = globalDataKeeper.constructDescriptionPLDCell(table.getColumnName(column), row, column, tmpValue, finalRows[row][0]);
 
                             } else {
                                 //Refactored: EXTRACT METHOD AND MOVE METHOD
-                                description = globalDataKeeper.constructDescriptionPLDPhasesCell(table, row, column, tmpValue, finalRows[row][0]);
+                                description = globalDataKeeper.constructDescriptionPLDPhasesCell(table.getColumnName(column), row, column, tmpValue, finalRows[row][0]);
                             }
 
                             descriptionText.setText(description);
@@ -974,7 +1007,7 @@ public class Gui extends JFrame implements ActionListener {
                 if (column == wholeColZoomArea && wholeColZoomArea != 0) {
 
                     // Refactored: EXTRACT METHOD and MOVE METHOD
-                    String description = globalDataKeeper.constructDescriptionZoomAreaColumn(table, column);
+                    String description = globalDataKeeper.constructDescriptionZoomAreaColumn(table.getColumnName(column));
 
                     descriptionText.setText(description);
 
@@ -991,8 +1024,7 @@ public class Gui extends JFrame implements ActionListener {
                         c.setBackground(cl);
 
                         // Refactored: EXTRACT METHOD and MOVE METHOD
-                        String description = globalDataKeeper.constructDescriptionZoomAreaRow(row,
-                                finalRowsZoomArea[row][0]);
+                        String description = globalDataKeeper.constructDescriptionZoomAreaRow(finalRowsZoomArea[row][0]);
 
                         descriptionText.setText(description);
 
@@ -1016,7 +1048,7 @@ public class Gui extends JFrame implements ActionListener {
                         if (!table.getColumnName(column).contains("Table name")) {
 
                             // Refactored: EXTRACT METHOD and MOVE METHOD
-                            description = globalDataKeeper.constructDescriptionZoomAreaCell(table, column, finalRowsZoomArea[row][0]);
+                            description = globalDataKeeper.constructDescriptionZoomAreaCell(table.getColumnName(column), finalRowsZoomArea[row][0]);
                             descriptionText.setText(description);
                         }
                         Color cl = new Color(255, 69, 0, 100);
@@ -1274,7 +1306,7 @@ public class Gui extends JFrame implements ActionListener {
 
                 if (column == wholeColZoomArea) {
                     //Refactored: EXTRACT METHOD AND MOVE METHOD 
-                    String description = globalDataKeeper.constructDescriptionZoomAreaPhasesColumn(rowsZoom, table, column);
+                    String description = globalDataKeeper.constructDescriptionZoomAreaPhasesColumn(rowsZoom, table.getColumnName(column));
 
                     descriptionText.setText(description);
                     Color cl = new Color(255, 69, 0, 100);
@@ -1284,7 +1316,7 @@ public class Gui extends JFrame implements ActionListener {
                 } else if (selectedColumnZoomArea == 0) {
                     if (isSelected) {
                         //Refactored: EXTRACT METHOD AND MOVE METHOD 
-                        String description = globalDataKeeper.constructDescriptionZoomAreaPhasesRow(table, row, finalRowsZoomArea[row][0]);
+                        String description = globalDataKeeper.constructDescriptionZoomAreaPhasesRow(table.getColumnName(1), table.getColumnName(table.getColumnCount() - 1), row, finalRowsZoomArea[row][0]);
                         descriptionText.setText(description);
 
                         Color cl = new Color(255, 69, 0, 100);
@@ -1298,7 +1330,7 @@ public class Gui extends JFrame implements ActionListener {
                         String description = "";
                         if (!table.getColumnName(column).contains("Table name")) {
                             //Refactored: EXTRACT METHOD AND MOVE METHOD 
-                            description = globalDataKeeper.constructDescriptionZoomAreaPhasesRowCell(table, row, column,  finalRowsZoomArea[row][0]);
+                            description = globalDataKeeper.constructDescriptionZoomAreaPhasesRowCell(table.getColumnName(column), row, finalRowsZoomArea[row][0]);
                             descriptionText.setText(description);
                         }
 
@@ -1491,7 +1523,7 @@ public class Gui extends JFrame implements ActionListener {
                 if (column == wholeColZoomArea && wholeColZoomArea != 0) {
 
                     //Refactored: EXTRACT METHOD AND MOVE METHOD
-                    String description = globalDataKeeper.constructDescriptionZoomAreaClusterColumn(table, column);
+                    String description = globalDataKeeper.constructDescriptionZoomAreaClusterColumn(table.getColumnName(column), column);
                     descriptionText.setText(description);
 
                     Color cl = new Color(255, 69, 0, 100);
@@ -1503,7 +1535,7 @@ public class Gui extends JFrame implements ActionListener {
 
                         //Refactored: EXTRACT METHOD AND MOVE METHOD
                         finalRowsZoomArea = tableController.getFinalRowsZoomArea();
-                        String description = globalDataKeeper.constructDescriptionZoomAreaClusterRow(row, finalRowsZoomArea[row][0]);
+                        String description = globalDataKeeper.constructDescriptionZoomAreaClusterRow(finalRowsZoomArea[row][0]);
                         descriptionText.setText(description);
 
                         Color cl = new Color(255, 69, 0, 100);
@@ -1520,7 +1552,7 @@ public class Gui extends JFrame implements ActionListener {
 
                             //Refactored: EXTRACT METHOD AND MOVE METHOD
                             finalRowsZoomArea = tableController.getFinalRowsZoomArea();
-                            description = globalDataKeeper.constructDescriptionZoomAreaClusterCell(table, row, column, tmpValue, finalRowsZoomArea[row][0]);
+                            description = globalDataKeeper.constructDescriptionZoomAreaClusterCell(table.getColumnName(column), row, tmpValue, finalRowsZoomArea[row][0]);
                             descriptionText.setText(description);
 
                         }
@@ -1709,7 +1741,6 @@ public class Gui extends JFrame implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent arg0) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -1812,7 +1843,6 @@ public class Gui extends JFrame implements ActionListener {
             bw.close();
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -1866,7 +1896,6 @@ public class Gui extends JFrame implements ActionListener {
             bw.close();
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

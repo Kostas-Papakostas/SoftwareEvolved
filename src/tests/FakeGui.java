@@ -41,7 +41,7 @@ public class FakeGui extends Gui{
     
     private void loadProject() {
         File file = new File("filesHandler/inis/Atlas.ini");
-        fileController.loadProjectAction(true, file);
+        fileController.loadProject(true, file);
     }
 
     public File getFileToReturn() {
