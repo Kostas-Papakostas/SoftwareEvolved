@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-import javax.swing.JTable;
-
 /* Refactor! Problem: Data Class */
 
 public class GlobalDataKeeper {
@@ -159,28 +157,28 @@ public class GlobalDataKeeper {
     }
 
     // Extracted methods area
-    public String constructDescriptionZoomAreaColumn(JTable table, int column) {
-        String description = "Transition ID:" + table.getColumnName(column) + "\n";
+    public String constructDescriptionZoomAreaColumn(String tableName) {
+        String description = "Transition ID:" + tableName + "\n";
         description = description + "Old Version Name:"
-                + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column))).getOldVersionName() + "\n";
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getOldVersionName() + "\n";
         description = description + "New Version Name:"
-                + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column))).getNewVersionName() + "\n";
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNewVersionName() + "\n";
         description = description + "Transition Changes:"
-                + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column))).getNumberOfChangesForOneTr()
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfChangesForOneTr()
                 + "\n";
         description = description + "Additions:"
-                + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column))).getNumberOfAdditionsForOneTr()
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfAdditionsForOneTr()
                 + "\n";
         description = description + "Deletions:"
-                + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column))).getNumberOfDeletionsForOneTr()
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfDeletionsForOneTr()
                 + "\n";
         description = description + "Updates:"
-                + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column))).getNumberOfUpdatesForOneTr()
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfUpdatesForOneTr()
                 + "\n";
         return description;
     }
 
-    public String constructDescriptionZoomAreaRow(int row, String finalRowsZoomAreaRowZero) {
+    public String constructDescriptionZoomAreaRow( String finalRowsZoomAreaRowZero) {
         String description = "Table:" + finalRowsZoomAreaRowZero + "\n";
         description = description + "Birth Version Name:" + allTables.get(finalRowsZoomAreaRowZero).getBirth() + "\n";
         description = description + "Birth Version ID:" + allTables.get(finalRowsZoomAreaRowZero).getBirthVersionID()
@@ -192,28 +190,28 @@ public class GlobalDataKeeper {
         return description;
     }
 
-    public String constructDescriptionZoomAreaCell(JTable table, int column, String finalRowsZoomAreaRowZero) {
+    public String constructDescriptionZoomAreaCell(String tableName, String finalRowsZoomAreaRowZero) {
         String description;
         description = "Table:" + finalRowsZoomAreaRowZero + "\n";
 
         description = description + "Old Version Name:"
-                + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column))).getOldVersionName() + "\n";
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getOldVersionName() + "\n";
         description = description + "New Version Name:"
-                + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column))).getNewVersionName() + "\n";
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNewVersionName() + "\n";
 
         if (allTables.get(finalRowsZoomAreaRowZero).getTableChanges()
-                .getTableAtChForOneTransition(Integer.parseInt(table.getColumnName(column))) != null) {
+                .getTableAtChForOneTransition(Integer.parseInt(tableName)) != null) {
 
             description = description + "Transition Changes:"
                     + allTables.get(finalRowsZoomAreaRowZero).getTableChanges()
-                            .getTableAtChForOneTransition(Integer.parseInt(table.getColumnName(column))).size()
+                            .getTableAtChForOneTransition(Integer.parseInt(tableName)).size()
                     + "\n";
             description = description + "Additions:" + allTables.get(finalRowsZoomAreaRowZero)
-                    .getNumberOfAdditionsForOneTr(Integer.parseInt(table.getColumnName(column))) + "\n";
+                    .getNumberOfAdditionsForOneTr(Integer.parseInt(tableName)) + "\n";
             description = description + "Deletions:" + allTables.get(finalRowsZoomAreaRowZero)
-                    .getNumberOfDeletionsForOneTr(Integer.parseInt(table.getColumnName(column))) + "\n";
+                    .getNumberOfDeletionsForOneTr(Integer.parseInt(tableName)) + "\n";
             description = description + "Updates:" + allTables.get(finalRowsZoomAreaRowZero)
-                    .getNumberOfUpdatesForOneTr(Integer.parseInt(table.getColumnName(column))) + "\n";
+                    .getNumberOfUpdatesForOneTr(Integer.parseInt(tableName)) + "\n";
 
         } else {
             description = description + "Transition Changes:0" + "\n";
@@ -225,8 +223,8 @@ public class GlobalDataKeeper {
         return description;
     }
 
-    public String constructDescriptionPLDColumns(JTable table, int column) {
-        String description = table.getColumnName(column) + "\n";
+    public String constructDescriptionPLDColumns(String tableName, int column) {
+        String description = tableName + "\n";
         description = description + "First Transition ID:"
                 + phaseCollectors.get(0).getPhases().get(column - 1).getStartPos() + "\n";
         description = description + "Last Transition ID:"
@@ -259,7 +257,7 @@ public class GlobalDataKeeper {
         return description;
     }
 
-    public String constructDescriptionPLDPhases(int row, String tableName) {
+    public String constructDescriptionPLDPhases(String tableName) {
         String description = "Table:" + tableName + "\n";
         description = description + "Birth Version Name:" + allTables.get(tableName).getBirth() + "\n";
         description = description + "Birth Version ID:" + allTables.get(tableName).getBirthVersionID() + "\n";
@@ -269,13 +267,13 @@ public class GlobalDataKeeper {
         return description;
     }
 
-    public String constructDescriptionPLDCell(JTable table, int row, int column, String tmpValue, String clusterID) {
+    public String constructDescriptionPLDCell(String tableName, int row, int column, String tmpValue, String clusterID) {
         String description;
         description = clusterID + "\n";
         description = description + "Tables:"
                 + clusterCollectors.get(0).getClusters().get(row).getNamesOfTables().size() + "\n\n";
 
-        description = description + table.getColumnName(column) + "\n";
+        description = description + tableName + "\n";
         description = description + "First Transition ID:"
                 + phaseCollectors.get(0).getPhases().get(column - 1).getStartPos() + "\n";
         description = description + "Last Transition ID:"
@@ -284,10 +282,9 @@ public class GlobalDataKeeper {
         return description;
     }
 
-    public String constructDescriptionPLDPhasesCell(JTable table, int row, int column, String tmpValue,
-            String tableName) {
+    public String constructDescriptionPLDPhasesCell(String tableName, int column, String tmpValue) {
         String description;
-        description = table.getColumnName(column) + "\n";
+        description = tableName + "\n";
         description = description + "First Transition ID:"
                 + phaseCollectors.get(0).getPhases().get(column - 1).getStartPos() + "\n";
         description = description + "Last Transition ID:"
@@ -301,55 +298,55 @@ public class GlobalDataKeeper {
         return description;
     }
 
-    public String constructDescriptionZoomAreaPhasesColumn(final String[][] rowsZoom, JTable table, int column) {
-        String description = "Transition ID:" + table.getColumnName(column) + "\n";
+    public String constructDescriptionZoomAreaPhasesColumn(final String[][] rowsZoom, String tableName, int column) {
+        String description = "Transition ID:" + tableName + "\n";
         description = description + "Old Version Name:"
-                + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column))).getOldVersionName() + "\n";
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getOldVersionName() + "\n";
         description = description + "New Version Name:"
-                + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column))).getNewVersionName() + "\n";
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNewVersionName() + "\n";
 
         description = description + "Transition Changes:" + allPPLTransitions
-                .get(Integer.parseInt(table.getColumnName(column))).getNumberOfClusterChangesForOneTr(rowsZoom) + "\n";
-        description = description + "Additions:" + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column)))
+                .get(Integer.parseInt(tableName)).getNumberOfClusterChangesForOneTr(rowsZoom) + "\n";
+        description = description + "Additions:" + allPPLTransitions.get(Integer.parseInt(tableName))
                 .getNumberOfClusterAdditionsForOneTr(rowsZoom) + "\n";
-        description = description + "Deletions:" + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column)))
+        description = description + "Deletions:" + allPPLTransitions.get(Integer.parseInt(tableName))
                 .getNumberOfClusterDeletionsForOneTr(rowsZoom) + "\n";
-        description = description + "Updates:" + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column)))
+        description = description + "Updates:" + allPPLTransitions.get(Integer.parseInt(tableName))
                 .getNumberOfClusterUpdatesForOneTr(rowsZoom) + "\n";
         return description;
     }
 
-    public String constructDescriptionZoomAreaPhasesRow(JTable table, int row, String tablaName) {
+    public String constructDescriptionZoomAreaPhasesRow(String tablaName, String totalChanges, String changes) {
         String description = "Table:" + tablaName + "\n";
         description = description + "Birth Version Name:" + allTables.get(tablaName).getBirth() + "\n";
         description = description + "Birth Version ID:" + allTables.get(tablaName).getBirthVersionID() + "\n";
         description = description + "Death Version Name:" + allTables.get(tablaName).getDeath() + "\n";
         description = description + "Death Version ID:" + allTables.get(tablaName).getDeathVersionID() + "\n";
         description = description + "Total Changes:"
-                + allTables.get(tablaName).getTotalChangesForOnePhase(Integer.parseInt(table.getColumnName(1)),
-                        Integer.parseInt(table.getColumnName(table.getColumnCount() - 1)))
+                + allTables.get(tablaName).getTotalChangesForOnePhase(Integer.parseInt(totalChanges), //columnname 1
+                        Integer.parseInt(changes)) //column count -1
                 + "\n";
         return description;
     }
 
-    public String constructDescriptionZoomAreaPhasesRowCell(JTable table, int row, int column, String tableName) {
+    public String constructDescriptionZoomAreaPhasesRowCell(String tableName) {
         String description;
         description = "Table:" + tableName + "\n";
 
         description = description + "Old Version Name:"
-                + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column))).getOldVersionName() + "\n";
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getOldVersionName() + "\n";
         description = description + "New Version Name:"
-                + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column))).getNewVersionName() + "\n";
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNewVersionName() + "\n";
         if (allTables.get(tableName).getTableChanges()
-                .getTableAtChForOneTransition(Integer.parseInt(table.getColumnName(column))) != null) {
+                .getTableAtChForOneTransition(Integer.parseInt(tableName)) != null) {
             description = description + "Transition Changes:" + allTables.get(tableName).getTableChanges()
-                    .getTableAtChForOneTransition(Integer.parseInt(table.getColumnName(column))).size() + "\n";
+                    .getTableAtChForOneTransition(Integer.parseInt(tableName)).size() + "\n";
             description = description + "Additions:" + allTables.get(tableName)
-                    .getNumberOfAdditionsForOneTr(Integer.parseInt(table.getColumnName(column))) + "\n";
+                    .getNumberOfAdditionsForOneTr(Integer.parseInt(tableName)) + "\n";
             description = description + "Deletions:" + allTables.get(tableName)
-                    .getNumberOfDeletionsForOneTr(Integer.parseInt(table.getColumnName(column))) + "\n";
+                    .getNumberOfDeletionsForOneTr(Integer.parseInt(tableName)) + "\n";
             description = description + "Updates:"
-                    + allTables.get(tableName).getNumberOfUpdatesForOneTr(Integer.parseInt(table.getColumnName(column)))
+                    + allTables.get(tableName).getNumberOfUpdatesForOneTr(Integer.parseInt(tableName))
                     + "\n";
 
         } else {
@@ -362,8 +359,8 @@ public class GlobalDataKeeper {
         return description;
     }
 
-    public String constructDescriptionZoomAreaClusterColumn(JTable table, int column) {
-        String description = table.getColumnName(column) + "\n";
+    public String constructDescriptionZoomAreaClusterColumn(String tableName, int column) {
+        String description = tableName + "\n";
         description = description + "First Transition ID:"
                 + phaseCollectors.get(0).getPhases().get(column - 1).getStartPos() + "\n";
         description = description + "Last Transition ID:"
@@ -379,7 +376,7 @@ public class GlobalDataKeeper {
         return description;
     }
 
-    public String constructDescriptionZoomAreaClusterRow(int row, String tableName) {
+    public String constructDescriptionZoomAreaClusterRow(String tableName) {
         String description = "Table:" + tableName + "\n";
         description = description + "Birth Version Name:" + allTables.get(tableName).getBirth() + "\n";
         description = description + "Birth Version ID:" + allTables.get(tableName).getBirthVersionID() + "\n";
@@ -389,14 +386,14 @@ public class GlobalDataKeeper {
         return description;
     }
 
-    public String constructDescriptionZoomAreaClusterCell(JTable table, int row, int column, String tmpValue, String tableName) {
+    public String constructDescriptionZoomAreaClusterCell(String transitionName, String tmpValue, String tableName) {
         String description;
-        description = "Transition " + table.getColumnName(column) + "\n";
+        description = "Transition " + transitionName + "\n";
 
         description = description + "Old Version:"
-                + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column))).getOldVersionName() + "\n";
+                + allPPLTransitions.get(Integer.parseInt(transitionName)).getOldVersionName() + "\n";
         description = description + "New Version:"
-                + allPPLTransitions.get(Integer.parseInt(table.getColumnName(column))).getNewVersionName() + "\n\n";
+                + allPPLTransitions.get(Integer.parseInt(transitionName)).getNewVersionName() + "\n\n";
 
         description = description + "Table:" + tableName + "\n";
         description = description + "Birth Version Name:" + allTables.get(tableName).getBirth() + "\n";

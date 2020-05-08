@@ -2,7 +2,6 @@ package gui.actionListeners;
 
 import data.dataKeeper.GlobalDataKeeper;
 import gui.dialogs.CreateProjectJDialog;
-import gui.mainEngine.Gui;
 import org.antlr.v4.runtime.RecognitionException;
 
 import javax.swing.*;
@@ -31,8 +30,8 @@ public class FileController {
         }
         return singleInstance;
     }
-    
-    private void readProject(String fileName) throws FileNotFoundException, IOException {
+
+    private void readProject(String fileName) throws IOException {
         BufferedReader br;
         br = new BufferedReader(new FileReader(fileName));
         String line;
@@ -65,49 +64,36 @@ public class FileController {
 
         br.close();
     }
-    
-    public void loadProjectAction(Boolean isApproved, File file) {
+
+    public String loadProjectAction(boolean isApproved, File file) {
         String fileName;
-        
+        String internalProject;
+
         if (isApproved) {
             System.out.println(file.toString());
             project = file.getName();
             fileName = file.toString();
             System.out.println("!!" + project);
-
         } else {
-            return;
+            return null;
         }
-        
+
         try {
             importData(fileName);
         } catch (IOException e1) {
             JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
-            return;
+            return null;
         } catch (RecognitionException e1) {
             JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
-            return;
+            return null;
         }
+        internalProject= project;
+
+        return internalProject;
     }
     
-    public void createProjectAction(File file) {
-        loadProjectAction(true, file);
-    }
-    
-    public void editProjectAction(File file) {
-        loadProjectAction(true, file);
-    }
-    
-    public void loadProject(Gui gui) {
-        File dir = new File("filesHandler/inis");
-        JFileChooser fcOpen1 = new JFileChooser();
-        fcOpen1.setCurrentDirectory(dir);
-        int returnVal = fcOpen1.showDialog(gui, "Open");
-        loadProjectAction(returnVal == JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
-    }
-    
-    public void createProject(Gui gui) {
-        CreateProjectJDialog createProjectDialog = new CreateProjectJDialog("", "", "", "", "", "");
+    public void createProject(String projectName,String datasetTxt,String inputCsv,String ass1,String ass2,String transXml) {
+        CreateProjectJDialog createProjectDialog = new CreateProjectJDialog(projectName, datasetTxt, inputCsv, ass1, ass2, transXml);
         createProjectDialog.setModal(true);
         createProjectDialog.setVisible(true);
 
@@ -117,19 +103,15 @@ public class FileController {
             File file = createProjectDialog.getFile();
             System.out.println(file.toString());
             //TODO some kind of test? It the same with load project
-            createProjectAction(file);   
+            loadProjectAction(true, file);
         }
     }
     
-    public void editProject(Gui gui) {
+    public void editProject(boolean isApproved, File inputFile) {
         String fileName = null;
-        File dir = new File("filesHandler/inis");
-        JFileChooser fcOpen1 = new JFileChooser();
-        fcOpen1.setCurrentDirectory(dir);
-        int returnVal = fcOpen1.showDialog(gui, "Open");
 
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fcOpen1.getSelectedFile();
+        if (isApproved) {
+            File file = inputFile;
             System.out.println(file.toString());
             project = file.getName();
             fileName = file.toString();
@@ -150,12 +132,13 @@ public class FileController {
 
             createProjectDialog.setModal(true);
             createProjectDialog.setVisible(true);
+
             if (createProjectDialog.getConfirmation()) {
                 createProjectDialog.setVisible(false);
                 file = createProjectDialog.getFile();
                 System.out.println(file.toString());
                 //TODO check if is correct
-                editProjectAction(file);
+                loadProjectAction(isApproved, file);
             }
 
         } else {
@@ -180,11 +163,15 @@ public class FileController {
         System.out.println(fileName);
         currentProject = fileName;
     }
-    
+
+
+
+
+
     public GlobalDataKeeper getGlobalDataKeeper() {
         return globalDataKeeper;
     }
-    
+
     public String getProject() {
         return project;
     }
@@ -217,60 +204,4 @@ public class FileController {
         return currentProject;
     }
 
-    /**for testing purposes**/
-    public String loadProjectAction(Gui gui, boolean isApproved, File file) {
-        String fileName;
-        String project;
-
-        if (isApproved) {
-            System.out.println(file.toString());
-            project = file.getName();
-            fileName = file.toString();
-            System.out.println("!!" + project);
-        } else {
-            return null;
-        }
-
-        try {
-            importData(fileName);
-        } catch (IOException e1) {
-            JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
-            return null;
-        } catch (RecognitionException e1) {
-            JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
-            return null;
-        }
-
-        return project;
-    }
-
-    public String createAndEditProjectAction(Gui gui, File file) {
-        return loadProjectAction(gui, true, file);
-    }
-
-    public File createAndEditProject(String projectName, String datasetTxt, String inputCsv, String ass1, String ass2, String transXml){
-        File project;
-
-        CreateProjectJDialog createProjectDialog = new CreateProjectJDialog(projectName, datasetTxt, inputCsv, ass1, ass2, transXml);
-
-        createProjectDialog.setModal(true);
-
-        createProjectDialog.setVisible(true);
-
-
-        if (createProjectDialog.getConfirmation()) {
-
-            createProjectDialog.setVisible(false);
-
-            File file = createProjectDialog.getFile();
-            project=file;
-            System.out.println(file.toString());
-            //TODO some kind of test? It the same with load project
-            //project = loadProjectAction(gui, returnVal == JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile(), file);
-
-        }else{
-            return null;
-        }
-        return project;
-    }
 }

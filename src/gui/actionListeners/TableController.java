@@ -5,11 +5,9 @@ import data.dataSorters.PldRowSorter;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 import gui.tableElements.tableConstructors.TableConstructionAllSquaresIncluded;
-import gui.tableElements.tableConstructors.TableConstructionIDU;
 import gui.tableElements.tableRenderers.IDUHeaderTableRenderer;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
 public class TableController {
@@ -17,17 +15,12 @@ public class TableController {
     private FileController fileController = FileController.getInstance();
     private GlobalDataKeeper globalDataKeeper;
 
-    public int getRowHeight() {
-        return rowHeight;
-    }
-
-    public int getColumnWidth() {
-        return columnWidth;
-    }
-
     private int rowHeight;
     private int columnWidth;
+
     private Integer[] segmentSizeZoomArea = new Integer[4];
+
+
     protected Integer[] segmentSizeDetailedTable = new Integer[3];
     protected MyTableModel detailedModel = null;
     private MyTableModel zoomModel = null;
@@ -37,46 +30,46 @@ public class TableController {
     private String[] finalColumnsZoomArea;
     private String[][] finalRowsZoomArea;
     private JvTable generalTable;
-    private MyTableModel generalModel;
 
     //Needed for Singleton Pattern
     private TableController() {
     
     }
-    
-    
+
     public static TableController getInstance() {
         if(singleInstance == null) {
             singleInstance = new TableController();
         }
         return singleInstance;
     }
+
+
+
     
-    
-    public void createFullDetailedLifeTable(final int selectedColumn) {
+    public MyTableModel createFullDetailedLifeTableModel() {
         if (!(fileController.getCurrentProject() == null)) {
             globalDataKeeper = fileController.getGlobalDataKeeper();
             TableConstructionAllSquaresIncluded table = new TableConstructionAllSquaresIncluded(globalDataKeeper);
             final String[] columns = table.constructColumns();
             final String[][] rows = table.constructRows();
             segmentSizeDetailedTable = table.getSegmentSize();
-            makeDetailedTable(columns, rows, true, selectedColumn);
+            makeDetailedTable(columns, rows, true);
         } else {
             JOptionPane.showMessageDialog(null, "Select a Project first");
-            return;
+            return null;
         }
+
+        return detailedModel;
     }
-    
-   
+
     private JvTable setTableWidth(JvTable tmpLifeTimeTable, int colIndex, int preferedWidth) {
         tmpLifeTimeTable.getColumnModel().getColumn(colIndex).setPreferredWidth(preferedWidth);
         tmpLifeTimeTable.getColumnModel().getColumn(colIndex).setMaxWidth(preferedWidth);
         tmpLifeTimeTable.getColumnModel().getColumn(colIndex).setMinWidth(preferedWidth);
         return tmpLifeTimeTable;
     }
-    
-    
-    private void makeDetailedTable(String[] columns, String[][] rows, final boolean levelized, final int selectedColumn) {
+
+    private JvTable makeDetailedTable(String[] columns, String[][] rows, final boolean levelized) {
         
         detailedModel = new MyTableModel(columns, rows);
 
@@ -106,7 +99,9 @@ public class TableController {
             }
         }
 
-        tmpLifeTimeTable.setName("LifeTimeTable");
+        return tmpLifeTimeTable;
+
+        /**tmpLifeTimeTable.setName("LifeTimeTable");
 
         tmpLifeTimeTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 
@@ -114,7 +109,7 @@ public class TableController {
 
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                    boolean hasFocus, int row, int column) {
+                                                           boolean hasFocus, int row, int column) {
                 final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
                         column);
 
@@ -221,31 +216,8 @@ public class TableController {
                     }
                 }
             }
-        });
-        
-    }
+        });**/
 
-    
-    //TODO
-    
-    public void createPLD() {
-        globalDataKeeper = fileController.getGlobalDataKeeper();
-        TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
-        final String[] columns = table.constructColumns();
-        final String[][] rows = table.constructRows();
-        segmentSizeZoomArea = table.getSegmentSize();
-        System.out.println("Schemas: " + globalDataKeeper.getAllPPLSchemas().size());
-        System.out.println("C: " + columns.length + " R: " + rows.length);
-
-        finalColumnsZoomArea = columns;
-        finalRowsZoomArea = rows;
-        
-        //makeGeneralTableIDU(rowHeight,columnWidth,);
-    }
-
-
-    public MyTableModel getZoomModel() {
-        return zoomModel;
     }
 
     public final JvTable makeGeneralTableIDU(String[][] finalRowsZoomArea_p, String[] finalColumnsZoomArea_p, int rowHeight, int columnWidth, int wholeCol) {
@@ -320,26 +292,37 @@ public class TableController {
             }
         }
 
-        // generalTable.setDefaultRenderer(Object.class, renderer);
 
         return generalTable;
     }
-    
+
+
+
+
+
+    public MyTableModel getZoomModel() {
+        return zoomModel;
+    }
     
     public JvTable getTmpLifeTimeTable() {
         return tmpLifeTimeTable;
     }
-    
-    
-    public MyTableModel getDetailedModel() {
-        return detailedModel;
-    }
 
-    
     public String[] getFinalColumnsZoomArea() {
         return finalColumnsZoomArea;
     }
-    
+
+    public int getRowHeight() {
+        return rowHeight;
+    }
+
+    public int getColumnWidth() {
+        return columnWidth;
+    }
+
+    public Integer[] getSegmentSizeDetailedTable() {
+        return segmentSizeDetailedTable;
+    }
     
     public String[][] getFinalRowsZoomArea(){
         return finalRowsZoomArea;
