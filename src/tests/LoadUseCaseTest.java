@@ -7,6 +7,7 @@ package tests;
 import gui.actionListeners.FileController;
 import gui.mainEngine.Gui;
 import gui.tableElements.commons.MyTableModel;
+<<<<<<< HEAD
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -17,6 +18,12 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 //import static org.junit.Assert.assertEquals;
+=======
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import static org.junit.Assert.assertEquals;
+>>>>>>> ece5d8ff50f0f1a475864c155ce217e095eca3d1
 
 /**
  * Created by Kostakis on 20/4/2020.

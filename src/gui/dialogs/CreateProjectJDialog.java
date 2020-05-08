@@ -34,6 +34,8 @@ public class CreateProjectJDialog extends JDialog {
 	 * Launch the application.
 	 */
 	
+	
+	
 	public CreateProjectJDialog(String projectName,String datasetTxt,String inputCsv,String ass1,String ass2,String transXml) {
 		
 		
@@ -368,8 +370,16 @@ public class CreateProjectJDialog extends JDialog {
 		
 		return confirm;
 	}
+<<<<<<< HEAD
 
 	public void triggerOkButton() {
 		okButton.doClick();
 	}
+=======
+	
+	public void triggerOkButton() {
+        okButton.doClick();
+    }
+	
+>>>>>>> ece5d8ff50f0f1a475864c155ce217e095eca3d1
 }
