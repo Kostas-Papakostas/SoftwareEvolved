@@ -1,10 +1,9 @@
 package tests;
 
-import static org.junit.Assert.assertEquals;
-
+import data.dataPPL.pplTransition.PPLTransition;
 import org.junit.Test;
 
-import data.dataPPL.pplTransition.PPLTransition;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Kostakis on 21/4/2020.
@@ -12,8 +11,6 @@ import data.dataPPL.pplTransition.PPLTransition;
 public class AllPPLTransitionTest {
     @Test
     public void testAllPPLTransition(){
-        //String expectedResult = "Transition ID: 001 Old Version Name: oldshema0 New Version Name: newschema0";
-
         FakeGlobalDataKeeper fakeKeeper = new FakeGlobalDataKeeper();
         fakeKeeper.setData();
 

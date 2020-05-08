@@ -16,11 +16,11 @@ import java.util.TreeMap;
 public class FakeGlobalDataKeeper extends GlobalDataKeeper{
 
 
-    FakeGlobalDataKeeper(String fl, String transitionFile){
-        super(fl,transitionFile);
+    public FakeGlobalDataKeeper(String fl, String transitionFile){
+        super(fl, transitionFile);
     }
 
-    FakeGlobalDataKeeper(){
+    public FakeGlobalDataKeeper(){
         allPPLSchemas = new TreeMap<String,PPLSchema>();
         allPPLTransitions = new TreeMap<Integer,PPLTransition>();
     }

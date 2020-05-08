@@ -8,9 +8,9 @@ import data.dataPPL.pplSQLSchema.PPLTable;
 public class PldRowSorter {
 	
 	private String[][] finalRows;
-	private GlobalDataKeeper globalDataKeeper = new GlobalDataKeeper();
+	private GlobalDataKeeper globalDataKeeper;// = new GlobalDataKeeper();
 
-	public PldRowSorter(String[][] finalRows,GlobalDataKeeper globalDataKeeper){
+	public PldRowSorter(String[][] finalRows, GlobalDataKeeper globalDataKeeper){
 		this.finalRows=finalRows;
 		this.globalDataKeeper=globalDataKeeper;
 	}

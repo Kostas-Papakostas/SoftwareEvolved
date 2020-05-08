@@ -1,64 +1,26 @@
 package gui.mainEngine;
 
 //try to extract relationship beetween gui and pplSchema and pplTransition
+import data.dataKeeper.GlobalDataKeeper;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import gui.actionListeners.FileController;
-import gui.dialogs.CreateProjectJDialog;
+import gui.actionListeners.TableController;
 import gui.dialogs.EnlargeTable;
 import gui.dialogs.ParametersJDialog;
 import gui.dialogs.ProjectInfoDialog;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
-import gui.tableElements.tableConstructors.PldConstruction;
-import gui.tableElements.tableConstructors.TableConstructionAllSquaresIncluded;
-import gui.tableElements.tableConstructors.TableConstructionClusterTablesPhasesZoomA;
-import gui.tableElements.tableConstructors.TableConstructionIDU;
-import gui.tableElements.tableConstructors.TableConstructionPhases;
-import gui.tableElements.tableConstructors.TableConstructionWithClusters;
-import gui.tableElements.tableConstructors.TableConstructionZoomArea;
-import gui.tableElements.tableRenderers.IDUHeaderTableRenderer;
+import gui.tableElements.tableConstructors.*;
 import gui.tableElements.tableRenderers.IDUTableRenderer;
 import gui.treeElements.TreeConstructionGeneral;
 import gui.treeElements.TreeConstructionPhases;
 import gui.treeElements.TreeConstructionPhasesWithClusters;
+import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;
+import tableClustering.clusterExtractor.engine.TableClusteringMainEngine;
+import tableClustering.clusterValidator.engine.ClusterValidatorMainEngine;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.swing.GroupLayout;
+import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTree;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -66,14 +28,16 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.tree.TreePath;
-
-import org.antlr.v4.runtime.RecognitionException;
-
-import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;
-import tableClustering.clusterExtractor.engine.TableClusteringMainEngine;
-import tableClustering.clusterValidator.engine.ClusterValidatorMainEngine;
-import data.dataKeeper.GlobalDataKeeper;
-import data.dataSorters.PldRowSorter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /* Refactor! Problem: Large Class, Long Method, Switch Statements, Comments, Duplicated Code */
 public class Gui extends JFrame implements ActionListener {
@@ -87,9 +51,9 @@ public class Gui extends JFrame implements ActionListener {
     private JPanel lifeTimePanel = new JPanel();
     private JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
-    protected MyTableModel detailedModel = null;
     private MyTableModel generalModel = null;
     private MyTableModel zoomModel = null;
+    private MyTableModel detailedModel = null;
 
     private JvTable LifeTimeTable = null;
     private JvTable zoomAreaTable = null;
@@ -109,11 +73,10 @@ public class Gui extends JFrame implements ActionListener {
     private String[] firstLevelUndoColumnsZoomArea = null;
     private String[][] firstLevelUndoRowsZoomArea = null;
     private String currentProject = null;
-    private String project = null;
+    protected String project = null;
 
     private Integer[] segmentSize = new Integer[4];
     private Integer[] segmentSizeZoomArea = new Integer[4];
-    protected Integer[] segmentSizeDetailedTable = new Integer[3];
 
     private Float timeWeight = null;
     private Float changeWeight = null;
@@ -150,13 +113,18 @@ public class Gui extends JFrame implements ActionListener {
     private JButton showThisToPopup;
 
     private int[] selectedRowsFromMouse;
-    private int selectedColumn = -1;
+    private JvTable tmpLifeTimeTable = null;
+    private Integer[] segmentSizeDetailedTable;
+
+    protected int selectedColumn = -1;
     private int selectedColumnZoomArea = -1;
     private int wholeCol = -1;
     private int wholeColZoomArea = -1;
 
     private int rowHeight = 1;
     private int columnWidth = 1;
+
+    private JvTable generalTable = null;
 
     private ArrayList<String> tablesSelected = new ArrayList<String>();
 
@@ -166,7 +134,8 @@ public class Gui extends JFrame implements ActionListener {
     private JMenu mnProject;
     private JMenuItem mntmInfo;
     
-    protected static FileController fileController = new FileController();
+    protected FileController fileController = FileController.getInstance();
+    protected TableController tableController = TableController.getInstance();
     
     /**
      * Launch the application.
@@ -197,134 +166,8 @@ public class Gui extends JFrame implements ActionListener {
 
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
-
-        JMenu mnFile = new JMenu("File");
-        menuBar.add(mnFile);
-
-        JMenuItem mntmCreateProject = new JMenuItem("Create Project");
-        mntmCreateProject.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-
-                CreateProjectJDialog createProjectDialog = new CreateProjectJDialog("", "", "", "", "", "");
-
-                createProjectDialog.setModal(true);
-
-                createProjectDialog.setVisible(true);
-
-                if (createProjectDialog.getConfirmation()) {
-
-                    createProjectDialog.setVisible(false);
-
-                    File file = createProjectDialog.getFile();
-                    System.out.println(file.toString());
-                    //TODO some kind of test? It the same with load project
-                    fileController.createProjectAction(Gui.this, file);
-                    
-                    /*project = file.getName();
-                    String fileName = file.toString();
-                    System.out.println("!!" + project);
-                    
-
-                    try {
-                        importData(fileName);
-                    } catch (IOException e) {
-                        JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
-                        return;
-                    } catch (RecognitionException e) {
-
-                        JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
-                        return;
-                    }*/
-
-                }
-
-            }
-        });
-        mnFile.add(mntmCreateProject);
-
-        JMenuItem mntmLoadProject = new JMenuItem("Load Project");
-        mntmLoadProject.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                File dir = new File("filesHandler/inis");
-                JFileChooser fcOpen1 = new JFileChooser();
-                fcOpen1.setCurrentDirectory(dir);
-                int returnVal = fcOpen1.showDialog(Gui.this, "Open");
-                fileController.loadProjectAction(Gui.this, returnVal == JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
-            }
-        });
-        mnFile.add(mntmLoadProject);
-
-        JMenuItem mntmEditProject = new JMenuItem("Edit Project");
-        mntmEditProject.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-
-                String fileName = null;
-                File dir = new File("filesHandler/inis");
-                JFileChooser fcOpen1 = new JFileChooser();
-                fcOpen1.setCurrentDirectory(dir);
-                int returnVal = fcOpen1.showDialog(Gui.this, "Open");
-
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-                    File file = fcOpen1.getSelectedFile();
-                    System.out.println(file.toString());
-                    project = file.getName();
-                    fileName = file.toString();
-                    System.out.println("!!" + project);
-
-                    
-                    try {
-                        readProject(fileName);
-                    } catch (FileNotFoundException e1) {
-                        e1.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-
-                    }
-
-                    System.out.println(projectName);
-
-                    CreateProjectJDialog createProjectDialog = new CreateProjectJDialog(projectName, datasetTxt,
-                            inputCsv, outputAssessment1, outputAssessment2, transitionsFile);
-
-                    createProjectDialog.setModal(true);
-
-                    createProjectDialog.setVisible(true);
-
-                    if (createProjectDialog.getConfirmation()) {
-
-                        createProjectDialog.setVisible(false);
-
-                        file = createProjectDialog.getFile();
-                        System.out.println(file.toString());
-                        //TODO check if is correct
-                        fileController.editProjectAction(Gui.this, file);
-                        
-                        /*project = file.getName();
-                        fileName = file.toString();
-                        System.out.println("!!" + project);
-
-                        try {
-                            importData(fileName);
-                        } catch (IOException e) {
-                            JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
-                            return;
-                        } catch (RecognitionException e) {
-
-                            JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
-                            return;
-                        }*/
-
-                    }
-
-                } else {
-                    return;
-                }
-
-            }
-
-        });
-        mnFile.add(mntmEditProject);
+        
+        createFileJMenu(menuBar);
 
         JMenu mnTable = new JMenu("Table");
         menuBar.add(mnTable);
@@ -332,19 +175,44 @@ public class Gui extends JFrame implements ActionListener {
         JMenuItem mntmShowLifetimeTable = new JMenuItem("Show Full Detailed LifeTime Table");
         mntmShowLifetimeTable.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (!(currentProject == null)) {
-                    TableConstructionAllSquaresIncluded table = new TableConstructionAllSquaresIncluded(globalDataKeeper);
-                    final String[] columns = table.constructColumns();
-                    final String[][] rows = table.constructRows();
-                    segmentSizeDetailedTable = table.getSegmentSize();
-                    tabbedPane.setSelectedIndex(0);
-                    makeDetailedTable(columns, rows, true);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Select a Project first");
-                    return;
-                }
+                
+                detailedModel = tableController.createFullDetailedLifeTableModel();
+                tabbedPane.setSelectedIndex(0);
+                
+                JvTable tmpLifeTimeTable = tableController.getTmpLifeTimeTable();
+                paintDetailedTable(true);
+                tmpLifeTimeTable.setOpaque(true);
+
+                tmpLifeTimeTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                tmpLifeTimeTable.getSelectionModel().addListSelectionListener(new RowListener());
+                tmpLifeTimeTable.getColumnModel().getSelectionModel().addListSelectionListener(new ColumnListener());
+
+                JScrollPane detailedScrollPane = new JScrollPane();
+                detailedScrollPane.setViewportView(tmpLifeTimeTable);
+                detailedScrollPane.setAlignmentX(0);
+                detailedScrollPane.setAlignmentY(0);
+                detailedScrollPane.setBounds(0, 0, 1280, 650);
+                detailedScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                detailedScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+                detailedScrollPane.setCursor(getCursor());
+
+                JDialog detailedDialog = new JDialog();
+                detailedDialog.setBounds(100, 100, 1300, 700);
+
+                JPanel panelToAdd = new JPanel();
+
+                GroupLayout gl_panel = new GroupLayout(panelToAdd);
+                gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING));
+                gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING));
+                panelToAdd.setLayout(gl_panel);
+
+                panelToAdd.add(detailedScrollPane);
+                detailedDialog.getContentPane().add(panelToAdd);
+                detailedDialog.setVisible(true);
             }
         });
+        
 
         JMenuItem mntmShowGeneralLifetimeIDU = new JMenuItem("Show PLD");
         mntmShowGeneralLifetimeIDU.addActionListener(new ActionListener() {
@@ -352,31 +220,55 @@ public class Gui extends JFrame implements ActionListener {
                 if (!(currentProject == null)) {
                     zoomInButton.setVisible(true);
                     zoomOutButton.setVisible(true);
-                    TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
-                    final String[] columns = table.constructColumns();
-                    final String[][] rows = table.constructRows();
-                    segmentSizeZoomArea = table.getSegmentSize();
-                    System.out.println("Schemas: " + globalDataKeeper.getAllPPLSchemas().size());
-                    System.out.println("C: " + columns.length + " R: " + rows.length);
-
-                    finalColumnsZoomArea = columns;
-                    finalRowsZoomArea = rows;
-                    tabbedPane.setSelectedIndex(0);
-                    makeGeneralTableIDU();
+                    createPLD();
+                    //tabbedPane.setSelectedIndex(0);
                     fillTree();
+
 
                 } else {
                     JOptionPane.showMessageDialog(null, "Select a Project first");
                     return;
                 }
             }
+            //TODO extracted to be moved
+            private void createPLD() {
+                TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
+                final String[] columns = table.constructColumns();
+                final String[][] rows = table.constructRows();
+                segmentSizeZoomArea = table.getSegmentSize();
+                System.out.println("Schemas: " + globalDataKeeper.getAllPPLSchemas().size());
+                System.out.println("C: " + columns.length + " R: " + rows.length);
+
+                finalColumnsZoomArea = columns;
+                finalRowsZoomArea = rows;
+                tabbedPane.setSelectedIndex(0);
+
+                //Part of generaleableIDU
+                showingPld = true;
+                zoomInButton.setVisible(true);
+                zoomOutButton.setVisible(true);
+                showThisToPopup.setVisible(true);
+
+                generalTable = tableController.makeGeneralTableIDU(finalRowsZoomArea, finalColumnsZoomArea, rowHeight, columnWidth, wholeCol);
+                generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+                rowHeight=tableController.getRowHeight();
+                columnWidth = tableController.getColumnWidth();
+                finalRowsZoomArea = tableController.getFinalRowsZoomArea();
+                finalColumnsZoomArea = tableController.getFinalColumnsZoomArea();
+
+                paintGeneralTableIDU();
+
+            }
+
+
         });
         mnTable.add(mntmShowGeneralLifetimeIDU);
 
         JMenuItem mntmShowGeneralLifetimePhasesPLD = new JMenuItem("Show Phases PLD");
         mntmShowGeneralLifetimePhasesPLD.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-
+                System.out.println("rrrrrank1 "+project);
                 if (!(project == null)) {
                     wholeCol = -1;
                     ParametersJDialog jD = new ParametersJDialog(false);
@@ -401,11 +293,7 @@ public class Gui extends JFrame implements ActionListener {
                         mainEngine.parseInput();
                         System.out.println("\n\n\n");
                         mainEngine.extractPhases(numberOfPhases);
-                        /*
-                         * try { mainEngine.extractReportAssessment1(); } catch (IOException e) {
-                         * e.printStackTrace(); } try { mainEngine.extractReportAssessment2(); } catch
-                         * (IOException e) { e.printStackTrace(); }
-                         */
+                       
                         mainEngine.connectTransitionsWithPhases(globalDataKeeper);
                         globalDataKeeper.setPhaseCollectors(mainEngine.getPhaseCollectors());
 
@@ -435,7 +323,7 @@ public class Gui extends JFrame implements ActionListener {
             }
         });
         mnTable.add(mntmShowGeneralLifetimePhasesPLD);
-
+        
         JMenuItem mntmShowGeneralLifetimePhasesWithClustersPLD = new JMenuItem("Show Phases With Clusters PLD");
         mntmShowGeneralLifetimePhasesWithClustersPLD.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
@@ -496,13 +384,6 @@ public class Gui extends JFrame implements ActionListener {
                             makeGeneralTablePhases();
                             fillClustersTree();
 
-                            /*
-                             * ClusterValidatorMainEngine lala; try { lala = new
-                             * ClusterValidatorMainEngine(globalDataKeeper); lala.run();
-                             * 
-                             * } catch (IOException e) { // TODO Auto-generated catch block
-                             * e.printStackTrace(); }
-                             */
                         } else {
                             JOptionPane.showMessageDialog(null, "Extract Phases first");
                         }
@@ -760,89 +641,13 @@ public class Gui extends JFrame implements ActionListener {
 
         pack();
         setBounds(30, 30, 1300, 700);
-
+        
     }
 
-    
-    private void makeGeneralTableIDU() {
-
-        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea, globalDataKeeper);
-
-        finalRowsZoomArea = sorter.sortRows();
-
-        showingPld = true;
-        zoomInButton.setVisible(true);
-        zoomOutButton.setVisible(true);
-
-        showThisToPopup.setVisible(true);
-
-        int numberOfColumns = finalRowsZoomArea[0].length;
-        int numberOfRows = finalRowsZoomArea.length;
-
-        selectedRows = new ArrayList<Integer>();
-
-        String[][] rows = new String[numberOfRows][numberOfColumns];
-
-        for (int i = 0; i < numberOfRows; i++) {
-
-            rows[i][0] = finalRowsZoomArea[i][0];
-
-        }
-
-        zoomModel = new MyTableModel(finalColumnsZoomArea, rows);
-
-        final JvTable generalTable = new JvTable(zoomModel);
-
-        generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-        if (rowHeight < 1) {
-            rowHeight = 1;
-        }
-        if (columnWidth < 1) {
-            columnWidth = 1;
-        }
-
-        for (int i = 0; i < generalTable.getRowCount(); i++) {
-            generalTable.setRowHeight(i, rowHeight);
-
-        }
-
-        generalTable.setShowGrid(false);
-        generalTable.setIntercellSpacing(new Dimension(0, 0));
-
-        for (int i = 0; i < generalTable.getColumnCount(); i++) {
-            if (i == 0) {
-                generalTable.getColumnModel().getColumn(0).setPreferredWidth(columnWidth);
-
-            } else {
-                generalTable.getColumnModel().getColumn(i).setPreferredWidth(columnWidth);
-
-            }
-        }
-
-        int start = -1;
-        int end = -1;
-        if (globalDataKeeper.getPhaseCollectors() != null && wholeCol != -1 && wholeCol != 0) {
-            start = globalDataKeeper.getPhaseCollectors().get(0).getPhases().get(wholeCol - 1).getStartPos();
-            end = globalDataKeeper.getPhaseCollectors().get(0).getPhases().get(wholeCol - 1).getEndPos();
-        }
-
-        if (wholeCol != -1) {
-            for (int i = 0; i < generalTable.getColumnCount(); i++) {
-                if (!(generalTable.getColumnName(i).equals("Table name"))) {
-                    if (Integer.parseInt(generalTable.getColumnName(i)) >= start
-                            && Integer.parseInt(generalTable.getColumnName(i)) <= end) {
-
-                        generalTable.getColumnModel().getColumn(i).setHeaderRenderer(new IDUHeaderTableRenderer());
-
-                    }
-                }
-            }
-        }
-
+    private void paintGeneralTableIDU() {
         final IDUTableRenderer renderer = new IDUTableRenderer(Gui.this, finalRowsZoomArea, globalDataKeeper,
                 segmentSize);
-        // generalTable.setDefaultRenderer(Object.class, renderer);
+        generalTable.setDefaultRenderer(Object.class, renderer);
 
         generalTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 
@@ -850,7 +655,7 @@ public class Gui extends JFrame implements ActionListener {
 
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                    boolean hasFocus, int row, int column) {
+                                                           boolean hasFocus, int row, int column) {
                 final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
                         column);
 
@@ -864,7 +669,7 @@ public class Gui extends JFrame implements ActionListener {
                 if (column == wholeColZoomArea && wholeColZoomArea != 0) {
 
                     // Refactored: EXTRACT METHOD and MOVE METHOD
-                    String description = globalDataKeeper.constructDescriptionZoomAreaColumn(table, column);
+                    String description = globalDataKeeper.constructDescriptionZoomAreaColumn(table.getColumnName(column));
 
                     descriptionText.setText(description);
 
@@ -873,7 +678,7 @@ public class Gui extends JFrame implements ActionListener {
                     c.setBackground(cl);
                     return c;
                 }
-                
+
                 else if (selectedColumnZoomArea == 0) {
 
                     if (isSelected) {
@@ -881,8 +686,7 @@ public class Gui extends JFrame implements ActionListener {
                         c.setBackground(cl);
 
                         // Refactored: EXTRACT METHOD and MOVE METHOD
-                        String description = globalDataKeeper.constructDescriptionZoomAreaRow(row,
-                                finalRowsZoomArea[row][0]);
+                        String description = globalDataKeeper.constructDescriptionZoomAreaRow(finalRowsZoomArea[row][0]);
 
                         descriptionText.setText(description);
 
@@ -904,9 +708,9 @@ public class Gui extends JFrame implements ActionListener {
 
                         String description = "";
                         if (!table.getColumnName(column).contains("Table name")) {
-                            
+
                             // Refactored: EXTRACT METHOD and MOVE METHOD
-                            description = globalDataKeeper.constructDescriptionZoomAreaCell(table, column, finalRowsZoomArea[row][0]);
+                            description = globalDataKeeper.constructDescriptionZoomAreaCell(table.getColumnName(column), finalRowsZoomArea[row][0]);
                             descriptionText.setText(description);
                         }
                         Color cl = new Color(255, 69, 0, 100);
@@ -926,7 +730,6 @@ public class Gui extends JFrame implements ActionListener {
                     if (numericValue == 0) {
                         insersionColor = new Color(154, 205, 50, 200);
                     } else if (numericValue > 0 && numericValue <= segmentSizeZoomArea[3]) {
-
                         insersionColor = new Color(176, 226, 255);
                     } else if (numericValue > segmentSizeZoomArea[3] && numericValue <= 2 * segmentSizeZoomArea[3]) {
                         insersionColor = new Color(92, 172, 238);
@@ -1050,6 +853,7 @@ public class Gui extends JFrame implements ActionListener {
 
         });
 
+        //stays back
         zoomAreaTable = generalTable;
         tmpScrollPaneZoomArea.setViewportView(zoomAreaTable);
         tmpScrollPaneZoomArea.setAlignmentX(0);
@@ -1060,7 +864,192 @@ public class Gui extends JFrame implements ActionListener {
 
         lifeTimePanel.setCursor(getCursor());
         lifeTimePanel.add(tmpScrollPaneZoomArea);
+    }
 
+    private void paintDetailedTable(boolean levelized){
+        tmpLifeTimeTable = tableController.getTmpLifeTimeTable();
+        tmpLifeTimeTable.setName("LifeTimeTable");
+        segmentSizeDetailedTable = tableController.getSegmentSizeDetailedTable();
+        tmpLifeTimeTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                                           boolean hasFocus, int row, int column) {
+                final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
+                        column);
+
+                String tmpValue = (String) table.getValueAt(row, column);
+                String columnName = table.getColumnName(column);
+                Color fr = new Color(0, 0, 0);
+                c.setForeground(fr);
+
+                if (selectedColumn == 0) {
+                    if (isSelected) {
+                        Color cl = new Color(255, 69, 0, 100);
+
+                        c.setBackground(cl);
+
+                        return c;
+                    }
+                } else {
+                    if (isSelected && hasFocus) {
+
+                        c.setBackground(Color.YELLOW);
+                        return c;
+                    }
+
+                }
+
+                try {
+                    int numericValue = Integer.parseInt(tmpValue);
+                    Color insersionColor = null;
+
+                    if (columnName.equals("I")) {
+                        if (numericValue == 0) {
+                            insersionColor = new Color(255, 231, 186);
+                        } else if (numericValue > 0 && numericValue <= segmentSizeDetailedTable[0]) {
+
+                            insersionColor = new Color(193, 255, 193);
+                        } else if (numericValue > segmentSizeDetailedTable[0]
+                                && numericValue <= 2 * segmentSizeDetailedTable[0]) {
+                            insersionColor = new Color(84, 255, 159);
+                        } else if (numericValue > 2 * segmentSizeDetailedTable[0]
+                                && numericValue <= 3 * segmentSizeDetailedTable[0]) {
+
+                            insersionColor = new Color(0, 201, 87);
+                        } else {
+                            insersionColor = new Color(0, 100, 0);
+                        }
+                        c.setBackground(insersionColor);
+                    }
+
+                    if (columnName.equals("U")) {
+                        if (numericValue == 0) {
+                            insersionColor = new Color(255, 231, 186);
+                        } else if (numericValue > 0 && numericValue <= segmentSizeDetailedTable[1]) {
+
+                            insersionColor = new Color(176, 226, 255);
+                        } else if (numericValue > segmentSizeDetailedTable[1]
+                                && numericValue <= 2 * segmentSizeDetailedTable[1]) {
+                            insersionColor = new Color(92, 172, 238);
+                        } else if (numericValue > 2 * segmentSizeDetailedTable[1]
+                                && numericValue <= 3 * segmentSizeDetailedTable[1]) {
+
+                            insersionColor = new Color(28, 134, 238);
+                        } else {
+                            insersionColor = new Color(16, 78, 139);
+                        }
+                        c.setBackground(insersionColor);
+                    }
+
+                    if (columnName.equals("D")) {
+                        if (numericValue == 0) {
+                            insersionColor = new Color(255, 231, 186);
+                        } else if (numericValue > 0 && numericValue <= segmentSizeDetailedTable[2]) {
+
+                            insersionColor = new Color(255, 106, 106);
+                        } else if (numericValue > segmentSizeDetailedTable[2]
+                                && numericValue <= 2 * segmentSizeDetailedTable[2]) {
+                            insersionColor = new Color(255, 0, 0);
+                        } else if (numericValue > 2 * segmentSizeDetailedTable[2]
+                                && numericValue <= 3 * segmentSizeDetailedTable[2]) {
+
+                            insersionColor = new Color(205, 0, 0);
+                        } else {
+                            insersionColor = new Color(139, 0, 0);
+                        }
+                        c.setBackground(insersionColor);
+                    }
+
+                    return c;
+                } catch (Exception e) {
+
+                    if (tmpValue.equals("")) {
+                        c.setBackground(Color.black);
+                        return c;
+                    } else {
+                        if (columnName.contains("v")) {
+                            c.setBackground(Color.lightGray);
+                            if (levelized == false) {
+                                setToolTipText(columnName);
+                            }
+                        } else {
+                            Color tableNameColor = new Color(205, 175, 149);
+                            c.setBackground(tableNameColor);
+                        }
+                        return c;
+                    }
+                }
+            }
+        });
+
+    }
+
+    private void createFileJMenu(JMenuBar menuBar) {
+        JMenu mnFile = new JMenu("File");
+        menuBar.add(mnFile);
+
+        JMenuItem mntmCreateProject = new JMenuItem("Create Project");
+        mntmCreateProject.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                fileController.createProject("","","","","","");
+
+                getInfoFromFileController();
+                fillTable();
+                fillTree();
+            }
+        });
+        mnFile.add(mntmCreateProject);
+
+        JMenuItem mntmLoadProject = new JMenuItem("Load Project");
+        mntmLoadProject.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                File dir = new File("filesHandler/inis");
+                JFileChooser fcOpen1 = new JFileChooser();
+                fcOpen1.setCurrentDirectory(dir);
+                int returnVal = fcOpen1.showDialog(Gui.this, "Open");
+
+                project = fileController.loadProjectAction(returnVal==JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
+
+                getInfoFromFileController();
+                System.out.println("rataata"+project);
+                fillTable();
+                fillTree();
+            }
+        });
+        mnFile.add(mntmLoadProject);
+
+        JMenuItem mntmEditProject = new JMenuItem("Edit Project");
+        mntmEditProject.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                File dir = new File("filesHandler/inis");
+                JFileChooser fcOpen1 = new JFileChooser();
+                fcOpen1.setCurrentDirectory(dir);
+                int returnVal = fcOpen1.showDialog(Gui.this, "Open");
+
+                fileController.editProject(returnVal == JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
+
+                getInfoFromFileController();
+                fillTable();
+                fillTree();
+            }
+        });
+        mnFile.add(mntmEditProject);
+    }
+    
+    
+    public void getInfoFromFileController() {
+        project = fileController.getProject();
+        projectName = fileController.getProjectName();
+        datasetTxt = fileController.getDatasetTxt();
+        inputCsv = fileController.getInputCsv();
+        outputAssessment1 = fileController.getOutputAssessment1();
+        outputAssessment2 = fileController.getOutputAssessment2();
+        transitionsFile = fileController.getTransitionsFile();
+        currentProject = fileController.getCurrentProject();
+        globalDataKeeper = fileController.getGlobalDataKeeper();
     }
 
     
@@ -1083,7 +1072,7 @@ public class Gui extends JFrame implements ActionListener {
         }
 
         generalModel = new MyTableModel(finalColumns, rows);
-        final JvTable generalTable = new JvTable(generalModel);
+        generalTable = new JvTable(generalModel);
 
         generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
@@ -1119,7 +1108,7 @@ public class Gui extends JFrame implements ActionListener {
                 if (column == wholeCol && wholeCol != 0) {
 
                     //Refactored: EXTRACT METHOD AND MOVE METHOD
-                    String description = globalDataKeeper.constructDescriptionPLDColumns(table, column);
+                    String description = globalDataKeeper.constructDescriptionPLDColumns(table.getColumnName(column), column);
 
                     descriptionText.setText(description);
 
@@ -1136,7 +1125,7 @@ public class Gui extends JFrame implements ActionListener {
                             
                         } else {
                             //Refactored: EXTRACT METHOD AND MOVE METHOD
-                            description = globalDataKeeper.constructDescriptionPLDPhases(row, finalRows[row][0]);
+                            description = globalDataKeeper.constructDescriptionPLDPhases(finalRows[row][0]);
                         }
                         
                         descriptionText.setText(description);
@@ -1163,11 +1152,11 @@ public class Gui extends JFrame implements ActionListener {
                             if (finalRows[row][0].contains("Cluster")) {
 
                                 //Refactored: EXTRACT METHOD AND MOVE METHOD
-                                description = globalDataKeeper.constructDescriptionPLDCell(table, row, column, tmpValue, finalRows[row][0]);
+                                description = globalDataKeeper.constructDescriptionPLDCell(table.getColumnName(column), row, column, tmpValue, finalRows[row][0]);
 
                             } else {
                                 //Refactored: EXTRACT METHOD AND MOVE METHOD
-                                description = globalDataKeeper.constructDescriptionPLDPhasesCell(table, row, column, tmpValue, finalRows[row][0]);
+                                description = globalDataKeeper.constructDescriptionPLDPhasesCell(table.getColumnName(column), column, tmpValue);
                             }
 
                             descriptionText.setText(description);
@@ -1297,7 +1286,10 @@ public class Gui extends JFrame implements ActionListener {
                 System.out.println("Column index selected " + wholeCol + " " + name);
                 generalTable.repaint();
                 if (showingPld) {
-                    makeGeneralTableIDU();
+                    generalTable = tableController.makeGeneralTableIDU(finalRowsZoomArea,finalColumnsZoomArea,rowHeight,rowHeight,wholeCol);
+                    paintGeneralTableIDU();
+                    //makeGeneralTableIDU();
+
                 }
             }
         });
@@ -1317,7 +1309,9 @@ public class Gui extends JFrame implements ActionListener {
                             wholeCol = -1;
                             generalTable.repaint();
                             if (showingPld) {
-                                makeGeneralTableIDU();
+                                generalTable = tableController.makeGeneralTableIDU(finalRowsZoomArea,finalColumnsZoomArea,rowHeight,columnWidth,wholeCol);
+                                paintGeneralTableIDU();
+                                //makeGeneralTableIDU();
                             }
                         }
                     });
@@ -1468,7 +1462,7 @@ public class Gui extends JFrame implements ActionListener {
 
                 if (column == wholeColZoomArea) {
                     //Refactored: EXTRACT METHOD AND MOVE METHOD 
-                    String description = globalDataKeeper.constructDescriptionZoomAreaPhasesColumn(rowsZoom, table, column);
+                    String description = globalDataKeeper.constructDescriptionZoomAreaPhasesColumn(rowsZoom, table.getColumnName(column), column);
 
                     descriptionText.setText(description);
                     Color cl = new Color(255, 69, 0, 100);
@@ -1478,7 +1472,7 @@ public class Gui extends JFrame implements ActionListener {
                 } else if (selectedColumnZoomArea == 0) {
                     if (isSelected) {
                         //Refactored: EXTRACT METHOD AND MOVE METHOD 
-                        String description = globalDataKeeper.constructDescriptionZoomAreaPhasesRow(table, row, finalRowsZoomArea[row][0]);
+                        String description = globalDataKeeper.constructDescriptionZoomAreaPhasesRow(table.getColumnName(column), table.getColumnName(1), table.getColumnName(table.getColumnCount()-1));
                         descriptionText.setText(description);
 
                         Color cl = new Color(255, 69, 0, 100);
@@ -1492,7 +1486,7 @@ public class Gui extends JFrame implements ActionListener {
                         String description = "";
                         if (!table.getColumnName(column).contains("Table name")) {
                             //Refactored: EXTRACT METHOD AND MOVE METHOD 
-                            description = globalDataKeeper.constructDescriptionZoomAreaPhasesRowCell(table, row, column,  finalRowsZoomArea[row][0]);
+                            description = globalDataKeeper.constructDescriptionZoomAreaPhasesRowCell(table.getColumnName(column));
                             descriptionText.setText(description);
                         }
 
@@ -1685,7 +1679,7 @@ public class Gui extends JFrame implements ActionListener {
                 if (column == wholeColZoomArea && wholeColZoomArea != 0) {
 
                     //Refactored: EXTRACT METHOD AND MOVE METHOD
-                    String description = globalDataKeeper.constructDescriptionZoomAreaClusterColumn(table, column);
+                    String description = globalDataKeeper.constructDescriptionZoomAreaClusterColumn(table.getColumnName(column), column);
                     descriptionText.setText(description);
 
                     Color cl = new Color(255, 69, 0, 100);
@@ -1696,7 +1690,8 @@ public class Gui extends JFrame implements ActionListener {
                     if (isSelected) {
 
                         //Refactored: EXTRACT METHOD AND MOVE METHOD
-                        String description = globalDataKeeper.constructDescriptionZoomAreaClusterRow(row, finalRowsZoomArea[row][0]);
+                        finalRowsZoomArea = tableController.getFinalRowsZoomArea();
+                        String description = globalDataKeeper.constructDescriptionZoomAreaClusterRow(finalRowsZoomArea[row][0]);
                         descriptionText.setText(description);
 
                         Color cl = new Color(255, 69, 0, 100);
@@ -1712,7 +1707,8 @@ public class Gui extends JFrame implements ActionListener {
                         if (!table.getColumnName(column).contains("Table name")) {
 
                             //Refactored: EXTRACT METHOD AND MOVE METHOD
-                            description = globalDataKeeper.constructDescriptionZoomAreaClusterCell(table, row, column, tmpValue, finalRowsZoomArea[row][0]);
+                            finalRowsZoomArea = tableController.getFinalRowsZoomArea();
+                            description = globalDataKeeper.constructDescriptionZoomAreaClusterCell(table.getColumnName(column), tmpValue, finalRowsZoomArea[row][0]);
                             descriptionText.setText(description);
 
                         }
@@ -1874,215 +1870,7 @@ public class Gui extends JFrame implements ActionListener {
         lifeTimePanel.add(tmpScrollPaneZoomArea);
     }
 
-    private JvTable setTableWidth(JvTable tmpLifeTimeTable, int colIndex, int preferedWidth) {
-        tmpLifeTimeTable.getColumnModel().getColumn(colIndex).setPreferredWidth(preferedWidth);
-        tmpLifeTimeTable.getColumnModel().getColumn(colIndex).setMaxWidth(preferedWidth);
-        tmpLifeTimeTable.getColumnModel().getColumn(colIndex).setMinWidth(preferedWidth);
-
-        return tmpLifeTimeTable;
-    }
-
-    //TODO from here down
-    protected void makeDetailedTable(String[] columns, String[][] rows, final boolean levelized) {
-
-        detailedModel = new MyTableModel(columns, rows);
-
-        final JvTable tmpLifeTimeTable = new JvTable(detailedModel);
-
-        tmpLifeTimeTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-        if (levelized == true) {
-            for (int i = 0; i < tmpLifeTimeTable.getColumnCount(); i++) {
-                if (i == 0) {
-                    /**Refactored: Extracted Method**/
-                    setTableWidth(tmpLifeTimeTable,0,150);
-                } else {
-                    if (tmpLifeTimeTable.getColumnName(i).contains("v")) {
-                        /**Refactored: Extracted Method**/
-                        setTableWidth(tmpLifeTimeTable,i,100);
-                        /*
-                        tmpLifeTimeTable.getColumnModel().getColumn(i).setPreferredWidth(100);
-                        tmpLifeTimeTable.getColumnModel().getColumn(i).setMaxWidth(100);
-                        tmpLifeTimeTable.getColumnModel().getColumn(i).setMinWidth(100);*/
-                    } else {
-
-                        /**Refactored: Extracted Method**/
-                        setTableWidth(tmpLifeTimeTable,i,25);
-
-                        /*tmpLifeTimeTable.getColumnModel().getColumn(i).setPreferredWidth(25);
-                        tmpLifeTimeTable.getColumnModel().getColumn(i).setMaxWidth(25);
-                        tmpLifeTimeTable.getColumnModel().getColumn(i).setMinWidth(25);*/
-                    }
-                }
-            }
-        } else {
-            for (int i = 0; i < tmpLifeTimeTable.getColumnCount(); i++) {
-                if (i == 0) {
-                    /**Refactored: Extracted Method**/
-                    setTableWidth(tmpLifeTimeTable,0,150);
-                } else {
-                    /**Refactored: Extracted Method**/
-                    setTableWidth(tmpLifeTimeTable,i,20);
-
-                    /*tmpLifeTimeTable.getColumnModel().getColumn(i).setPreferredWidth(20);
-                    tmpLifeTimeTable.getColumnModel().getColumn(i).setMaxWidth(20);
-                    tmpLifeTimeTable.getColumnModel().getColumn(i).setMinWidth(20);*/
-
-                }
-            }
-        }
-
-        tmpLifeTimeTable.setName("LifeTimeTable");
-
-        tmpLifeTimeTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                    boolean hasFocus, int row, int column) {
-                final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
-                        column);
-
-                String tmpValue = (String) table.getValueAt(row, column);
-                String columnName = table.getColumnName(column);
-                Color fr = new Color(0, 0, 0);
-                c.setForeground(fr);
-
-                if (selectedColumn == 0) {
-                    if (isSelected) {
-                        Color cl = new Color(255, 69, 0, 100);
-
-                        c.setBackground(cl);
-
-                        return c;
-                    }
-                } else {
-                    if (isSelected && hasFocus) {
-
-                        c.setBackground(Color.YELLOW);
-                        return c;
-                    }
-
-                }
-
-                try {
-                    int numericValue = Integer.parseInt(tmpValue);
-                    Color insersionColor = null;
-
-                    if (columnName.equals("I")) {
-                        if (numericValue == 0) {
-                            insersionColor = new Color(255, 231, 186);
-                        } else if (numericValue > 0 && numericValue <= segmentSizeDetailedTable[0]) {
-
-                            insersionColor = new Color(193, 255, 193);
-                        } else if (numericValue > segmentSizeDetailedTable[0]
-                                && numericValue <= 2 * segmentSizeDetailedTable[0]) {
-                            insersionColor = new Color(84, 255, 159);
-                        } else if (numericValue > 2 * segmentSizeDetailedTable[0]
-                                && numericValue <= 3 * segmentSizeDetailedTable[0]) {
-
-                            insersionColor = new Color(0, 201, 87);
-                        } else {
-                            insersionColor = new Color(0, 100, 0);
-                        }
-                        c.setBackground(insersionColor);
-                    }
-
-                    if (columnName.equals("U")) {
-                        if (numericValue == 0) {
-                            insersionColor = new Color(255, 231, 186);
-                        } else if (numericValue > 0 && numericValue <= segmentSizeDetailedTable[1]) {
-
-                            insersionColor = new Color(176, 226, 255);
-                        } else if (numericValue > segmentSizeDetailedTable[1]
-                                && numericValue <= 2 * segmentSizeDetailedTable[1]) {
-                            insersionColor = new Color(92, 172, 238);
-                        } else if (numericValue > 2 * segmentSizeDetailedTable[1]
-                                && numericValue <= 3 * segmentSizeDetailedTable[1]) {
-
-                            insersionColor = new Color(28, 134, 238);
-                        } else {
-                            insersionColor = new Color(16, 78, 139);
-                        }
-                        c.setBackground(insersionColor);
-                    }
-
-                    if (columnName.equals("D")) {
-                        if (numericValue == 0) {
-                            insersionColor = new Color(255, 231, 186);
-                        } else if (numericValue > 0 && numericValue <= segmentSizeDetailedTable[2]) {
-
-                            insersionColor = new Color(255, 106, 106);
-                        } else if (numericValue > segmentSizeDetailedTable[2]
-                                && numericValue <= 2 * segmentSizeDetailedTable[2]) {
-                            insersionColor = new Color(255, 0, 0);
-                        } else if (numericValue > 2 * segmentSizeDetailedTable[2]
-                                && numericValue <= 3 * segmentSizeDetailedTable[2]) {
-
-                            insersionColor = new Color(205, 0, 0);
-                        } else {
-                            insersionColor = new Color(139, 0, 0);
-                        }
-                        c.setBackground(insersionColor);
-                    }
-
-                    return c;
-                } catch (Exception e) {
-
-                    if (tmpValue.equals("")) {
-                        c.setBackground(Color.black);
-                        return c;
-                    } else {
-                        if (columnName.contains("v")) {
-                            c.setBackground(Color.lightGray);
-                            if (levelized == false) {
-                                setToolTipText(columnName);
-                            }
-                        } else {
-                            Color tableNameColor = new Color(205, 175, 149);
-                            c.setBackground(tableNameColor);
-                        }
-                        return c;
-                    }
-
-                }
-            }
-        });
-
-        tmpLifeTimeTable.setOpaque(true);
-
-        tmpLifeTimeTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        tmpLifeTimeTable.getSelectionModel().addListSelectionListener(new RowListener());
-        tmpLifeTimeTable.getColumnModel().getSelectionModel().addListSelectionListener(new ColumnListener());
-
-        JScrollPane detailedScrollPane = new JScrollPane();
-        detailedScrollPane.setViewportView(tmpLifeTimeTable);
-        detailedScrollPane.setAlignmentX(0);
-        detailedScrollPane.setAlignmentY(0);
-        detailedScrollPane.setBounds(0, 0, 1280, 650);
-        detailedScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        detailedScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-
-        detailedScrollPane.setCursor(getCursor());
-
-        JDialog detailedDialog = new JDialog();
-        detailedDialog.setBounds(100, 100, 1300, 700);
-
-        JPanel panelToAdd = new JPanel();
-
-        GroupLayout gl_panel = new GroupLayout(panelToAdd);
-        gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING));
-        gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING));
-        panelToAdd.setLayout(gl_panel);
-
-        panelToAdd.add(detailedScrollPane);
-        detailedDialog.getContentPane().add(panelToAdd);
-        detailedDialog.setVisible(true);
-
-    }
-
-
+    
     private class RowListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent event) {
             if (event.getValueIsAdjusting()) {
@@ -2096,6 +1884,7 @@ public class Gui extends JFrame implements ActionListener {
         }
     }
 
+    
     private class ColumnListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent event) {
             if (event.getValueIsAdjusting()) {
@@ -2105,36 +1894,14 @@ public class Gui extends JFrame implements ActionListener {
         }
     }
 
+    
     @Override
     public void actionPerformed(ActionEvent arg0) {
         // TODO Auto-generated method stub
 
     }
 
-    public void importData(String fileName) throws IOException, RecognitionException {
-
-        readProject(fileName);
-
-        System.out.println("Project Name:" + projectName);
-        System.out.println("Dataset txt:" + datasetTxt);
-        System.out.println("Input Csv:" + inputCsv);
-        System.out.println("Output Assessment1:" + outputAssessment1);
-        System.out.println("Output Assessment2:" + outputAssessment2);
-        System.out.println("Transitions File:" + transitionsFile);
-
-        globalDataKeeper = new GlobalDataKeeper(datasetTxt, transitionsFile);
-        globalDataKeeper.setData();
-        System.out.println(globalDataKeeper.getAllPPLTables().size());
-
-        System.out.println(fileName);
-
-        fillTable();
-        fillTree();
-
-        currentProject = fileName;
-
-    }
-
+    
     public void fillTable() {
         TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
         final String[] columns = table.constructColumns();
@@ -2144,7 +1911,11 @@ public class Gui extends JFrame implements ActionListener {
         finalColumnsZoomArea = columns;
         finalRowsZoomArea = rows;
         tabbedPane.setSelectedIndex(0);
-        makeGeneralTableIDU();
+        generalTable = tableController.makeGeneralTableIDU(finalRowsZoomArea,finalColumnsZoomArea,rowHeight,columnWidth,wholeCol );
+        paintGeneralTableIDU();
+
+        finalRowsZoomArea = tableController.getFinalRowsZoomArea();
+        finalColumnsZoomArea = tableController.getFinalColumnsZoomArea();
 
         timeWeight = (float) 0.5;
         changeWeight = (float) 0.5;
@@ -2191,24 +1962,9 @@ public class Gui extends JFrame implements ActionListener {
         System.out.println("Schemas:" + globalDataKeeper.getAllPPLSchemas().size());
         System.out.println("Transitions:" + globalDataKeeper.getAllPPLTransitions().size());
         System.out.println("Tables:" + globalDataKeeper.getAllPPLTables().size());
-
-        /*
-         * ClusterValidatorMainEngine lala; try { lala = new
-         * ClusterValidatorMainEngine(globalDataKeeper); lala.run();
-         * //lala.getExternalEvaluationReport();
-         * getExternalValidityReport(lala.getExternalEvaluationReport());
-         * 
-         * } catch (IOException e) { // TODO Auto-generated catch block
-         * e.printStackTrace(); }
-         */
-        // optimize();
-        /*
-         * try { getExternalValidityReport(); } catch (IOException e) { // TODO
-         * Auto-generated catch block e.printStackTrace(); }
-         */
-
     }
 
+    
     public void optimize() throws IOException {
 
         String lalaString = "Birth Weight:" + "\tDeath Weight:" + "\tChange Weight:" + "\tTotal Cohesion:"
@@ -2253,6 +2009,7 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    
     public void getExternalValidityReport() throws IOException {
 
         String lalaString = "Birth Weight:" + "\tDeath Weight:" + "\tChange Weight:" + "\n";
@@ -2306,6 +2063,7 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    
     public void fillTree() {
 
         TreeConstructionGeneral tc = new TreeConstructionGeneral(globalDataKeeper);
@@ -2373,6 +2131,7 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    
     public void fillPhasesTree() {
 
         TreeConstructionPhases tc = new TreeConstructionPhases(globalDataKeeper);
@@ -2426,6 +2185,7 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    
     public void fillClustersTree() {
 
         TreeConstructionPhasesWithClusters tc = new TreeConstructionPhasesWithClusters(globalDataKeeper);
@@ -2479,60 +2239,36 @@ public class Gui extends JFrame implements ActionListener {
         sideMenu.repaint();
 
     }
+
     
-    private void readProject(String fileName) throws FileNotFoundException, IOException {
-        BufferedReader br;
-        br = new BufferedReader(new FileReader(fileName));
-        String line;
-
-        while (true) {
-            line = br.readLine();
-            if (line == null)
-                break;
-            if (line.contains("Project-name")) {
-                String[] projectNameTable = line.split(":");
-                projectName = projectNameTable[1];
-            } else if (line.contains("Dataset-txt")) {
-                String[] datasetTxtTable = line.split(":");
-                datasetTxt = datasetTxtTable[1];
-            } else if (line.contains("Input-csv")) {
-                String[] inputCsvTable = line.split(":");
-                inputCsv = inputCsvTable[1];
-            } else if (line.contains("Assessement1-output")) {
-                String[] outputAss1 = line.split(":");
-                outputAssessment1 = outputAss1[1];
-            } else if (line.contains("Assessement2-output")) {
-                String[] outputAss2 = line.split(":");
-                outputAssessment2 = outputAss2[1];
-            } else if (line.contains("Transition-xml")) {
-                String[] transitionXmlTable = line.split(":");
-                transitionsFile = transitionXmlTable[1];
-            }
-
-        }
-        ;
-
-        br.close();
-    }
-
     public void setDescription(String descr) {
         descriptionText.setText(descr);
     }
 
+    public int getSelectedColumn() {
+        return selectedColumn;
+    }
     
     //for testing
     public MyTableModel getGeneralModel() {
         return generalModel;
     }
-    
+
+
     //for testing
     public MyTableModel getZoomModel() {
+        zoomModel = tableController.getZoomModel();
         return zoomModel;
     }
-    
+
+    //for testing
+    public TableController getTableController() {
+        return tableController;
+    }
+
     //for testing
     public MyTableModel getDetailedModel() {
         return detailedModel;
     }
-    
+
 }

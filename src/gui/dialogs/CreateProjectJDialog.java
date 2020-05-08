@@ -1,22 +1,12 @@
 package gui.dialogs;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.GroupLayout;
+import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JTextField;
-
-import java.awt.event.ActionListener;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -29,14 +19,15 @@ public class CreateProjectJDialog extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
-	private JTextField textFieldProjectName;
-	private JTextField textFieldDatasetTxt;
-	private JTextField textFieldInputCsv;
-	private JTextField textFieldAss1;
-	private JTextField textFieldAss2;
-	private JTextField textFieldTransXml;
-	private File fileToCreate=null;
-	private boolean confirm=false;
+	protected JTextField textFieldProjectName;
+	protected JTextField textFieldDatasetTxt;
+	protected JTextField textFieldInputCsv;
+	protected JTextField textFieldAss1;
+	protected JTextField textFieldAss2;
+	protected JTextField textFieldTransXml;
+	protected File fileToCreate=null;
+	protected boolean confirm=false;
+	protected JButton okButton;
 
 
 	/**
@@ -266,7 +257,7 @@ public class CreateProjectJDialog extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
@@ -377,5 +368,8 @@ public class CreateProjectJDialog extends JDialog {
 		
 		return confirm;
 	}
-	
+
+	public void triggerOkButton() {
+		okButton.doClick();
+	}
 }
