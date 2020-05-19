@@ -55,5 +55,5 @@ public class ShowFullDetailedLifetimeTableListener extends JFrame implements Act
         detailedDialog.getContentPane().add(panelToAdd);
         detailedDialog.setVisible(true);
     }
-    
+
 }

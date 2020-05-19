@@ -53,10 +53,6 @@ public class Gui extends JFrame implements ActionListener {
     private JPanel contentPane;
     private JPanel lifeTimePanel = new JPanel();
 
-    public JTabbedPane getTabbedPane() {
-        return tabbedPane;
-    }
-
     private JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
     private MyTableModel generalModel = null;
@@ -72,22 +68,10 @@ public class Gui extends JFrame implements ActionListener {
 
     private static ArrayList<Integer> selectedRows = new ArrayList<Integer>();
 
-    public GlobalDataKeeper getGlobalDataKeeper() {
-        return globalDataKeeper;
-    }
-
     protected GlobalDataKeeper globalDataKeeper = null;
 
     private String[] finalColumns = null;
     private String[][] finalRows = null;
-
-    public void setFinalColumns(String[] finalColumns) {
-        this.finalColumns = finalColumns;
-    }
-
-    public void setFinalRows(String[][] finalRows) {
-        this.finalRows = finalRows;
-    }
 
     private String[] finalColumnsZoomArea = null;
     private String[][] finalRowsZoomArea = null;
@@ -96,16 +80,7 @@ public class Gui extends JFrame implements ActionListener {
 
 
     private String currentProject = null;
-
-    public String getProject() {
-        return project;
-    }
-
     protected String project = null;
-
-    public void setSegmentSize(Integer[] segmentSize) {
-        this.segmentSize = segmentSize;
-    }
 
     private Integer[] segmentSize = new Integer[4];
     private Integer[] segmentSizeZoomArea = new Integer[4];
@@ -124,31 +99,6 @@ public class Gui extends JFrame implements ActionListener {
     private String projectName = "";
     private String datasetTxt = "";
     private String inputCsv = "";
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public String getDatasetTxt() {
-        return datasetTxt;
-    }
-
-    public String getInputCsv() {
-        return inputCsv;
-    }
-
-    public String getOutputAssessment1() {
-        return outputAssessment1;
-    }
-
-    public String getOutputAssessment2() {
-        return outputAssessment2;
-    }
-
-    public String getTransitionsFile() {
-        return transitionsFile;
-    }
-
     private String outputAssessment1 = "";
     private String outputAssessment2 = "";
     private String transitionsFile = "";
@@ -175,14 +125,6 @@ public class Gui extends JFrame implements ActionListener {
 
     protected int selectedColumn = -1;
     private int selectedColumnZoomArea = -1;
-
-    public int getWholeCol() {
-        return wholeCol;
-    }
-
-    public void setWholeCol(int wholeCol) {
-        this.wholeCol = wholeCol;
-    }
 
     private int wholeCol = -1;
     private int wholeColZoomArea = -1;
@@ -2170,6 +2112,54 @@ public class Gui extends JFrame implements ActionListener {
 
     public DetailedTableGraphicComputation getDetailedTableToConstruct() {
         return detailedTableToConstruct;
+    }
+
+    public int getWholeCol() {
+        return wholeCol;
+    }
+
+    public void setWholeCol(int wholeCol) {
+        this.wholeCol = wholeCol;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public String getDatasetTxt() {
+        return datasetTxt;
+    }
+
+    public String getInputCsv() {
+        return inputCsv;
+    }
+
+    public String getOutputAssessment1() {
+        return outputAssessment1;
+    }
+
+    public String getOutputAssessment2() {
+        return outputAssessment2;
+    }
+
+    public String getTransitionsFile() {
+        return transitionsFile;
+    }
+
+    public JTabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
+
+    public void setFinalColumns(String[] finalColumns) {
+        this.finalColumns = finalColumns;
+    }
+
+    public void setFinalRows(String[][] finalRows) {
+        this.finalRows = finalRows;
+    }
+
+    public void setSegmentSize(Integer[] segmentSize) {
+        this.segmentSize = segmentSize;
     }
 
     //for testing

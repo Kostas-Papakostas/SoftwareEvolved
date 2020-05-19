@@ -68,7 +68,7 @@ public class ShowPhasesWithClustersPLDListener implements ActionListener {
                     final String[] columns = table.constructColumns();
                     final String[][] rows = table.constructRows();
                     gui.setSegmentSize(table.getSegmentSize());
-                    System.out.println("Schemas: " + gui.getGlobalDataKeeper().getAllPPLSchemas().size());
+                    System.out.println("Schemas: " + FileController.getGlobalDataKeeper().getAllPPLSchemas().size());
                     System.out.println("C: " + columns.length + " R: " + rows.length);
 
                     gui.setFinalColumns(columns);
