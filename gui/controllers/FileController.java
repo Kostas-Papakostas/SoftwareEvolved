@@ -1,4 +1,4 @@
-package gui.actionListeners;
+package gui.controllers;
 
 import data.dataKeeper.GlobalDataKeeper;
 import gui.dialogs.CreateProjectJDialog;
@@ -9,8 +9,8 @@ import java.io.*;
 
 public class FileController {
     private static FileController singleInstance = null;
-    private GlobalDataKeeper globalDataKeeper;
-    private String project;
+    private static GlobalDataKeeper globalDataKeeper;
+    private static String project;
     private String projectName;
     private String datasetTxt;
     private String inputCsv;
@@ -92,7 +92,7 @@ public class FileController {
         return internalProject;
     }
     
-    public void createProject(String projectName,String datasetTxt,String inputCsv,String ass1,String ass2,String transXml) {
+    public boolean createProject(String projectName,String datasetTxt,String inputCsv,String ass1,String ass2,String transXml) {
         CreateProjectJDialog createProjectDialog = new CreateProjectJDialog(projectName, datasetTxt, inputCsv, ass1, ass2, transXml);
         createProjectDialog.setModal(true);
         createProjectDialog.setVisible(true);
@@ -104,7 +104,9 @@ public class FileController {
             System.out.println(file.toString());
             //TODO some kind of test? It the same with load project
             loadProjectAction(true, file);
+            return true;
         }
+        return false;
     }
     
     public void editProject(boolean isApproved, File inputFile) {
@@ -164,15 +166,11 @@ public class FileController {
         currentProject = fileName;
     }
 
-
-
-
-
-    public GlobalDataKeeper getGlobalDataKeeper() {
+    public static GlobalDataKeeper getGlobalDataKeeper() {
         return globalDataKeeper;
     }
 
-    public String getProject() {
+    public static String getProject() {
         return project;
     }
     

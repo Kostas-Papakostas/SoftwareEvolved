@@ -4,17 +4,21 @@ package tests;
 
 //import org.junit.Test;
 
-import gui.actionListeners.FileController;
+import gui.controllers.FileController;
 import gui.mainEngine.Gui;
 import gui.tableElements.commons.MyTableModel;
-import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.Test;
+
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.Test;
+
+//import static org.junit.jupiter.api.Assertions.assertEquals;
 
 //import static org.junit.Assert.assertEquals;
 

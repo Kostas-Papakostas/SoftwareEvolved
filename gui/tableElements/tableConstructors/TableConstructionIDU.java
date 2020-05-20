@@ -1,15 +1,15 @@
 package gui.tableElements.tableConstructors;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
-
 import data.dataKeeper.GlobalDataKeeper;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import data.dataPPL.pplSQLSchema.PPLTable;
 import data.dataPPL.pplTransition.AtomicChange;
 import data.dataPPL.pplTransition.PPLTransition;
 import data.dataPPL.pplTransition.TableChange;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class TableConstructionIDU implements PldConstruction {
 
@@ -31,8 +31,6 @@ public class TableConstructionIDU implements PldConstruction {
 		
 		allPPLSchemas=globalDataKeeper.getAllPPLSchemas();
 		allPPLTransitions=globalDataKeeper.getAllPPLTransitions();
-		
-		
 	}
 	
 	public String[] constructColumns(){

@@ -1,13 +1,17 @@
 package gui.mainEngine;
 
 //try to extract relationship beetween gui and pplSchema and pplTransition
+
 import data.dataKeeper.GlobalDataKeeper;
 import data.dataPPL.pplSQLSchema.PPLSchema;
-import gui.actionListeners.FileController;
-import gui.actionListeners.TableController;
+import gui.actionListeners.*;
+import gui.controllers.FileController;
+import gui.controllers.TableController;
 import gui.dialogs.EnlargeTable;
 import gui.dialogs.ParametersJDialog;
 import gui.dialogs.ProjectInfoDialog;
+import gui.tableComputations.DetailedTableGraphicComputation;
+import gui.tableComputations.GeneralTableGraphicComputation;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 import gui.tableElements.tableConstructors.*;
@@ -34,7 +38,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,20 +52,22 @@ public class Gui extends JFrame implements ActionListener {
 
     private JPanel contentPane;
     private JPanel lifeTimePanel = new JPanel();
+
     private JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
     private MyTableModel generalModel = null;
     private MyTableModel zoomModel = null;
     private MyTableModel detailedModel = null;
 
-    private JvTable LifeTimeTable = null;
+    private static JvTable LifeTimeTable = null;
     private JvTable zoomAreaTable = null;
 
     private JScrollPane tmpScrollPane = new JScrollPane();
     private JScrollPane treeScrollPane = new JScrollPane();
     private JScrollPane tmpScrollPaneZoomArea = new JScrollPane();
 
-    private ArrayList<Integer> selectedRows = new ArrayList<Integer>();
+    private static ArrayList<Integer> selectedRows = new ArrayList<Integer>();
+
     protected GlobalDataKeeper globalDataKeeper = null;
 
     private String[] finalColumns = null;
@@ -72,6 +77,8 @@ public class Gui extends JFrame implements ActionListener {
     private String[][] finalRowsZoomArea = null;
     private String[] firstLevelUndoColumnsZoomArea = null;
     private String[][] firstLevelUndoRowsZoomArea = null;
+
+
     private String currentProject = null;
     protected String project = null;
 
@@ -118,13 +125,12 @@ public class Gui extends JFrame implements ActionListener {
 
     protected int selectedColumn = -1;
     private int selectedColumnZoomArea = -1;
+
     private int wholeCol = -1;
     private int wholeColZoomArea = -1;
 
     private int rowHeight = 1;
     private int columnWidth = 1;
-
-    private JvTable generalTable = null;
 
     private ArrayList<String> tablesSelected = new ArrayList<String>();
 
@@ -136,7 +142,19 @@ public class Gui extends JFrame implements ActionListener {
     
     protected FileController fileController = FileController.getInstance();
     protected TableController tableController = TableController.getInstance();
-    
+
+    private GeneralTableGraphicComputation generalTableToConstruct = GeneralTableGraphicComputation.getInstance();
+    private DetailedTableGraphicComputation detailedTableToConstruct = DetailedTableGraphicComputation.getInstance();
+
+    protected LoadProjectListener loadListener = new LoadProjectListener();
+    protected EditProjectListener editListener = new EditProjectListener();
+    protected CreateProjectListener createListener = new CreateProjectListener();
+    protected ShowPLDListener showPLDListener = new ShowPLDListener();
+    protected ShowFullDetailedLifetimeTableListener showfullDetailedTable = new ShowFullDetailedLifetimeTableListener();
+    protected ShowPhasesWithClustersPLDListener showPhasesClusters = new ShowPhasesWithClustersPLDListener();
+    protected ShowPhasesPLD showPhasesPLDListener = new ShowPhasesPLD();
+
+
     /**
      * Launch the application.
      */
@@ -169,235 +187,8 @@ public class Gui extends JFrame implements ActionListener {
         
         createFileJMenu(menuBar);
 
-        JMenu mnTable = new JMenu("Table");
-        menuBar.add(mnTable);
+        tableActionsJMenu(menuBar);
 
-        JMenuItem mntmShowLifetimeTable = new JMenuItem("Show Full Detailed LifeTime Table");
-        mntmShowLifetimeTable.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                
-                detailedModel = tableController.createFullDetailedLifeTableModel();
-                tabbedPane.setSelectedIndex(0);
-                
-                JvTable tmpLifeTimeTable = tableController.getTmpLifeTimeTable();
-                paintDetailedTable(true);
-                tmpLifeTimeTable.setOpaque(true);
-
-                tmpLifeTimeTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-                tmpLifeTimeTable.getSelectionModel().addListSelectionListener(new RowListener());
-                tmpLifeTimeTable.getColumnModel().getSelectionModel().addListSelectionListener(new ColumnListener());
-
-                JScrollPane detailedScrollPane = new JScrollPane();
-                detailedScrollPane.setViewportView(tmpLifeTimeTable);
-                detailedScrollPane.setAlignmentX(0);
-                detailedScrollPane.setAlignmentY(0);
-                detailedScrollPane.setBounds(0, 0, 1280, 650);
-                detailedScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-                detailedScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-
-                detailedScrollPane.setCursor(getCursor());
-
-                JDialog detailedDialog = new JDialog();
-                detailedDialog.setBounds(100, 100, 1300, 700);
-
-                JPanel panelToAdd = new JPanel();
-
-                GroupLayout gl_panel = new GroupLayout(panelToAdd);
-                gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING));
-                gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING));
-                panelToAdd.setLayout(gl_panel);
-
-                panelToAdd.add(detailedScrollPane);
-                detailedDialog.getContentPane().add(panelToAdd);
-                detailedDialog.setVisible(true);
-            }
-        });
-        
-
-        JMenuItem mntmShowGeneralLifetimeIDU = new JMenuItem("Show PLD");
-        mntmShowGeneralLifetimeIDU.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                if (!(currentProject == null)) {
-                    zoomInButton.setVisible(true);
-                    zoomOutButton.setVisible(true);
-                    createPLD();
-                    //tabbedPane.setSelectedIndex(0);
-                    fillTree();
-
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "Select a Project first");
-                    return;
-                }
-            }
-            //TODO extracted to be moved
-            private void createPLD() {
-                TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
-                final String[] columns = table.constructColumns();
-                final String[][] rows = table.constructRows();
-                segmentSizeZoomArea = table.getSegmentSize();
-                System.out.println("Schemas: " + globalDataKeeper.getAllPPLSchemas().size());
-                System.out.println("C: " + columns.length + " R: " + rows.length);
-
-                finalColumnsZoomArea = columns;
-                finalRowsZoomArea = rows;
-                tabbedPane.setSelectedIndex(0);
-
-                //Part of generaleableIDU
-                showingPld = true;
-                zoomInButton.setVisible(true);
-                zoomOutButton.setVisible(true);
-                showThisToPopup.setVisible(true);
-
-                generalTable = tableController.makeGeneralTableIDU(finalRowsZoomArea, finalColumnsZoomArea, rowHeight, columnWidth, wholeCol);
-                generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-                rowHeight=tableController.getRowHeight();
-                columnWidth = tableController.getColumnWidth();
-                finalRowsZoomArea = tableController.getFinalRowsZoomArea();
-                finalColumnsZoomArea = tableController.getFinalColumnsZoomArea();
-
-                paintGeneralTableIDU();
-
-            }
-
-
-        });
-        mnTable.add(mntmShowGeneralLifetimeIDU);
-
-        JMenuItem mntmShowGeneralLifetimePhasesPLD = new JMenuItem("Show Phases PLD");
-        mntmShowGeneralLifetimePhasesPLD.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                System.out.println("rrrrrank1 "+project);
-                if (!(project == null)) {
-                    wholeCol = -1;
-                    ParametersJDialog jD = new ParametersJDialog(false);
-
-                    jD.setModal(true);
-
-                    jD.setVisible(true);
-
-                    if (jD.getConfirmation()) {
-
-                        timeWeight = jD.getTimeWeight();
-                        changeWeight = jD.getChangeWeight();
-                        preProcessingTime = jD.getPreProcessingTime();
-                        preProcessingChange = jD.getPreProcessingChange();
-                        numberOfPhases = jD.getNumberOfPhases();
-
-                        System.out.println(timeWeight + " " + changeWeight);
-
-                        PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(inputCsv, outputAssessment1,
-                                outputAssessment2, timeWeight, changeWeight, preProcessingTime, preProcessingChange);
-
-                        mainEngine.parseInput();
-                        System.out.println("\n\n\n");
-                        mainEngine.extractPhases(numberOfPhases);
-                       
-                        mainEngine.connectTransitionsWithPhases(globalDataKeeper);
-                        globalDataKeeper.setPhaseCollectors(mainEngine.getPhaseCollectors());
-
-                        if (globalDataKeeper.getPhaseCollectors().size() != 0) {
-                            TableConstructionPhases table = new TableConstructionPhases(globalDataKeeper);
-                            final String[] columns = table.constructColumns();
-                            final String[][] rows = table.constructRows();
-                            segmentSize = table.getSegmentSize();
-                            System.out.println("Schemas: " + globalDataKeeper.getAllPPLSchemas().size());
-                            System.out.println("C: " + columns.length + " R: " + rows.length);
-
-                            finalColumns = columns;
-                            finalRows = rows;
-                            tabbedPane.setSelectedIndex(0);
-                            makeGeneralTablePhases();
-                            fillPhasesTree();
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Extract Phases first");
-                        }
-                    }
-                } else {
-
-                    JOptionPane.showMessageDialog(null, "Please select a project first!");
-
-                }
-
-            }
-        });
-        mnTable.add(mntmShowGeneralLifetimePhasesPLD);
-        
-        JMenuItem mntmShowGeneralLifetimePhasesWithClustersPLD = new JMenuItem("Show Phases With Clusters PLD");
-        mntmShowGeneralLifetimePhasesWithClustersPLD.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                wholeCol = -1;
-                if (!(project == null)) {
-
-                    ParametersJDialog jD = new ParametersJDialog(true);
-
-                    jD.setModal(true);
-
-                    jD.setVisible(true);
-
-                    if (jD.getConfirmation()) {
-
-                        timeWeight = jD.getTimeWeight();
-                        changeWeight = jD.getChangeWeight();
-                        preProcessingTime = jD.getPreProcessingTime();
-                        preProcessingChange = jD.getPreProcessingChange();
-                        numberOfPhases = jD.getNumberOfPhases();
-                        numberOfClusters = jD.getNumberOfClusters();
-                        birthWeight = jD.geBirthWeight();
-                        deathWeight = jD.getDeathWeight();
-                        changeWeightCl = jD.getChangeWeightCluster();
-
-                        System.out.println(timeWeight + " " + changeWeight);
-
-                        PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(inputCsv, outputAssessment1,
-                                outputAssessment2, timeWeight, changeWeight, preProcessingTime, preProcessingChange);
-
-                        mainEngine.parseInput();
-                        System.out.println("\n\n\n");
-                        mainEngine.extractPhases(numberOfPhases);
-                        /*
-                         * try { mainEngine.extractReportAssessment1(); } catch (IOException e) {
-                         * e.printStackTrace(); } try { mainEngine.extractReportAssessment2(); } catch
-                         * (IOException e) { e.printStackTrace(); }
-                         */
-
-                        mainEngine.connectTransitionsWithPhases(globalDataKeeper);
-                        globalDataKeeper.setPhaseCollectors(mainEngine.getPhaseCollectors());
-                        TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalDataKeeper,
-                                birthWeight, deathWeight, changeWeightCl);
-                        mainEngine2.extractClusters(numberOfClusters);
-                        globalDataKeeper.setClusterCollectors(mainEngine2.getClusterCollectors());
-                        mainEngine2.print();
-
-                        if (globalDataKeeper.getPhaseCollectors().size() != 0) {
-                            TableConstructionWithClusters table = new TableConstructionWithClusters(globalDataKeeper);
-                            final String[] columns = table.constructColumns();
-                            final String[][] rows = table.constructRows();
-                            segmentSize = table.getSegmentSize();
-                            System.out.println("Schemas: " + globalDataKeeper.getAllPPLSchemas().size());
-                            System.out.println("C: " + columns.length + " R: " + rows.length);
-
-                            finalColumns = columns;
-                            finalRows = rows;
-                            tabbedPane.setSelectedIndex(0);
-                            makeGeneralTablePhases();
-                            fillClustersTree();
-
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Extract Phases first");
-                        }
-                    }
-                } else {
-
-                    JOptionPane.showMessageDialog(null, "Please select a project first!");
-
-                }
-            }
-        });
-        mnTable.add(mntmShowGeneralLifetimePhasesWithClustersPLD);
-
-        mnTable.add(mntmShowLifetimeTable);
 
         sideMenu.setBounds(0, 0, 280, 600);
         sideMenu.setBackground(Color.DARK_GRAY);
@@ -644,10 +435,59 @@ public class Gui extends JFrame implements ActionListener {
         
     }
 
-    private void paintGeneralTableIDU() {
+    private void tableActionsJMenu(JMenuBar menuBar) {
+        JMenu mnTable = new JMenu("Table");
+        menuBar.add(mnTable);
+
+        JMenuItem mntmShowGeneralLifetimeIDU = new JMenuItem("Show PLD");
+        showPLDListener.listenToGUI(Gui.this);
+        mntmShowGeneralLifetimeIDU.addActionListener(showPLDListener);
+        /*mntmShowGeneralLifetimeIDU.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                if (!(currentProject == null)) {
+                    zoomInButton.setVisible(true);
+                    zoomOutButton.setVisible(true);
+                    createPLD();
+                    //tabbedPane.setSelectedIndex(0);
+                    fillTree();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Select a Project first");
+                    return;
+                }
+            }
+
+        });*/
+        mnTable.add(mntmShowGeneralLifetimeIDU);
+
+        JMenuItem mntmShowGeneralLifetimePhasesPLD = new JMenuItem("Show Phases PLD");
+        showPhasesPLDListener.listenToGui(Gui.this);
+        mntmShowGeneralLifetimePhasesPLD.addActionListener(showPhasesPLDListener);
+        mnTable.add(mntmShowGeneralLifetimePhasesPLD);
+
+        JMenuItem mntmShowGeneralLifetimePhasesWithClustersPLD = new JMenuItem("Show Phases With Clusters PLD");
+
+        showPhasesClusters.listenToGUI(Gui.this);
+        mntmShowGeneralLifetimePhasesWithClustersPLD.addActionListener(showPhasesClusters);
+        mnTable.add(mntmShowGeneralLifetimePhasesWithClustersPLD);
+
+        JMenuItem mntmShowLifetimeTable = new JMenuItem("Show Full Detailed LifeTime Table");
+        showfullDetailedTable.listenToGui(Gui.this);
+        mntmShowLifetimeTable.addActionListener(showfullDetailedTable);
+        mnTable.add(mntmShowLifetimeTable);
+    }
+
+    private void paintGeneralTableIDU(MyTableModel myTable) {
         final IDUTableRenderer renderer = new IDUTableRenderer(Gui.this, finalRowsZoomArea, globalDataKeeper,
                 segmentSize);
+
+        final JvTable generalTable = generalTableToConstruct.makeGeneralTableIDU(myTable, rowHeight, columnWidth, wholeCol);
+
+
+        generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+
         generalTable.setDefaultRenderer(Object.class, renderer);
+
 
         generalTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 
@@ -815,13 +655,14 @@ public class Gui extends JFrame implements ActionListener {
             }
         });
 
+        /**changed general table to zoomtablearea**/
         generalTable.getTableHeader().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 wholeColZoomArea = generalTable.columnAtPoint(e.getPoint());
                 renderer.setWholeCol(generalTable.columnAtPoint(e.getPoint()));
-                // String name = generalTable.getColumnName(wholeColZoomArea);
-                // System.out.println("Column index selected " + wholeColZoomArea + " " + name);
+                String name = generalTable.getColumnName(wholeColZoomArea);
+                System.out.println("Column index selected rrreee" + wholeColZoomArea + " " + name);
                 generalTable.repaint();
             }
         });
@@ -866,8 +707,8 @@ public class Gui extends JFrame implements ActionListener {
         lifeTimePanel.add(tmpScrollPaneZoomArea);
     }
 
-    private void paintDetailedTable(boolean levelized){
-        tmpLifeTimeTable = tableController.getTmpLifeTimeTable();
+    public void paintDetailedTable(boolean levelized){
+        tmpLifeTimeTable = detailedTableToConstruct.getTmpLifeTimeTable();
         tmpLifeTimeTable.setName("LifeTimeTable");
         segmentSizeDetailedTable = tableController.getSegmentSizeDetailedTable();
         tmpLifeTimeTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -992,54 +833,58 @@ public class Gui extends JFrame implements ActionListener {
         menuBar.add(mnFile);
 
         JMenuItem mntmCreateProject = new JMenuItem("Create Project");
-        mntmCreateProject.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                fileController.createProject("","","","","","");
-
-                getInfoFromFileController();
-                fillTable();
-                fillTree();
-            }
-        });
+        createListener.listenToGui(Gui.this);
+        mntmCreateProject.addActionListener(createListener);
         mnFile.add(mntmCreateProject);
 
         JMenuItem mntmLoadProject = new JMenuItem("Load Project");
-        mntmLoadProject.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                File dir = new File("filesHandler/inis");
-                JFileChooser fcOpen1 = new JFileChooser();
-                fcOpen1.setCurrentDirectory(dir);
-                int returnVal = fcOpen1.showDialog(Gui.this, "Open");
-
-                project = fileController.loadProjectAction(returnVal==JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
-
-                getInfoFromFileController();
-                System.out.println("rataata"+project);
-                fillTable();
-                fillTree();
-            }
-        });
+        loadListener.listenToGui(Gui.this);
+        mntmLoadProject.addActionListener(loadListener);
         mnFile.add(mntmLoadProject);
 
         JMenuItem mntmEditProject = new JMenuItem("Edit Project");
-        mntmEditProject.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                File dir = new File("filesHandler/inis");
-                JFileChooser fcOpen1 = new JFileChooser();
-                fcOpen1.setCurrentDirectory(dir);
-                int returnVal = fcOpen1.showDialog(Gui.this, "Open");
-
-                fileController.editProject(returnVal == JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
-
-                getInfoFromFileController();
-                fillTable();
-                fillTree();
-            }
-        });
+        editListener.listenToGui(Gui.this);
+        mntmEditProject.addActionListener(editListener);
         mnFile.add(mntmEditProject);
     }
-    
-    
+
+    //TODO extracted to be moved
+    public void createPLD() {
+
+
+        TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
+        final String[] columns = table.constructColumns();
+        final String[][] rows = table.constructRows();
+        segmentSizeZoomArea = table.getSegmentSize();
+        System.out.println("Schemas: " + globalDataKeeper.getAllPPLSchemas().size());
+        System.out.println("C: " + columns.length + " R: " + rows.length);
+
+        finalColumnsZoomArea = columns;
+        finalRowsZoomArea = rows;
+        tabbedPane.setSelectedIndex(0);
+
+        //Part of generaleableIDU
+        defineButtonsVisibillity(true);
+
+
+        zoomModel = tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
+
+        paintGeneralTableIDU(zoomModel);
+        rowHeight= generalTableToConstruct.getRowHeight();
+        columnWidth = generalTableToConstruct.getColumnWidth();
+
+        finalRowsZoomArea = tableController.getFinalRowsZoomArea();
+        finalColumnsZoomArea = tableController.getFinalColumnsZoomArea();
+
+    }
+
+    public void defineButtonsVisibillity(boolean isVisible) {
+        showingPld = isVisible;
+        zoomInButton.setVisible(isVisible);
+        zoomOutButton.setVisible(isVisible);
+        showThisToPopup.setVisible(isVisible);
+    }
+
     public void getInfoFromFileController() {
         project = fileController.getProject();
         projectName = fileController.getProjectName();
@@ -1053,7 +898,7 @@ public class Gui extends JFrame implements ActionListener {
     }
 
     
-    private void makeGeneralTablePhases() {
+    public void makeGeneralTablePhases() {
         uniformlyDistributedButton.setVisible(true);
 
         notUniformlyDistributedButton.setVisible(true);
@@ -1072,7 +917,8 @@ public class Gui extends JFrame implements ActionListener {
         }
 
         generalModel = new MyTableModel(finalColumns, rows);
-        generalTable = new JvTable(generalModel);
+
+        final JvTable generalTable = new JvTable(generalModel);
 
         generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
@@ -1286,10 +1132,14 @@ public class Gui extends JFrame implements ActionListener {
                 System.out.println("Column index selected " + wholeCol + " " + name);
                 generalTable.repaint();
                 if (showingPld) {
-                    generalTable = tableController.makeGeneralTableIDU(finalRowsZoomArea,finalColumnsZoomArea,rowHeight,rowHeight,wholeCol);
-                    paintGeneralTableIDU();
-                    //makeGeneralTableIDU();
+                    zoomModel = tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
+//                    generalTable = generalTableConstruction.makeGeneralTableIDU(zoomModel, rowHeight, columnWidth, wholeCol);
 
+                    //generalTable = tableController.makeGeneralTableIDU(tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea, rowHeight, columnWidth),rowHeight,rowHeight,wholeCol);
+                    paintGeneralTableIDU(zoomModel);
+                    //makeGeneralTableIDU();
+                    rowHeight = generalTableToConstruct.getRowHeight();
+                    columnWidth = generalTableToConstruct.getColumnWidth();
                 }
             }
         });
@@ -1309,9 +1159,14 @@ public class Gui extends JFrame implements ActionListener {
                             wholeCol = -1;
                             generalTable.repaint();
                             if (showingPld) {
-                                generalTable = tableController.makeGeneralTableIDU(finalRowsZoomArea,finalColumnsZoomArea,rowHeight,columnWidth,wholeCol);
-                                paintGeneralTableIDU();
+                                zoomModel= tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
+                                //generalTable = tableController.makeGeneralTableIDU(tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea, rowHeight, columnWidth), rowHeight,columnWidth,wholeCol);
+
+                                paintGeneralTableIDU(zoomModel);
                                 //makeGeneralTableIDU();
+
+                                rowHeight = generalTableToConstruct.getRowHeight();
+                                columnWidth = generalTableToConstruct.getColumnWidth();
                             }
                         }
                     });
@@ -1871,7 +1726,7 @@ public class Gui extends JFrame implements ActionListener {
     }
 
     
-    private class RowListener implements ListSelectionListener {
+    public static class RowListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent event) {
             if (event.getValueIsAdjusting()) {
                 return;
@@ -1880,17 +1735,15 @@ public class Gui extends JFrame implements ActionListener {
             int selectedRow = LifeTimeTable.getSelectedRow();
 
             selectedRows.add(selectedRow);
-
         }
     }
 
     
-    private class ColumnListener implements ListSelectionListener {
+    public static class ColumnListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent event) {
             if (event.getValueIsAdjusting()) {
                 return;
             }
-
         }
     }
 
@@ -1911,8 +1764,12 @@ public class Gui extends JFrame implements ActionListener {
         finalColumnsZoomArea = columns;
         finalRowsZoomArea = rows;
         tabbedPane.setSelectedIndex(0);
-        generalTable = tableController.makeGeneralTableIDU(finalRowsZoomArea,finalColumnsZoomArea,rowHeight,columnWidth,wholeCol );
-        paintGeneralTableIDU();
+        zoomModel = tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
+
+        //final JvTable generalTable = generalTableConstruction.makeGeneralTableIDU(,rowHeight, columnWidth, wholeCol);
+        //generalTable = tableController.makeGeneralTableIDU(tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea, rowHeight, columnWidth),rowHeight,columnWidth,wholeCol );
+
+        paintGeneralTableIDU(zoomModel);
 
         finalRowsZoomArea = tableController.getFinalRowsZoomArea();
         finalColumnsZoomArea = tableController.getFinalColumnsZoomArea();
@@ -2248,12 +2105,67 @@ public class Gui extends JFrame implements ActionListener {
     public int getSelectedColumn() {
         return selectedColumn;
     }
-    
+
+    public String getCurrentProject() {
+        return currentProject;
+    }
+
+    public DetailedTableGraphicComputation getDetailedTableToConstruct() {
+        return detailedTableToConstruct;
+    }
+
+    public int getWholeCol() {
+        return wholeCol;
+    }
+
+    public void setWholeCol(int wholeCol) {
+        this.wholeCol = wholeCol;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public String getDatasetTxt() {
+        return datasetTxt;
+    }
+
+    public String getInputCsv() {
+        return inputCsv;
+    }
+
+    public String getOutputAssessment1() {
+        return outputAssessment1;
+    }
+
+    public String getOutputAssessment2() {
+        return outputAssessment2;
+    }
+
+    public String getTransitionsFile() {
+        return transitionsFile;
+    }
+
+    public JTabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
+
+    public void setFinalColumns(String[] finalColumns) {
+        this.finalColumns = finalColumns;
+    }
+
+    public void setFinalRows(String[][] finalRows) {
+        this.finalRows = finalRows;
+    }
+
+    public void setSegmentSize(Integer[] segmentSize) {
+        this.segmentSize = segmentSize;
+    }
+
     //for testing
     public MyTableModel getGeneralModel() {
         return generalModel;
     }
-
 
     //for testing
     public MyTableModel getZoomModel() {

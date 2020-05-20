@@ -9,4 +9,5 @@ Table and File controllers created</br>
 Long blocks of code extracted in gui to smaller methods</br>
 Gui class methods moved to Table and File controllers</br>
 new tests created</br>
-Other methods extracted in gui
+Other methods extracted in gui</br>
+Added Action Listeners classes.
