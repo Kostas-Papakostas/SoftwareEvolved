@@ -5,10 +5,9 @@ package gui.mainEngine;
 import data.dataKeeper.GlobalDataKeeper;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import gui.actionListeners.*;
-import gui.controllers.FileController;
+import gui.controllers.ProjectConfig;
 import gui.controllers.TableController;
 import gui.dialogs.EnlargeTable;
-import gui.dialogs.ParametersJDialog;
 import gui.dialogs.ProjectInfoDialog;
 import gui.tableComputations.DetailedTableGraphicComputation;
 import gui.tableComputations.GeneralTableGraphicComputation;
@@ -96,12 +95,6 @@ public class Gui extends JFrame implements ActionListener {
     private Boolean preProcessingTime = null;
     private Boolean preProcessingChange = null;
 
-    private String projectName = "";
-    private String datasetTxt = "";
-    private String inputCsv = "";
-    private String outputAssessment1 = "";
-    private String outputAssessment2 = "";
-    private String transitionsFile = "";
     private ArrayList<String> selectedFromTree = new ArrayList<String>();
 
     private JTree tablesTree = new JTree();
@@ -139,13 +132,18 @@ public class Gui extends JFrame implements ActionListener {
     private JButton undoButton;
     private JMenu mnProject;
     private JMenuItem mntmInfo;
-    
-    protected FileController fileController = FileController.getInstance();
+
+    public ProjectConfig getProjectConfig() {
+        return projectConfig;
+    }
+
+    protected ProjectConfig projectConfig = ProjectConfig.getInstance();
     protected TableController tableController = TableController.getInstance();
 
     private GeneralTableGraphicComputation generalTableToConstruct = GeneralTableGraphicComputation.getInstance();
     private DetailedTableGraphicComputation detailedTableToConstruct = DetailedTableGraphicComputation.getInstance();
 
+    protected ProjectInfoListener infoListener = new ProjectInfoListener();
     protected LoadProjectListener loadListener = new LoadProjectListener();
     protected EditProjectListener editListener = new EditProjectListener();
     protected CreateProjectListener createListener = new CreateProjectListener();
@@ -255,39 +253,8 @@ public class Gui extends JFrame implements ActionListener {
             }
         });
 
-        mnProject = new JMenu("Project");
-        menuBar.add(mnProject);
+        createInfoJMenuItem(menuBar);
 
-        mntmInfo = new JMenuItem("Info");
-        mntmInfo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                if (!(currentProject == null)) {
-
-                    System.out.println("Project Name:" + projectName);
-                    System.out.println("Dataset txt:" + datasetTxt);
-                    System.out.println("Input Csv:" + inputCsv);
-                    System.out.println("Output Assessment1:" + outputAssessment1);
-                    System.out.println("Output Assessment2:" + outputAssessment2);
-                    System.out.println("Transitions File:" + transitionsFile);
-
-                    System.out.println("Schemas:" + globalDataKeeper.getAllPPLSchemas().size());
-                    System.out.println("Transitions:" + globalDataKeeper.getAllPPLTransitions().size());
-                    System.out.println("Tables:" + globalDataKeeper.getAllPPLTables().size());
-
-                    ProjectInfoDialog infoDialog = new ProjectInfoDialog(projectName, datasetTxt, inputCsv,
-                            transitionsFile, globalDataKeeper.getAllPPLSchemas().size(),
-                            globalDataKeeper.getAllPPLTransitions().size(), globalDataKeeper.getAllPPLTables().size());
-
-                    infoDialog.setVisible(true);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Select a Project first");
-                    return;
-                }
-
-            }
-        });
-        mnProject.add(mntmInfo);
         buttonHelp.setBounds(900, 900, 80, 40);
         menuBar.add(buttonHelp);
 
@@ -435,6 +402,16 @@ public class Gui extends JFrame implements ActionListener {
         
     }
 
+    private void createInfoJMenuItem(JMenuBar menuBar) {
+        mnProject = new JMenu("Project");
+        menuBar.add(mnProject);
+
+        mntmInfo = new JMenuItem("Info");
+        infoListener.listenToGUI(Gui.this);
+        mntmInfo.addActionListener(infoListener);
+        mnProject.add(mntmInfo);
+    }
+
     private void tableActionsJMenu(JMenuBar menuBar) {
         JMenu mnTable = new JMenu("Table");
         menuBar.add(mnTable);
@@ -442,21 +419,6 @@ public class Gui extends JFrame implements ActionListener {
         JMenuItem mntmShowGeneralLifetimeIDU = new JMenuItem("Show PLD");
         showPLDListener.listenToGUI(Gui.this);
         mntmShowGeneralLifetimeIDU.addActionListener(showPLDListener);
-        /*mntmShowGeneralLifetimeIDU.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                if (!(currentProject == null)) {
-                    zoomInButton.setVisible(true);
-                    zoomOutButton.setVisible(true);
-                    createPLD();
-                    //tabbedPane.setSelectedIndex(0);
-                    fillTree();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Select a Project first");
-                    return;
-                }
-            }
-
-        });*/
         mnTable.add(mntmShowGeneralLifetimeIDU);
 
         JMenuItem mntmShowGeneralLifetimePhasesPLD = new JMenuItem("Show Phases PLD");
@@ -885,29 +847,21 @@ public class Gui extends JFrame implements ActionListener {
         showThisToPopup.setVisible(isVisible);
     }
 
-    public void getInfoFromFileController() {
-        project = fileController.getProject();
-        projectName = fileController.getProjectName();
-        datasetTxt = fileController.getDatasetTxt();
-        inputCsv = fileController.getInputCsv();
-        outputAssessment1 = fileController.getOutputAssessment1();
-        outputAssessment2 = fileController.getOutputAssessment2();
-        transitionsFile = fileController.getTransitionsFile();
-        currentProject = fileController.getCurrentProject();
-        globalDataKeeper = fileController.getGlobalDataKeeper();
+    public void getDataKeeperFromFileController() {
+        globalDataKeeper = projectConfig.getGlobalDataKeeper();
     }
 
     
     public void makeGeneralTablePhases() {
-        uniformlyDistributedButton.setVisible(true);
+        /*uniformlyDistributedButton.setVisible(true);
 
         notUniformlyDistributedButton.setVisible(true);
 
         int numberOfColumns = finalRows[0].length;
         int numberOfRows = finalRows.length;
-
+        */
         selectedRows = new ArrayList<Integer>();
-
+        /*
         String[][] rows = new String[numberOfRows][numberOfColumns];
 
         for (int i = 0; i < numberOfRows; i++) {
@@ -915,8 +869,8 @@ public class Gui extends JFrame implements ActionListener {
             rows[i][0] = finalRows[i][0];
 
         }
-
-        generalModel = new MyTableModel(finalColumns, rows);
+        */
+        generalModel = tableController.createGeneralTableModel(finalRows, finalColumns);//new MyTableModel(finalColumns, rows);
 
         final JvTable generalTable = new JvTable(generalModel);
 
@@ -1787,8 +1741,10 @@ public class Gui extends JFrame implements ActionListener {
 
         System.out.println(timeWeight + " " + changeWeight);
 
-        PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(inputCsv, outputAssessment1, outputAssessment2,
-                timeWeight, changeWeight, preProcessingTime, preProcessingChange);
+        //PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(inputCsv, outputAssessment1, outputAssessment2,
+          //      timeWeight, changeWeight, preProcessingTime, preProcessingChange);
+
+        PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectConfig, timeWeight, changeWeight, preProcessingTime, preProcessingChange);
 
         Double b = new Double(0.3);
         Double d = new Double(0.3);
@@ -2120,30 +2076,6 @@ public class Gui extends JFrame implements ActionListener {
 
     public void setWholeCol(int wholeCol) {
         this.wholeCol = wholeCol;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public String getDatasetTxt() {
-        return datasetTxt;
-    }
-
-    public String getInputCsv() {
-        return inputCsv;
-    }
-
-    public String getOutputAssessment1() {
-        return outputAssessment1;
-    }
-
-    public String getOutputAssessment2() {
-        return outputAssessment2;
-    }
-
-    public String getTransitionsFile() {
-        return transitionsFile;
     }
 
     public JTabbedPane getTabbedPane() {

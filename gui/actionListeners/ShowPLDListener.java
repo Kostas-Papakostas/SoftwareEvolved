@@ -16,7 +16,7 @@ public class ShowPLDListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (!(gui.getCurrentProject() == null)) {
+        if (!(gui.getProjectConfig().getCurrentProject() == null)) {
             gui.createPLD();
             gui.fillTree();
         } else {

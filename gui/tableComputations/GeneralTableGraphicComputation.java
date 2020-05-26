@@ -1,6 +1,6 @@
 package gui.tableComputations;
 
-import gui.controllers.FileController;
+import gui.controllers.ProjectConfig;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 import gui.tableElements.tableRenderers.IDUHeaderTableRenderer;
@@ -11,7 +11,7 @@ import java.awt.*;
 public class GeneralTableGraphicComputation extends  TableComputation{
 
     private static GeneralTableGraphicComputation singleInstance;
-    private FileController fileController = FileController.getInstance();
+    private ProjectConfig projectConfig = ProjectConfig.getInstance();
 
     public static GeneralTableGraphicComputation getInstance() {
         if(singleInstance == null) {
@@ -55,9 +55,9 @@ public class GeneralTableGraphicComputation extends  TableComputation{
 
         int start = -1;
         int end = -1;
-        if (fileController.getGlobalDataKeeper().getPhaseCollectors() != null && wholeCol != -1 && wholeCol != 0) {
-            start = fileController.getGlobalDataKeeper().getPhaseCollectors().get(0).getPhases().get(wholeCol - 1).getStartPos();
-            end = fileController.getGlobalDataKeeper().getPhaseCollectors().get(0).getPhases().get(wholeCol - 1).getEndPos();
+        if (projectConfig.getGlobalDataKeeper().getPhaseCollectors() != null && wholeCol != -1 && wholeCol != 0) {
+            start = projectConfig.getGlobalDataKeeper().getPhaseCollectors().get(0).getPhases().get(wholeCol - 1).getStartPos();
+            end = projectConfig.getGlobalDataKeeper().getPhaseCollectors().get(0).getPhases().get(wholeCol - 1).getEndPos();
         }
 
         if (wholeCol != -1) {

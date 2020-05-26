@@ -1,6 +1,6 @@
 package gui.actionListeners;
 
-import gui.controllers.FileController;
+import gui.controllers.ProjectConfig;
 import gui.mainEngine.Gui;
 
 import java.awt.event.ActionEvent;
@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 
 public class CreateProjectListener implements ActionListener {
 
-    private FileController fileController = FileController.getInstance();
+    private ProjectConfig projectConfig = ProjectConfig.getInstance();
     private Gui gui;
 
     public void listenToGui(Gui gui_p){
@@ -17,10 +17,10 @@ public class CreateProjectListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        boolean okPressed = fileController.createProject("","","","","","");
+        boolean okPressed = projectConfig.createProject("","","","","","");
 
         if (okPressed){
-            gui.getInfoFromFileController();
+            gui.getDataKeeperFromFileController();
             gui.fillTable();
             gui.fillTree();
             gui.defineButtonsVisibillity(true);

@@ -1,7 +1,7 @@
 package gui.actionListeners;
 
 import data.dataKeeper.GlobalDataKeeper;
-import gui.controllers.FileController;
+import gui.controllers.ProjectConfig;
 import gui.dialogs.ParametersJDialog;
 import gui.mainEngine.Gui;
 import gui.tableElements.tableConstructors.TableConstructionPhases;
@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 public class ShowPhasesPLD implements ActionListener {
     private Gui gui;
     private GlobalDataKeeper globalDataKeeper;
+    private ProjectConfig projectConfig = ProjectConfig.getInstance();
 
     public void listenToGui(Gui gui_p){
         this.gui = gui_p;
@@ -22,7 +23,7 @@ public class ShowPhasesPLD implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        String project = FileController.getProject();
+        String project = ProjectConfig.getProject();
 
         System.out.println("rrrrrank1 "+ project);
         if (!(project == null)) {
@@ -34,23 +35,17 @@ public class ShowPhasesPLD implements ActionListener {
             jD.setVisible(true);
 
             if (jD.getConfirmation()) {
-                float timeWeight = jD.getTimeWeight();
-                float changeWeight = jD.getChangeWeight();
-                boolean preProcessingTime = jD.getPreProcessingTime();
-                boolean preProcessingChange = jD.getPreProcessingChange();
-                int numberOfPhases = jD.getNumberOfPhases();
-
                 System.out.println(jD.getTimeWeight() + " " + jD.getChangeWeight());
 
-                PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(gui.getInputCsv(), gui.getOutputAssessment1(),
-                        gui.getOutputAssessment2(), jD.getTimeWeight(), jD.getChangeWeight(), jD.getPreProcessingTime(), jD.getPreProcessingChange());
+                PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectConfig.getInputCsv(), projectConfig.getOutputAssessment1(),
+                        projectConfig.getOutputAssessment2(), jD.getTimeWeight(), jD.getChangeWeight(), jD.getPreProcessingTime(), jD.getPreProcessingChange());
 
                 mainEngine.parseInput();
 
                 System.out.println("\n\n\n");
                 mainEngine.extractPhases(jD.getNumberOfPhases());
 
-                globalDataKeeper = FileController.getGlobalDataKeeper();
+                globalDataKeeper = ProjectConfig.getGlobalDataKeeper();
                 mainEngine.connectTransitionsWithPhases(globalDataKeeper);
 
                 globalDataKeeper.setPhaseCollectors(mainEngine.getPhaseCollectors());

@@ -20,7 +20,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="gui.controllers.FileController" project="PlutarchParallelLives" 
+  <class id="3" language="java" name="gui.controllers.ProjectConfig" project="PlutarchParallelLives"
     file="/PlutarchParallelLives/src/gui/controllers/FileController.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="865" y="1412"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

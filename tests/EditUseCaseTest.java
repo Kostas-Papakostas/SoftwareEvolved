@@ -1,7 +1,7 @@
 
 package tests;
 
-import gui.controllers.FileController;
+import gui.controllers.ProjectConfig;
 import gui.mainEngine.Gui;
 import gui.tableElements.commons.MyTableModel;
 //import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import org.junit.Test;
 public class EditUseCaseTest {
 
     Gui testGui = new Gui();
-    private FileController fileController = FileController.getInstance();
+    private ProjectConfig projectConfig = ProjectConfig.getInstance();
 
     @Test
     public void testEdit_generalModel(){
@@ -36,9 +36,9 @@ public class EditUseCaseTest {
         String pathToRefactoredFile = "./Dump Files Refactored/Load Use Case/generalModel_Atlas.txt";
 
         File file = new File("filesHandler/inis/Atlas.ini");
-        fileController.editProject(true, file);
+        projectConfig.editProject(true, file);
 
-        testGui.getInfoFromFileController();
+        testGui.getDataKeeperFromFileController();
         testGui.fillTable();
         testGui.fillTree();
 

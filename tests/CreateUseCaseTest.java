@@ -1,6 +1,6 @@
 package tests;
 
-import gui.controllers.ProjectManager;
+import gui.controllers.ProjectConfig;
 import gui.mainEngine.Gui;
 import org.junit.jupiter.api.Test;
 
@@ -13,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CreateUseCaseTest {
 
     Gui testGui = new Gui();
-    private ProjectManager projectManager = ProjectManager.getInstance();
+    private ProjectConfig projectConfig = ProjectConfig.getInstance();
 
 
 
     @Test
     public void testCreatedFile(){
-        projectManager = ProjectManager.getInstance();
+        projectConfig = ProjectConfig.getInstance();
         String expectedContenrts = "Project-name:lala\n"+
                 "Dataset-txt:filesHandler/datasets/Atlas.txt\n"+
                 "Input-csv:filesHandler/input/atlas.csv\n"+
@@ -27,8 +27,8 @@ public class CreateUseCaseTest {
                 "Assessement2-output:filesHandler/output/atlas_Assessment2.txt\n"+
                 "Transition-xml:filesHandler/transitions/atlasTransitions.xml";
 
-        projectManager.createProject("lala","filesHandler/datasets/Atlas.txt","filesHandler/input/atlas.csv","filesHandler/output/atlas_Assessment1.txt","filesHandler/output/atlas_Assessment2.txt","filesHandler/transitions/atlasTransitions.xml");
-        testGui.getInfoFromFileController();
+        projectConfig.createProject("lala","filesHandler/datasets/Atlas.txt","filesHandler/input/atlas.csv","filesHandler/output/atlas_Assessment1.txt","filesHandler/output/atlas_Assessment2.txt","filesHandler/transitions/atlasTransitions.xml");
+        testGui.getDataKeeperFromFileController();
         testGui.fillTable();
         testGui.fillTree();
 

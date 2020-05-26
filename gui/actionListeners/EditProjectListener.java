@@ -1,6 +1,6 @@
 package gui.actionListeners;
 
-import gui.controllers.FileController;
+import gui.controllers.ProjectConfig;
 import gui.mainEngine.Gui;
 
 import javax.swing.*;
@@ -10,7 +10,7 @@ import java.io.File;
 
 public class EditProjectListener implements ActionListener {
 
-    private FileController fileController = FileController.getInstance();
+    private ProjectConfig projectConfig = ProjectConfig.getInstance();
     private Gui gui;
 
     public void listenToGui(Gui gui_p){
@@ -24,10 +24,10 @@ public class EditProjectListener implements ActionListener {
         fcOpen1.setCurrentDirectory(dir);
         int returnVal = fcOpen1.showDialog(gui, "Open");
 
-        fileController.editProject(returnVal == JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
+        projectConfig.editProject(returnVal == JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
 
         if(returnVal == JFileChooser.APPROVE_OPTION) {
-            gui.getInfoFromFileController();
+            gui.getDataKeeperFromFileController();
             gui.fillTable();
             gui.fillTree();
             gui.defineButtonsVisibillity(true);

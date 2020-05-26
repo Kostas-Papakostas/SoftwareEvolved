@@ -1,21 +1,42 @@
 package phaseAnalyzer.engine;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import data.dataKeeper.GlobalDataKeeper;
+import gui.controllers.ProjectConfig;
 import phaseAnalyzer.analysis.IPhaseExtractor;
 import phaseAnalyzer.analysis.PhaseExtractorFactory;
 import phaseAnalyzer.commons.PhaseCollector;
 import phaseAnalyzer.commons.TransitionHistory;
 import phaseAnalyzer.parser.IParser;
 import phaseAnalyzer.parser.ParserFactory;
-import data.dataKeeper.GlobalDataKeeper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /* Refactor! Problem: Comments */
 
 public class PhaseAnalyzerMainEngine {
-	
+
+	public PhaseAnalyzerMainEngine(ProjectConfig inputProject_p,Float tmpTimeWeight, Float tmpChangeWeight, Boolean tmpPreProcessingTime,Boolean tmpPreProcessingChange){
+		timeWeight=tmpTimeWeight;
+		changeWeight=tmpChangeWeight;
+		preProcessingTime=tmpPreProcessingTime;
+		preProcessingChange=tmpPreProcessingChange;
+
+		this.inputCsv=inputProject_p.getInputCsv();
+
+		parserFactory = new ParserFactory();
+		parser = parserFactory.createParser("SimpleTextParser");
+
+		phaseExtractorFactory = new PhaseExtractorFactory();
+		phaseExtractor = phaseExtractorFactory.createPhaseExtractor("BottomUpPhaseExtractor");
+
+		transitionHistory = new TransitionHistory();
+
+		allPhaseCollectors = new HashMap<String, ArrayList<PhaseCollector>>();
+
+	}
+
 	public PhaseAnalyzerMainEngine(String inputCsv,String outputAssessment1,String outputAssessment2,Float tmpTimeWeight, Float tmpChangeWeight,
 														Boolean tmpPreProcessingTime,Boolean tmpPreProcessingChange){
 		

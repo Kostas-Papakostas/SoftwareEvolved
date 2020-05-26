@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class TableController {
     private static TableController singleInstance = null;
-    private FileController fileController = FileController.getInstance();
+    private ProjectConfig projectConfig = ProjectConfig.getInstance();
     private GlobalDataKeeper globalDataKeeper;
 
     private Integer[] segmentSizeZoomArea = new Integer[4];
@@ -23,6 +23,10 @@ public class TableController {
 
     private String[] finalColumnsZoomArea;
     private String[][] finalRowsZoomArea;
+    private String[] finalColumnsGeneral;
+    private String[][] finalRowsGeneral;
+    //private ArrayList<Integer> selectedRows;
+    private MyTableModel generalModel;
 
     //Needed for Singleton Pattern
     private TableController() {
@@ -40,8 +44,8 @@ public class TableController {
 
     /**keeping that**/
     public MyTableModel createFullDetailedLifeTableModel() {
-        if (!(fileController.getCurrentProject() == null)) {
-            globalDataKeeper = fileController.getGlobalDataKeeper();
+        if (!(projectConfig.getCurrentProject() == null)) {
+            globalDataKeeper = projectConfig.getGlobalDataKeeper();
             TableConstructionAllSquaresIncluded table = new TableConstructionAllSquaresIncluded(globalDataKeeper);
             final String[] columns = table.constructColumns();
             final String[][] rows = table.constructRows();
@@ -62,7 +66,7 @@ public class TableController {
         finalRowsZoomArea=finalRowsZoomArea_p;
         finalColumnsZoomArea=finalColumnsZoomArea_p;
 
-        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea_p, fileController.getGlobalDataKeeper());
+        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea_p, projectConfig.getGlobalDataKeeper());
 
         finalRowsZoomArea = sorter.sortRows();
 
@@ -82,7 +86,30 @@ public class TableController {
         return zoomModel;
     }
 
+    public MyTableModel createGeneralTableModel(String[][] finalRowsGeneral_p, String[] finalColumnsGeneral_p){
+        finalRowsGeneral=finalRowsGeneral_p;
+        finalColumnsGeneral=finalColumnsGeneral_p;
 
+        int numberOfColumns = finalRowsGeneral[0].length;
+        int numberOfRows = finalRowsGeneral.length;
+
+        /***selectedRows = new ArrayList<Integer>();****/  //don't need this here
+
+        String[][] rows = new String[numberOfRows][numberOfColumns];
+
+        for (int i = 0; i < numberOfRows; i++) {
+
+            rows[i][0] = finalRowsGeneral[i][0];
+
+        }
+
+        generalModel = new MyTableModel(finalColumnsGeneral, rows);
+        return generalModel;
+    }
+
+    public MyTableModel getGeneralModel(){
+        return generalModel;
+    }
 
     public MyTableModel getZoomModel() {
         return zoomModel;

@@ -1,6 +1,6 @@
 package gui.tableComputations;
 
-import gui.controllers.FileController;
+import gui.controllers.ProjectConfig;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 
@@ -9,7 +9,7 @@ import javax.swing.*;
 public class DetailedTableGraphicComputation extends TableComputation{
 
     private static DetailedTableGraphicComputation singleInstance;
-    private FileController fileController = FileController.getInstance();
+    private ProjectConfig projectConfig = ProjectConfig.getInstance();
 
     private JvTable tmpLifeTimeTable;
 

@@ -4,7 +4,7 @@ package tests;
 
 //import org.junit.Test;
 
-import gui.controllers.FileController;
+import gui.controllers.ProjectConfig;
 import gui.mainEngine.Gui;
 import gui.tableElements.commons.MyTableModel;
 //import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ import org.junit.Test;
  */
 public class LoadUseCaseTest {
     Gui testGui = new Gui();
-    private FileController fileController = FileController.getInstance();
+    private ProjectConfig projectConfig = ProjectConfig.getInstance();
 
     @Test
     public void testDumpData_detailedModel(){
@@ -38,11 +38,11 @@ public class LoadUseCaseTest {
 
         File file = new File("filesHandler/inis/Atlas.ini");
 
-        String project = fileController.loadProjectAction(true, file);
+        String project = projectConfig.loadProjectAction(true, file);
 
-        //currentProject = fileController.loadProjectAction(returnVal==JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
+        //currentProject = projectConfig.loadProjectAction(returnVal==JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
 
-        testGui.getInfoFromFileController();
+        testGui.getDataKeeperFromFileController();
         System.out.println("rataata"+project);
         testGui.fillTable();
         testGui.fillTree();
@@ -74,11 +74,11 @@ public class LoadUseCaseTest {
 
 
         File file = new File("filesHandler/inis/Atlas.ini");
-        String project = fileController.loadProjectAction(true, file);
+        String project = projectConfig.loadProjectAction(true, file);
 
-        //currentProject = fileController.loadProjectAction(returnVal==JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
+        //currentProject = projectConfig.loadProjectAction(returnVal==JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
 
-        testGui.getInfoFromFileController();
+        testGui.getDataKeeperFromFileController();
         System.out.println("rataata"+project);
         testGui.fillTable();
         testGui.fillTree();
@@ -109,11 +109,11 @@ public class LoadUseCaseTest {
         String pathToRefactoredFile = "./Dump Files Refactored/Load Use Case/zoomModel_Atlas.txt";
 
         File file = new File("filesHandler/inis/Atlas.ini");
-        String project = fileController.loadProjectAction(true, file);
+        String project = projectConfig.loadProjectAction(true, file);
 
-        //currentProject = fileController.loadProjectAction(returnVal==JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
+        //currentProject = projectConfig.loadProjectAction(returnVal==JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
 
-        testGui.getInfoFromFileController();
+        testGui.getDataKeeperFromFileController();
         System.out.println("rataata"+project);
         testGui.fillTable();
         testGui.fillTree();
