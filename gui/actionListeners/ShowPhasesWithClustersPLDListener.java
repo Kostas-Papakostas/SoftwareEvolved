@@ -4,9 +4,8 @@ import gui.dialogs.ParametersJDialog;
 import gui.tableElements.tableConstructors.TableConstructionWithClusters;
 import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;
 import tableClustering.clusterExtractor.engine.TableClusteringMainEngine;
-import java.awt.event.ActionListener;
 
-public class ShowPhasesWithClustersPLDListener extends PhasesTemplateListener implements ActionListener  {
+public class ShowPhasesWithClustersPLDListener extends PhasesTemplateListener {
     private TableConstructionWithClusters table;
     
     @Override

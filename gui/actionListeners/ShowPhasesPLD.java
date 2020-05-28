@@ -3,9 +3,8 @@ package gui.actionListeners;
 import gui.dialogs.ParametersJDialog;
 import gui.tableElements.tableConstructors.TableConstructionPhases;
 import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;
-import java.awt.event.ActionListener;
 
-public class ShowPhasesPLD extends PhasesTemplateListener implements ActionListener {
+public class ShowPhasesPLD extends PhasesTemplateListener {
     private TableConstructionPhases table;
 
     @Override
