@@ -16,7 +16,7 @@ import java.util.TreeMap;
 /* Refactor! Problem: Data Class */
 
 public class GlobalDataKeeper {
-    //Refactor: Implemented Singleton Pattern
+    // Refactor: Implemented Singleton Pattern
     protected TreeMap<String, PPLSchema> allPPLSchemas = null; // ATTENTION::HAS BEEN CHANGED TO PROTECTED
     private TreeMap<String, PPLTable> allTables = null;
     private ArrayList<AtomicChange> atomicChanges = null;
@@ -43,11 +43,10 @@ public class GlobalDataKeeper {
         this.transitionsFile = transitionsFile;
     }
 
-
     public GlobalDataKeeper() {
-        
+
     }
-    
+
     public void setData() {
 
         Worker w = new Worker(filename, transitionsFile);
@@ -164,21 +163,17 @@ public class GlobalDataKeeper {
         description = description + "New Version Name:"
                 + allPPLTransitions.get(Integer.parseInt(tableName)).getNewVersionName() + "\n";
         description = description + "Transition Changes:"
-                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfChangesForOneTr()
-                + "\n";
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfChangesForOneTr() + "\n";
         description = description + "Additions:"
-                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfAdditionsForOneTr()
-                + "\n";
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfAdditionsForOneTr() + "\n";
         description = description + "Deletions:"
-                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfDeletionsForOneTr()
-                + "\n";
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfDeletionsForOneTr() + "\n";
         description = description + "Updates:"
-                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfUpdatesForOneTr()
-                + "\n";
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfUpdatesForOneTr() + "\n";
         return description;
     }
 
-    public String constructDescriptionZoomAreaRow( String finalRowsZoomAreaRowZero) {
+    public String constructDescriptionZoomAreaRow(String finalRowsZoomAreaRowZero) {
         String description = "Table:" + finalRowsZoomAreaRowZero + "\n";
         description = description + "Birth Version Name:" + allTables.get(finalRowsZoomAreaRowZero).getBirth() + "\n";
         description = description + "Birth Version ID:" + allTables.get(finalRowsZoomAreaRowZero).getBirthVersionID()
@@ -202,16 +197,17 @@ public class GlobalDataKeeper {
         if (allTables.get(finalRowsZoomAreaRowZero).getTableChanges()
                 .getTableAtChForOneTransition(Integer.parseInt(tableName)) != null) {
 
-            description = description + "Transition Changes:"
-                    + allTables.get(finalRowsZoomAreaRowZero).getTableChanges()
-                            .getTableAtChForOneTransition(Integer.parseInt(tableName)).size()
+            description = description + "Transition Changes:" + allTables.get(finalRowsZoomAreaRowZero)
+                    .getTableChanges().getTableAtChForOneTransition(Integer.parseInt(tableName)).size() + "\n";
+            description = description + "Additions:"
+                    + allTables.get(finalRowsZoomAreaRowZero).getNumberOfAdditionsForOneTr(Integer.parseInt(tableName))
                     + "\n";
-            description = description + "Additions:" + allTables.get(finalRowsZoomAreaRowZero)
-                    .getNumberOfAdditionsForOneTr(Integer.parseInt(tableName)) + "\n";
-            description = description + "Deletions:" + allTables.get(finalRowsZoomAreaRowZero)
-                    .getNumberOfDeletionsForOneTr(Integer.parseInt(tableName)) + "\n";
-            description = description + "Updates:" + allTables.get(finalRowsZoomAreaRowZero)
-                    .getNumberOfUpdatesForOneTr(Integer.parseInt(tableName)) + "\n";
+            description = description + "Deletions:"
+                    + allTables.get(finalRowsZoomAreaRowZero).getNumberOfDeletionsForOneTr(Integer.parseInt(tableName))
+                    + "\n";
+            description = description + "Updates:"
+                    + allTables.get(finalRowsZoomAreaRowZero).getNumberOfUpdatesForOneTr(Integer.parseInt(tableName))
+                    + "\n";
 
         } else {
             description = description + "Transition Changes:0" + "\n";
@@ -267,7 +263,8 @@ public class GlobalDataKeeper {
         return description;
     }
 
-    public String constructDescriptionPLDCell(String tableName, int row, int column, String tmpValue, String clusterID) {
+    public String constructDescriptionPLDCell(String tableName, int row, int column, String tmpValue,
+            String clusterID) {
         String description;
         description = clusterID + "\n";
         description = description + "Tables:"
@@ -305,14 +302,16 @@ public class GlobalDataKeeper {
         description = description + "New Version Name:"
                 + allPPLTransitions.get(Integer.parseInt(tableName)).getNewVersionName() + "\n";
 
-        description = description + "Transition Changes:" + allPPLTransitions
-                .get(Integer.parseInt(tableName)).getNumberOfClusterChangesForOneTr(rowsZoom) + "\n";
-        description = description + "Additions:" + allPPLTransitions.get(Integer.parseInt(tableName))
-                .getNumberOfClusterAdditionsForOneTr(rowsZoom) + "\n";
-        description = description + "Deletions:" + allPPLTransitions.get(Integer.parseInt(tableName))
-                .getNumberOfClusterDeletionsForOneTr(rowsZoom) + "\n";
-        description = description + "Updates:" + allPPLTransitions.get(Integer.parseInt(tableName))
-                .getNumberOfClusterUpdatesForOneTr(rowsZoom) + "\n";
+        description = description + "Transition Changes:"
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfClusterChangesForOneTr(rowsZoom) + "\n";
+        description = description + "Additions:"
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfClusterAdditionsForOneTr(rowsZoom)
+                + "\n";
+        description = description + "Deletions:"
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfClusterDeletionsForOneTr(rowsZoom)
+                + "\n";
+        description = description + "Updates:"
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfClusterUpdatesForOneTr(rowsZoom) + "\n";
         return description;
     }
 
@@ -323,8 +322,8 @@ public class GlobalDataKeeper {
         description = description + "Death Version Name:" + allTables.get(tablaName).getDeath() + "\n";
         description = description + "Death Version ID:" + allTables.get(tablaName).getDeathVersionID() + "\n";
         description = description + "Total Changes:"
-                + allTables.get(tablaName).getTotalChangesForOnePhase(Integer.parseInt(totalChanges), //columnname 1
-                        Integer.parseInt(changes)) //column count -1
+                + allTables.get(tablaName).getTotalChangesForOnePhase(Integer.parseInt(totalChanges), // columnname 1
+                        Integer.parseInt(changes)) // column count -1
                 + "\n";
         return description;
     }
@@ -341,13 +340,12 @@ public class GlobalDataKeeper {
                 .getTableAtChForOneTransition(Integer.parseInt(tableName)) != null) {
             description = description + "Transition Changes:" + allTables.get(tableName).getTableChanges()
                     .getTableAtChForOneTransition(Integer.parseInt(tableName)).size() + "\n";
-            description = description + "Additions:" + allTables.get(tableName)
-                    .getNumberOfAdditionsForOneTr(Integer.parseInt(tableName)) + "\n";
-            description = description + "Deletions:" + allTables.get(tableName)
-                    .getNumberOfDeletionsForOneTr(Integer.parseInt(tableName)) + "\n";
+            description = description + "Additions:"
+                    + allTables.get(tableName).getNumberOfAdditionsForOneTr(Integer.parseInt(tableName)) + "\n";
+            description = description + "Deletions:"
+                    + allTables.get(tableName).getNumberOfDeletionsForOneTr(Integer.parseInt(tableName)) + "\n";
             description = description + "Updates:"
-                    + allTables.get(tableName).getNumberOfUpdatesForOneTr(Integer.parseInt(tableName))
-                    + "\n";
+                    + allTables.get(tableName).getNumberOfUpdatesForOneTr(Integer.parseInt(tableName)) + "\n";
 
         } else {
             description = description + "Transition Changes:0" + "\n";

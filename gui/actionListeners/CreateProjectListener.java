@@ -20,7 +20,7 @@ public class CreateProjectListener implements ActionListener {
         boolean okPressed = projectConfig.createProject("","","","","","");
 
         if (okPressed){
-            gui.getDataKeeperFromFileController();
+            gui.getDataKeeper();
             gui.fillTable();
             gui.fillTree();
             gui.defineButtonsVisibillity(true);

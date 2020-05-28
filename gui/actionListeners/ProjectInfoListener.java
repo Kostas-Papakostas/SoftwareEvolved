@@ -10,12 +10,13 @@ import java.awt.event.ActionListener;
 
 public class ProjectInfoListener implements ActionListener {
     private Gui gui;
+    private ProjectConfig projectConfig = ProjectConfig.getInstance();
 
     public void listenToGUI(Gui gui_p){
         gui=gui_p;
     }
 
-    private ProjectConfig projectConfig = ProjectConfig.getInstance();
+    
 
     @Override
     public void actionPerformed(ActionEvent e) {

@@ -27,7 +27,7 @@ public class EditProjectListener implements ActionListener {
         projectConfig.editProject(returnVal == JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
 
         if(returnVal == JFileChooser.APPROVE_OPTION) {
-            gui.getDataKeeperFromFileController();
+            gui.getDataKeeper();
             gui.fillTable();
             gui.fillTree();
             gui.defineButtonsVisibillity(true);

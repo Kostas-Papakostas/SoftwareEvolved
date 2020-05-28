@@ -29,8 +29,7 @@ public class LoadProjectListener implements ActionListener {
 
         if(returnVal==JFileChooser.APPROVE_OPTION) {
             gui.setWholeCol(-1);
-            gui.getDataKeeperFromFileController();
-            System.out.println("rataata" + project);
+            gui.getDataKeeper();
             gui.fillTable();
             gui.fillTree();
             gui.defineButtonsVisibillity(true);

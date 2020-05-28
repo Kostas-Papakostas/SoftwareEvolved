@@ -77,7 +77,6 @@ public class Gui extends JFrame implements ActionListener {
     private String[] firstLevelUndoColumnsZoomArea = null;
     private String[][] firstLevelUndoRowsZoomArea = null;
 
-
     private String currentProject = null;
     protected String project = null;
 
@@ -133,10 +132,6 @@ public class Gui extends JFrame implements ActionListener {
     private JMenu mnProject;
     private JMenuItem mntmInfo;
 
-    public ProjectConfig getProjectConfig() {
-        return projectConfig;
-    }
-
     protected ProjectConfig projectConfig = ProjectConfig.getInstance();
     protected TableController tableController = TableController.getInstance();
 
@@ -151,7 +146,6 @@ public class Gui extends JFrame implements ActionListener {
     protected ShowFullDetailedLifetimeTableListener showfullDetailedTable = new ShowFullDetailedLifetimeTableListener();
     protected ShowPhasesWithClustersPLDListener showPhasesClusters = new ShowPhasesWithClustersPLDListener();
     protected ShowPhasesPLD showPhasesPLDListener = new ShowPhasesPLD();
-
 
     /**
      * Launch the application.
@@ -182,11 +176,10 @@ public class Gui extends JFrame implements ActionListener {
 
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
-        
+
         createFileJMenu(menuBar);
 
         tableActionsJMenu(menuBar);
-
 
         sideMenu.setBounds(0, 0, 280, 600);
         sideMenu.setBackground(Color.DARK_GRAY);
@@ -399,7 +392,7 @@ public class Gui extends JFrame implements ActionListener {
 
         pack();
         setBounds(30, 30, 1300, 700);
-        
+
     }
 
     private void createInfoJMenuItem(JMenuBar menuBar) {
@@ -428,7 +421,7 @@ public class Gui extends JFrame implements ActionListener {
 
         JMenuItem mntmShowGeneralLifetimePhasesWithClustersPLD = new JMenuItem("Show Phases With Clusters PLD");
 
-        showPhasesClusters.listenToGUI(Gui.this);
+        showPhasesClusters.listenToGui(Gui.this);
         mntmShowGeneralLifetimePhasesWithClustersPLD.addActionListener(showPhasesClusters);
         mnTable.add(mntmShowGeneralLifetimePhasesWithClustersPLD);
 
@@ -438,18 +431,36 @@ public class Gui extends JFrame implements ActionListener {
         mnTable.add(mntmShowLifetimeTable);
     }
 
+    private void createFileJMenu(JMenuBar menuBar) {
+        JMenu mnFile = new JMenu("File");
+        menuBar.add(mnFile);
+
+        JMenuItem mntmCreateProject = new JMenuItem("Create Project");
+        createListener.listenToGui(Gui.this);
+        mntmCreateProject.addActionListener(createListener);
+        mnFile.add(mntmCreateProject);
+
+        JMenuItem mntmLoadProject = new JMenuItem("Load Project");
+        loadListener.listenToGui(Gui.this);
+        mntmLoadProject.addActionListener(loadListener);
+        mnFile.add(mntmLoadProject);
+
+        JMenuItem mntmEditProject = new JMenuItem("Edit Project");
+        editListener.listenToGui(Gui.this);
+        mntmEditProject.addActionListener(editListener);
+        mnFile.add(mntmEditProject);
+    }
+
     private void paintGeneralTableIDU(MyTableModel myTable) {
         final IDUTableRenderer renderer = new IDUTableRenderer(Gui.this, finalRowsZoomArea, globalDataKeeper,
                 segmentSize);
 
-        final JvTable generalTable = generalTableToConstruct.makeGeneralTableIDU(myTable, rowHeight, columnWidth, wholeCol);
-
+        final JvTable generalTable = generalTableToConstruct.makeGeneralTableIDU(myTable, rowHeight, columnWidth,
+                wholeCol);
 
         generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-
         generalTable.setDefaultRenderer(Object.class, renderer);
-
 
         generalTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 
@@ -457,7 +468,7 @@ public class Gui extends JFrame implements ActionListener {
 
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                                                           boolean hasFocus, int row, int column) {
+                    boolean hasFocus, int row, int column) {
                 final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
                         column);
 
@@ -471,7 +482,8 @@ public class Gui extends JFrame implements ActionListener {
                 if (column == wholeColZoomArea && wholeColZoomArea != 0) {
 
                     // Refactored: EXTRACT METHOD and MOVE METHOD
-                    String description = globalDataKeeper.constructDescriptionZoomAreaColumn(table.getColumnName(column));
+                    String description = globalDataKeeper
+                            .constructDescriptionZoomAreaColumn(table.getColumnName(column));
 
                     descriptionText.setText(description);
 
@@ -488,7 +500,8 @@ public class Gui extends JFrame implements ActionListener {
                         c.setBackground(cl);
 
                         // Refactored: EXTRACT METHOD and MOVE METHOD
-                        String description = globalDataKeeper.constructDescriptionZoomAreaRow(finalRowsZoomArea[row][0]);
+                        String description = globalDataKeeper
+                                .constructDescriptionZoomAreaRow(finalRowsZoomArea[row][0]);
 
                         descriptionText.setText(description);
 
@@ -512,7 +525,8 @@ public class Gui extends JFrame implements ActionListener {
                         if (!table.getColumnName(column).contains("Table name")) {
 
                             // Refactored: EXTRACT METHOD and MOVE METHOD
-                            description = globalDataKeeper.constructDescriptionZoomAreaCell(table.getColumnName(column), finalRowsZoomArea[row][0]);
+                            description = globalDataKeeper.constructDescriptionZoomAreaCell(table.getColumnName(column),
+                                    finalRowsZoomArea[row][0]);
                             descriptionText.setText(description);
                         }
                         Color cl = new Color(255, 69, 0, 100);
@@ -617,7 +631,7 @@ public class Gui extends JFrame implements ActionListener {
             }
         });
 
-        /**changed general table to zoomtablearea**/
+        /** changed general table to zoomtablearea **/
         generalTable.getTableHeader().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -656,7 +670,7 @@ public class Gui extends JFrame implements ActionListener {
 
         });
 
-        //stays back
+        // stays back
         zoomAreaTable = generalTable;
         tmpScrollPaneZoomArea.setViewportView(zoomAreaTable);
         tmpScrollPaneZoomArea.setAlignmentX(0);
@@ -669,7 +683,7 @@ public class Gui extends JFrame implements ActionListener {
         lifeTimePanel.add(tmpScrollPaneZoomArea);
     }
 
-    public void paintDetailedTable(boolean levelized){
+    public void paintDetailedTable(final boolean levelized) {
         tmpLifeTimeTable = detailedTableToConstruct.getTmpLifeTimeTable();
         tmpLifeTimeTable.setName("LifeTimeTable");
         segmentSizeDetailedTable = tableController.getSegmentSizeDetailedTable();
@@ -679,7 +693,7 @@ public class Gui extends JFrame implements ActionListener {
 
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                                                           boolean hasFocus, int row, int column) {
+                    boolean hasFocus, int row, int column) {
                 final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
                         column);
 
@@ -790,29 +804,7 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
-    private void createFileJMenu(JMenuBar menuBar) {
-        JMenu mnFile = new JMenu("File");
-        menuBar.add(mnFile);
-
-        JMenuItem mntmCreateProject = new JMenuItem("Create Project");
-        createListener.listenToGui(Gui.this);
-        mntmCreateProject.addActionListener(createListener);
-        mnFile.add(mntmCreateProject);
-
-        JMenuItem mntmLoadProject = new JMenuItem("Load Project");
-        loadListener.listenToGui(Gui.this);
-        mntmLoadProject.addActionListener(loadListener);
-        mnFile.add(mntmLoadProject);
-
-        JMenuItem mntmEditProject = new JMenuItem("Edit Project");
-        editListener.listenToGui(Gui.this);
-        mntmEditProject.addActionListener(editListener);
-        mnFile.add(mntmEditProject);
-    }
-
-    //TODO extracted to be moved
     public void createPLD() {
-
 
         TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
         final String[] columns = table.constructColumns();
@@ -825,14 +817,13 @@ public class Gui extends JFrame implements ActionListener {
         finalRowsZoomArea = rows;
         tabbedPane.setSelectedIndex(0);
 
-        //Part of generaleableIDU
+        // Part of generaleableIDU
         defineButtonsVisibillity(true);
-
 
         zoomModel = tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
 
         paintGeneralTableIDU(zoomModel);
-        rowHeight= generalTableToConstruct.getRowHeight();
+        rowHeight = generalTableToConstruct.getRowHeight();
         columnWidth = generalTableToConstruct.getColumnWidth();
 
         finalRowsZoomArea = tableController.getFinalRowsZoomArea();
@@ -847,30 +838,32 @@ public class Gui extends JFrame implements ActionListener {
         showThisToPopup.setVisible(isVisible);
     }
 
-    public void getDataKeeperFromFileController() {
+    public void getDataKeeper() {
         globalDataKeeper = projectConfig.getGlobalDataKeeper();
     }
 
-    
     public void makeGeneralTablePhases() {
-        /*uniformlyDistributedButton.setVisible(true);
-
-        notUniformlyDistributedButton.setVisible(true);
-
-        int numberOfColumns = finalRows[0].length;
-        int numberOfRows = finalRows.length;
-        */
+        /*
+         * uniformlyDistributedButton.setVisible(true);
+         * 
+         * notUniformlyDistributedButton.setVisible(true);
+         * 
+         * int numberOfColumns = finalRows[0].length; int numberOfRows =
+         * finalRows.length;
+         */
         selectedRows = new ArrayList<Integer>();
         /*
-        String[][] rows = new String[numberOfRows][numberOfColumns];
-
-        for (int i = 0; i < numberOfRows; i++) {
-
-            rows[i][0] = finalRows[i][0];
-
-        }
-        */
-        generalModel = tableController.createGeneralTableModel(finalRows, finalColumns);//new MyTableModel(finalColumns, rows);
+         * String[][] rows = new String[numberOfRows][numberOfColumns];
+         * 
+         * for (int i = 0; i < numberOfRows; i++) {
+         * 
+         * rows[i][0] = finalRows[i][0];
+         * 
+         * }
+         */
+        generalModel = tableController.createGeneralTableModel(finalRows, finalColumns);// new
+                                                                                        // MyTableModel(finalColumns,
+                                                                                        // rows);
 
         final JvTable generalTable = new JvTable(generalModel);
 
@@ -907,8 +900,9 @@ public class Gui extends JFrame implements ActionListener {
 
                 if (column == wholeCol && wholeCol != 0) {
 
-                    //Refactored: EXTRACT METHOD AND MOVE METHOD
-                    String description = globalDataKeeper.constructDescriptionPLDColumns(table.getColumnName(column), column);
+                    // Refactored: EXTRACT METHOD AND MOVE METHOD
+                    String description = globalDataKeeper.constructDescriptionPLDColumns(table.getColumnName(column),
+                            column);
 
                     descriptionText.setText(description);
 
@@ -920,14 +914,14 @@ public class Gui extends JFrame implements ActionListener {
                     if (isSelected) {
                         String description;
                         if (finalRows[row][0].contains("Cluster")) {
-                            //Refactored: EXTRACT METHOD AND MOVE METHOD
+                            // Refactored: EXTRACT METHOD AND MOVE METHOD
                             description = globalDataKeeper.constructDescriptionPLDCluster(row, finalRows[row][0]);
-                            
+
                         } else {
-                            //Refactored: EXTRACT METHOD AND MOVE METHOD
+                            // Refactored: EXTRACT METHOD AND MOVE METHOD
                             description = globalDataKeeper.constructDescriptionPLDPhases(finalRows[row][0]);
                         }
-                        
+
                         descriptionText.setText(description);
                         Color cl = new Color(255, 69, 0, 100);
                         c.setBackground(cl);
@@ -951,12 +945,14 @@ public class Gui extends JFrame implements ActionListener {
 
                             if (finalRows[row][0].contains("Cluster")) {
 
-                                //Refactored: EXTRACT METHOD AND MOVE METHOD
-                                description = globalDataKeeper.constructDescriptionPLDCell(table.getColumnName(column), row, column, tmpValue, finalRows[row][0]);
+                                // Refactored: EXTRACT METHOD AND MOVE METHOD
+                                description = globalDataKeeper.constructDescriptionPLDCell(table.getColumnName(column),
+                                        row, column, tmpValue, finalRows[row][0]);
 
                             } else {
-                                //Refactored: EXTRACT METHOD AND MOVE METHOD
-                                description = globalDataKeeper.constructDescriptionPLDPhasesCell(table.getColumnName(column), column, tmpValue);
+                                // Refactored: EXTRACT METHOD AND MOVE METHOD
+                                description = globalDataKeeper.constructDescriptionPLDPhasesCell(
+                                        table.getColumnName(column), column, tmpValue);
                             }
 
                             descriptionText.setText(description);
@@ -1089,9 +1085,11 @@ public class Gui extends JFrame implements ActionListener {
                     zoomModel = tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
 //                    generalTable = generalTableConstruction.makeGeneralTableIDU(zoomModel, rowHeight, columnWidth, wholeCol);
 
-                    //generalTable = tableController.makeGeneralTableIDU(tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea, rowHeight, columnWidth),rowHeight,rowHeight,wholeCol);
+                    // generalTable =
+                    // tableController.makeGeneralTableIDU(tableController.createZoomTableModel(finalRowsZoomArea,
+                    // finalColumnsZoomArea, rowHeight, columnWidth),rowHeight,rowHeight,wholeCol);
                     paintGeneralTableIDU(zoomModel);
-                    //makeGeneralTableIDU();
+                    // makeGeneralTableIDU();
                     rowHeight = generalTableToConstruct.getRowHeight();
                     columnWidth = generalTableToConstruct.getColumnWidth();
                 }
@@ -1113,11 +1111,15 @@ public class Gui extends JFrame implements ActionListener {
                             wholeCol = -1;
                             generalTable.repaint();
                             if (showingPld) {
-                                zoomModel= tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
-                                //generalTable = tableController.makeGeneralTableIDU(tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea, rowHeight, columnWidth), rowHeight,columnWidth,wholeCol);
+                                zoomModel = tableController.createZoomTableModel(finalRowsZoomArea,
+                                        finalColumnsZoomArea);
+                                // generalTable =
+                                // tableController.makeGeneralTableIDU(tableController.createZoomTableModel(finalRowsZoomArea,
+                                // finalColumnsZoomArea, rowHeight, columnWidth),
+                                // rowHeight,columnWidth,wholeCol);
 
                                 paintGeneralTableIDU(zoomModel);
-                                //makeGeneralTableIDU();
+                                // makeGeneralTableIDU();
 
                                 rowHeight = generalTableToConstruct.getRowHeight();
                                 columnWidth = generalTableToConstruct.getColumnWidth();
@@ -1168,10 +1170,10 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
-    
     private void showSelectionToZoomArea(int selectedColumn) {
 
-        TableConstructionZoomArea table = new TableConstructionZoomArea(globalDataKeeper, tablesSelected, selectedColumn);
+        TableConstructionZoomArea table = new TableConstructionZoomArea(globalDataKeeper, tablesSelected,
+                selectedColumn);
         final String[] columns = table.constructColumns();
         final String[][] rows = table.constructRows();
         segmentSizeZoomArea = table.getSegmentSize();
@@ -1186,7 +1188,6 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
-    
     private void showClusterSelectionToZoomArea(int selectedColumn, String selectedCluster) {
         ArrayList<String> tablesOfCluster = new ArrayList<String>();
         for (int i = 0; i < tablesSelected.size(); i++) {
@@ -1219,7 +1220,6 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
-   
     private void makeZoomAreaTable() {
         showingPld = false;
         int numberOfColumns = finalRowsZoomArea[0].length;
@@ -1270,8 +1270,9 @@ public class Gui extends JFrame implements ActionListener {
                 c.setForeground(fr);
 
                 if (column == wholeColZoomArea) {
-                    //Refactored: EXTRACT METHOD AND MOVE METHOD 
-                    String description = globalDataKeeper.constructDescriptionZoomAreaPhasesColumn(rowsZoom, table.getColumnName(column), column);
+                    // Refactored: EXTRACT METHOD AND MOVE METHOD
+                    String description = globalDataKeeper.constructDescriptionZoomAreaPhasesColumn(rowsZoom,
+                            table.getColumnName(column), column);
 
                     descriptionText.setText(description);
                     Color cl = new Color(255, 69, 0, 100);
@@ -1280,8 +1281,10 @@ public class Gui extends JFrame implements ActionListener {
                     return c;
                 } else if (selectedColumnZoomArea == 0) {
                     if (isSelected) {
-                        //Refactored: EXTRACT METHOD AND MOVE METHOD 
-                        String description = globalDataKeeper.constructDescriptionZoomAreaPhasesRow(table.getColumnName(column), table.getColumnName(1), table.getColumnName(table.getColumnCount()-1));
+                        // Refactored: EXTRACT METHOD AND MOVE METHOD
+                        String description = globalDataKeeper.constructDescriptionZoomAreaPhasesRow(
+                                table.getColumnName(column), table.getColumnName(1),
+                                table.getColumnName(table.getColumnCount() - 1));
                         descriptionText.setText(description);
 
                         Color cl = new Color(255, 69, 0, 100);
@@ -1294,8 +1297,9 @@ public class Gui extends JFrame implements ActionListener {
 
                         String description = "";
                         if (!table.getColumnName(column).contains("Table name")) {
-                            //Refactored: EXTRACT METHOD AND MOVE METHOD 
-                            description = globalDataKeeper.constructDescriptionZoomAreaPhasesRowCell(table.getColumnName(column));
+                            // Refactored: EXTRACT METHOD AND MOVE METHOD
+                            description = globalDataKeeper
+                                    .constructDescriptionZoomAreaPhasesRowCell(table.getColumnName(column));
                             descriptionText.setText(description);
                         }
 
@@ -1436,7 +1440,6 @@ public class Gui extends JFrame implements ActionListener {
         lifeTimePanel.add(tmpScrollPaneZoomArea);
     }
 
-    
     private void makeZoomAreaTableForCluster() {
         showingPld = false;
         int numberOfColumns = finalRowsZoomArea[0].length;
@@ -1487,8 +1490,9 @@ public class Gui extends JFrame implements ActionListener {
 
                 if (column == wholeColZoomArea && wholeColZoomArea != 0) {
 
-                    //Refactored: EXTRACT METHOD AND MOVE METHOD
-                    String description = globalDataKeeper.constructDescriptionZoomAreaClusterColumn(table.getColumnName(column), column);
+                    // Refactored: EXTRACT METHOD AND MOVE METHOD
+                    String description = globalDataKeeper
+                            .constructDescriptionZoomAreaClusterColumn(table.getColumnName(column), column);
                     descriptionText.setText(description);
 
                     Color cl = new Color(255, 69, 0, 100);
@@ -1498,9 +1502,10 @@ public class Gui extends JFrame implements ActionListener {
                 } else if (selectedColumnZoomArea == 0) {
                     if (isSelected) {
 
-                        //Refactored: EXTRACT METHOD AND MOVE METHOD
+                        // Refactored: EXTRACT METHOD AND MOVE METHOD
                         finalRowsZoomArea = tableController.getFinalRowsZoomArea();
-                        String description = globalDataKeeper.constructDescriptionZoomAreaClusterRow(finalRowsZoomArea[row][0]);
+                        String description = globalDataKeeper
+                                .constructDescriptionZoomAreaClusterRow(finalRowsZoomArea[row][0]);
                         descriptionText.setText(description);
 
                         Color cl = new Color(255, 69, 0, 100);
@@ -1515,9 +1520,10 @@ public class Gui extends JFrame implements ActionListener {
                         String description = "";
                         if (!table.getColumnName(column).contains("Table name")) {
 
-                            //Refactored: EXTRACT METHOD AND MOVE METHOD
+                            // Refactored: EXTRACT METHOD AND MOVE METHOD
                             finalRowsZoomArea = tableController.getFinalRowsZoomArea();
-                            description = globalDataKeeper.constructDescriptionZoomAreaClusterCell(table.getColumnName(column), tmpValue, finalRowsZoomArea[row][0]);
+                            description = globalDataKeeper.constructDescriptionZoomAreaClusterCell(
+                                    table.getColumnName(column), tmpValue, finalRowsZoomArea[row][0]);
                             descriptionText.setText(description);
 
                         }
@@ -1679,7 +1685,6 @@ public class Gui extends JFrame implements ActionListener {
         lifeTimePanel.add(tmpScrollPaneZoomArea);
     }
 
-    
     public static class RowListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent event) {
             if (event.getValueIsAdjusting()) {
@@ -1692,7 +1697,6 @@ public class Gui extends JFrame implements ActionListener {
         }
     }
 
-    
     public static class ColumnListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent event) {
             if (event.getValueIsAdjusting()) {
@@ -1701,14 +1705,12 @@ public class Gui extends JFrame implements ActionListener {
         }
     }
 
-    
     @Override
     public void actionPerformed(ActionEvent arg0) {
         // TODO Auto-generated method stub
 
     }
 
-    
     public void fillTable() {
         TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
         final String[] columns = table.constructColumns();
@@ -1720,8 +1722,13 @@ public class Gui extends JFrame implements ActionListener {
         tabbedPane.setSelectedIndex(0);
         zoomModel = tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
 
-        //final JvTable generalTable = generalTableConstruction.makeGeneralTableIDU(,rowHeight, columnWidth, wholeCol);
-        //generalTable = tableController.makeGeneralTableIDU(tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea, rowHeight, columnWidth),rowHeight,columnWidth,wholeCol );
+        // final JvTable generalTable =
+        // generalTableConstruction.makeGeneralTableIDU(,rowHeight, columnWidth,
+        // wholeCol);
+        // generalTable =
+        // tableController.makeGeneralTableIDU(tableController.createZoomTableModel(finalRowsZoomArea,
+        // finalColumnsZoomArea, rowHeight, columnWidth),rowHeight,columnWidth,wholeCol
+        // );
 
         paintGeneralTableIDU(zoomModel);
 
@@ -1741,10 +1748,12 @@ public class Gui extends JFrame implements ActionListener {
 
         System.out.println(timeWeight + " " + changeWeight);
 
-        //PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(inputCsv, outputAssessment1, outputAssessment2,
-          //      timeWeight, changeWeight, preProcessingTime, preProcessingChange);
+        // PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(inputCsv,
+        // outputAssessment1, outputAssessment2,
+        // timeWeight, changeWeight, preProcessingTime, preProcessingChange);
 
-        PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectConfig, timeWeight, changeWeight, preProcessingTime, preProcessingChange);
+        PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectConfig, timeWeight, changeWeight,
+                preProcessingTime, preProcessingChange);
 
         Double b = new Double(0.3);
         Double d = new Double(0.3);
@@ -1777,7 +1786,6 @@ public class Gui extends JFrame implements ActionListener {
         System.out.println("Tables:" + globalDataKeeper.getAllPPLTables().size());
     }
 
-    
     public void optimize() throws IOException {
 
         String lalaString = "Birth Weight:" + "\tDeath Weight:" + "\tChange Weight:" + "\tTotal Cohesion:"
@@ -1822,7 +1830,6 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
-    
     public void getExternalValidityReport() throws IOException {
 
         String lalaString = "Birth Weight:" + "\tDeath Weight:" + "\tChange Weight:" + "\n";
@@ -1876,7 +1883,6 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
-    
     public void fillTree() {
 
         TreeConstructionGeneral tc = new TreeConstructionGeneral(globalDataKeeper);
@@ -1944,7 +1950,6 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
-    
     public void fillPhasesTree() {
 
         TreeConstructionPhases tc = new TreeConstructionPhases(globalDataKeeper);
@@ -1998,7 +2003,6 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
-    
     public void fillClustersTree() {
 
         TreeConstructionPhasesWithClusters tc = new TreeConstructionPhasesWithClusters(globalDataKeeper);
@@ -2053,7 +2057,6 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
-    
     public void setDescription(String descr) {
         descriptionText.setText(descr);
     }
@@ -2094,23 +2097,27 @@ public class Gui extends JFrame implements ActionListener {
         this.segmentSize = segmentSize;
     }
 
-    //for testing
+    public ProjectConfig getProjectConfig() {
+        return projectConfig;
+    }
+
+    // for testing
     public MyTableModel getGeneralModel() {
         return generalModel;
     }
 
-    //for testing
+    // for testing
     public MyTableModel getZoomModel() {
         zoomModel = tableController.getZoomModel();
         return zoomModel;
     }
 
-    //for testing
+    // for testing
     public TableController getTableController() {
         return tableController;
     }
 
-    //for testing
+    // for testing
     public MyTableModel getDetailedModel() {
         return detailedModel;
     }
