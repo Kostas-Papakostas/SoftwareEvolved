@@ -135,7 +135,7 @@ public class Gui extends JFrame implements ActionListener {
     protected TableController tableController = TableController.getInstance();
 
     private GeneralTableGraphicComputation generalTableToConstruct = GeneralTableGraphicComputation.getInstance();
-    private DetailedTableGraphicComputation detailedTableToConstruct = DetailedTableGraphicComputation.getInstance();
+    public DetailedTableGraphicComputation detailedTableToConstruct = DetailedTableGraphicComputation.getInstance();
 
     protected ProjectInfoListener infoListener = new ProjectInfoListener();
     protected LoadProjectListener loadListener = new LoadProjectListener();
@@ -681,6 +681,7 @@ public class Gui extends JFrame implements ActionListener {
         lifeTimePanel.add(tmpScrollPaneZoomArea);
     }
 
+    /*
     public void paintDetailedTable(final boolean levelized) {
         tmpLifeTimeTable = detailedTableToConstruct.getTmpLifeTimeTable();
         tmpLifeTimeTable.setName("LifeTimeTable");
@@ -799,34 +800,6 @@ public class Gui extends JFrame implements ActionListener {
                 }
             }
         });
-
-    }
-   
-   /* 
-    public void createPLD() {
-
-        TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
-        final String[] columns = table.constructColumns();
-        final String[][] rows = table.constructRows();
-        segmentSizeZoomArea = table.getSegmentSize();
-        System.out.println("Schemas: " + globalDataKeeper.getAllPPLSchemas().size());
-        System.out.println("C: " + columns.length + " R: " + rows.length);
-
-        finalColumnsZoomArea = columns;
-        finalRowsZoomArea = rows;
-        tabbedPane.setSelectedIndex(0);
-
-        // Part of generaleableIDU
-        defineButtonsVisibillity(true);
-
-        zoomModel = tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
-
-        paintGeneralTableIDU(zoomModel);
-        rowHeight = generalTableToConstruct.getRowHeight();
-        columnWidth = generalTableToConstruct.getColumnWidth();
-
-        finalRowsZoomArea = tableController.getFinalRowsZoomArea();
-        finalColumnsZoomArea = tableController.getFinalColumnsZoomArea();
 
     }*/
 
@@ -2140,6 +2113,18 @@ public class Gui extends JFrame implements ActionListener {
 
     public void setColumnWidth(int columnWidth) {
         this.columnWidth = columnWidth;
+    }
+
+    public Integer[] getSegmentSizeDetailedTable() {
+        return segmentSizeDetailedTable;
+    }
+
+    public void setTmpLifeTimeTable(JvTable tmpLifeTimeTable) {
+        this.tmpLifeTimeTable = tmpLifeTimeTable;
+    }
+
+    public void setSegmentSizeDetailedTable(Integer[] segmentSizeDetailedTable) {
+        this.segmentSizeDetailedTable = segmentSizeDetailedTable;
     }
 
 }
