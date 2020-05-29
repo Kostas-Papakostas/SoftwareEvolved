@@ -8,7 +8,6 @@ import gui.actionListeners.*;
 import gui.controllers.ProjectConfig;
 import gui.controllers.TableController;
 import gui.dialogs.EnlargeTable;
-import gui.dialogs.ProjectInfoDialog;
 import gui.tableComputations.DetailedTableGraphicComputation;
 import gui.tableComputations.GeneralTableGraphicComputation;
 import gui.tableElements.commons.JvTable;
@@ -451,7 +450,7 @@ public class Gui extends JFrame implements ActionListener {
         mnFile.add(mntmEditProject);
     }
 
-    private void paintGeneralTableIDU(MyTableModel myTable) {
+    public void paintGeneralTableIDU(MyTableModel myTable) {
         final IDUTableRenderer renderer = new IDUTableRenderer(Gui.this, finalRowsZoomArea, globalDataKeeper,
                 segmentSize);
 
@@ -670,7 +669,6 @@ public class Gui extends JFrame implements ActionListener {
 
         });
 
-        // stays back
         zoomAreaTable = generalTable;
         tmpScrollPaneZoomArea.setViewportView(zoomAreaTable);
         tmpScrollPaneZoomArea.setAlignmentX(0);
@@ -803,7 +801,8 @@ public class Gui extends JFrame implements ActionListener {
         });
 
     }
-
+   
+   /* 
     public void createPLD() {
 
         TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
@@ -829,7 +828,7 @@ public class Gui extends JFrame implements ActionListener {
         finalRowsZoomArea = tableController.getFinalRowsZoomArea();
         finalColumnsZoomArea = tableController.getFinalColumnsZoomArea();
 
-    }
+    }*/
 
     public void defineButtonsVisibillity(boolean isVisible) {
         showingPld = isVisible;
@@ -837,7 +836,7 @@ public class Gui extends JFrame implements ActionListener {
         zoomOutButton.setVisible(isVisible);
         showThisToPopup.setVisible(isVisible);
     }
-
+    
     public void getDataKeeper() {
         globalDataKeeper = projectConfig.getGlobalDataKeeper();
     }
@@ -1707,7 +1706,6 @@ public class Gui extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -1822,7 +1820,6 @@ public class Gui extends JFrame implements ActionListener {
             bw.close();
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -1875,7 +1872,6 @@ public class Gui extends JFrame implements ActionListener {
             bw.close();
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -2120,6 +2116,30 @@ public class Gui extends JFrame implements ActionListener {
     // for testing
     public MyTableModel getDetailedModel() {
         return detailedModel;
+    }
+
+    public void setZoomModel(MyTableModel zoomModel) {
+        this.zoomModel = zoomModel;
+    }
+
+    public void setFinalColumnsZoomArea(String[] finalColumnsZoomArea) {
+        this.finalColumnsZoomArea = finalColumnsZoomArea;
+    }
+
+    public void setFinalRowsZoomArea(String[][] finalRowsZoomArea) {
+        this.finalRowsZoomArea = finalRowsZoomArea;
+    }
+
+    public void setSegmentSizeZoomArea(Integer[] segmentSizeZoomArea) {
+        this.segmentSizeZoomArea = segmentSizeZoomArea;
+    }
+
+    public void setRowHeight(int rowHeight) {
+        this.rowHeight = rowHeight;
+    }
+
+    public void setColumnWidth(int columnWidth) {
+        this.columnWidth = columnWidth;
     }
 
 }
