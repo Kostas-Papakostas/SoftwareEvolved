@@ -680,129 +680,7 @@ public class Gui extends JFrame implements ActionListener {
         lifeTimePanel.setCursor(getCursor());
         lifeTimePanel.add(tmpScrollPaneZoomArea);
     }
-
-    /*
-    public void paintDetailedTable(final boolean levelized) {
-        tmpLifeTimeTable = detailedTableToConstruct.getTmpLifeTimeTable();
-        tmpLifeTimeTable.setName("LifeTimeTable");
-        segmentSizeDetailedTable = tableController.getSegmentSizeDetailedTable();
-        tmpLifeTimeTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                    boolean hasFocus, int row, int column) {
-                final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
-                        column);
-
-                String tmpValue = (String) table.getValueAt(row, column);
-                String columnName = table.getColumnName(column);
-                Color fr = new Color(0, 0, 0);
-                c.setForeground(fr);
-
-                if (selectedColumn == 0) {
-                    if (isSelected) {
-                        Color cl = new Color(255, 69, 0, 100);
-
-                        c.setBackground(cl);
-
-                        return c;
-                    }
-                } else {
-                    if (isSelected && hasFocus) {
-
-                        c.setBackground(Color.YELLOW);
-                        return c;
-                    }
-
-                }
-
-                try {
-                    int numericValue = Integer.parseInt(tmpValue);
-                    Color insersionColor = null;
-
-                    if (columnName.equals("I")) {
-                        if (numericValue == 0) {
-                            insersionColor = new Color(255, 231, 186);
-                        } else if (numericValue > 0 && numericValue <= segmentSizeDetailedTable[0]) {
-
-                            insersionColor = new Color(193, 255, 193);
-                        } else if (numericValue > segmentSizeDetailedTable[0]
-                                && numericValue <= 2 * segmentSizeDetailedTable[0]) {
-                            insersionColor = new Color(84, 255, 159);
-                        } else if (numericValue > 2 * segmentSizeDetailedTable[0]
-                                && numericValue <= 3 * segmentSizeDetailedTable[0]) {
-
-                            insersionColor = new Color(0, 201, 87);
-                        } else {
-                            insersionColor = new Color(0, 100, 0);
-                        }
-                        c.setBackground(insersionColor);
-                    }
-
-                    if (columnName.equals("U")) {
-                        if (numericValue == 0) {
-                            insersionColor = new Color(255, 231, 186);
-                        } else if (numericValue > 0 && numericValue <= segmentSizeDetailedTable[1]) {
-
-                            insersionColor = new Color(176, 226, 255);
-                        } else if (numericValue > segmentSizeDetailedTable[1]
-                                && numericValue <= 2 * segmentSizeDetailedTable[1]) {
-                            insersionColor = new Color(92, 172, 238);
-                        } else if (numericValue > 2 * segmentSizeDetailedTable[1]
-                                && numericValue <= 3 * segmentSizeDetailedTable[1]) {
-
-                            insersionColor = new Color(28, 134, 238);
-                        } else {
-                            insersionColor = new Color(16, 78, 139);
-                        }
-                        c.setBackground(insersionColor);
-                    }
-
-                    if (columnName.equals("D")) {
-                        if (numericValue == 0) {
-                            insersionColor = new Color(255, 231, 186);
-                        } else if (numericValue > 0 && numericValue <= segmentSizeDetailedTable[2]) {
-
-                            insersionColor = new Color(255, 106, 106);
-                        } else if (numericValue > segmentSizeDetailedTable[2]
-                                && numericValue <= 2 * segmentSizeDetailedTable[2]) {
-                            insersionColor = new Color(255, 0, 0);
-                        } else if (numericValue > 2 * segmentSizeDetailedTable[2]
-                                && numericValue <= 3 * segmentSizeDetailedTable[2]) {
-
-                            insersionColor = new Color(205, 0, 0);
-                        } else {
-                            insersionColor = new Color(139, 0, 0);
-                        }
-                        c.setBackground(insersionColor);
-                    }
-
-                    return c;
-                } catch (Exception e) {
-
-                    if (tmpValue.equals("")) {
-                        c.setBackground(Color.black);
-                        return c;
-                    } else {
-                        if (columnName.contains("v")) {
-                            c.setBackground(Color.lightGray);
-                            if (levelized == false) {
-                                setToolTipText(columnName);
-                            }
-                        } else {
-                            Color tableNameColor = new Color(205, 175, 149);
-                            c.setBackground(tableNameColor);
-                        }
-                        return c;
-                    }
-                }
-            }
-        });
-
-    }*/
-
+   
     public void defineButtonsVisibillity(boolean isVisible) {
         showingPld = isVisible;
         zoomInButton.setVisible(isVisible);
@@ -1141,7 +1019,8 @@ public class Gui extends JFrame implements ActionListener {
         lifeTimePanel.add(tmpScrollPane);
 
     }
-
+    
+    
     private void showSelectionToZoomArea(int selectedColumn) {
 
         TableConstructionZoomArea table = new TableConstructionZoomArea(globalDataKeeper, tablesSelected,
@@ -1159,7 +1038,7 @@ public class Gui extends JFrame implements ActionListener {
         makeZoomAreaTable();
 
     }
-
+    
     private void showClusterSelectionToZoomArea(int selectedColumn, String selectedCluster) {
         ArrayList<String> tablesOfCluster = new ArrayList<String>();
         for (int i = 0; i < tablesSelected.size(); i++) {
@@ -1192,6 +1071,7 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    
     private void makeZoomAreaTable() {
         showingPld = false;
         int numberOfColumns = finalRowsZoomArea[0].length;
@@ -1693,14 +1573,6 @@ public class Gui extends JFrame implements ActionListener {
         tabbedPane.setSelectedIndex(0);
         zoomModel = tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
 
-        // final JvTable generalTable =
-        // generalTableConstruction.makeGeneralTableIDU(,rowHeight, columnWidth,
-        // wholeCol);
-        // generalTable =
-        // tableController.makeGeneralTableIDU(tableController.createZoomTableModel(finalRowsZoomArea,
-        // finalColumnsZoomArea, rowHeight, columnWidth),rowHeight,columnWidth,wholeCol
-        // );
-
         paintGeneralTableIDU(zoomModel);
 
         finalRowsZoomArea = tableController.getFinalRowsZoomArea();
@@ -1718,10 +1590,6 @@ public class Gui extends JFrame implements ActionListener {
         numberOfClusters = 14;
 
         System.out.println(timeWeight + " " + changeWeight);
-
-        // PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(inputCsv,
-        // outputAssessment1, outputAssessment2,
-        // timeWeight, changeWeight, preProcessingTime, preProcessingChange);
 
         PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectConfig, timeWeight, changeWeight,
                 preProcessingTime, preProcessingChange);
@@ -1759,7 +1627,7 @@ public class Gui extends JFrame implements ActionListener {
 
     public void optimize() throws IOException {
 
-        String lalaString = "Birth Weight:" + "\tDeath Weight:" + "\tChange Weight:" + "\tTotal Cohesion:"
+        String tableInfo = "Birth Weight:" + "\tDeath Weight:" + "\tChange Weight:" + "\tTotal Cohesion:"
                 + "\tTotal Separation:" + "\n";
         int counter = 0;
         for (double wb = 0.0; wb <= 1.0; wb = wb + 0.01) {
@@ -1767,14 +1635,14 @@ public class Gui extends JFrame implements ActionListener {
             for (double wd = (1.0 - wb); wd >= 0.0; wd = wd - 0.01) {
 
                 double wc = 1.0 - (wb + wd);
-                TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalDataKeeper, wb, wd, wc);
-                mainEngine2.extractClusters(numberOfClusters);
-                globalDataKeeper.setClusterCollectors(mainEngine2.getClusterCollectors());
+                TableClusteringMainEngine tableClusteringEngine = new TableClusteringMainEngine(globalDataKeeper, wb, wd, wc);
+                tableClusteringEngine.extractClusters(numberOfClusters);
+                globalDataKeeper.setClusterCollectors(tableClusteringEngine.getClusterCollectors());
 
                 ClusterValidatorMainEngine lala = new ClusterValidatorMainEngine(globalDataKeeper);
                 lala.run();
 
-                lalaString = lalaString + wb + "\t" + wd + "\t" + wc + "\t" + lala.getTotalCohesion() + "\t"
+                tableInfo = tableInfo + wb + "\t" + wd + "\t" + wc + "\t" + lala.getTotalCohesion() + "\t"
                         + lala.getTotalSeparation() + "\t" + (wb + wd + wc) + "\n";
 
                 counter++;
@@ -1789,31 +1657,31 @@ public class Gui extends JFrame implements ActionListener {
             fw = new FileWriter("lala.csv");
 
             BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(lalaString);
+            bw.write(tableInfo);
             bw.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println(lalaString);
+        System.out.println(tableInfo);
 
     }
 
     public void getExternalValidityReport() throws IOException {
 
-        String lalaString = "Birth Weight:" + "\tDeath Weight:" + "\tChange Weight:" + "\n";
+        String validityInfo = "Birth Weight:" + "\tDeath Weight:" + "\tChange Weight:" + "\n";
         int counter = 0;
 
         TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalDataKeeper, 0.333, 0.333, 0.333);
         mainEngine2.extractClusters(4);
         globalDataKeeper.setClusterCollectors(mainEngine2.getClusterCollectors());
 
-        ClusterValidatorMainEngine lala = new ClusterValidatorMainEngine(globalDataKeeper);
-        lala.run();
+        ClusterValidatorMainEngine clusterValidatorMainEngine = new ClusterValidatorMainEngine(globalDataKeeper);
+        clusterValidatorMainEngine.run();
 
-        lalaString = lalaString + "\n" + "0.333" + "\t" + "0.333" + "\t" + "0.333" + "\n"
-                + lala.getExternalEvaluationReport();
+        validityInfo = validityInfo + "\n" + "0.333" + "\t" + "0.333" + "\t" + "0.333" + "\n"
+                + clusterValidatorMainEngine.getExternalEvaluationReport();
 
         for (double wb = 0.0; wb <= 1.0; wb = wb + 0.5) {
 
@@ -1824,10 +1692,10 @@ public class Gui extends JFrame implements ActionListener {
                 mainEngine2.extractClusters(4);
                 globalDataKeeper.setClusterCollectors(mainEngine2.getClusterCollectors());
 
-                lala = new ClusterValidatorMainEngine(globalDataKeeper);
-                lala.run();
+                clusterValidatorMainEngine = new ClusterValidatorMainEngine(globalDataKeeper);
+                clusterValidatorMainEngine.run();
 
-                lalaString = lalaString + "\n" + wb + "\t" + wd + "\t" + wc + "\n" + lala.getExternalEvaluationReport();
+                validityInfo = validityInfo + "\n" + wb + "\t" + wd + "\t" + wc + "\n" + clusterValidatorMainEngine.getExternalEvaluationReport();
 
                 counter++;
                 System.err.println(counter);
@@ -1841,14 +1709,14 @@ public class Gui extends JFrame implements ActionListener {
             fw = new FileWriter("lala.csv");
 
             BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(lalaString);
+            bw.write(validityInfo);
             bw.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println(lalaString);
+        System.out.println(validityInfo);
 
     }
 
@@ -1897,9 +1765,6 @@ public class Gui extends JFrame implements ActionListener {
                     });
                     popupMenu.add(showDetailsItem);
                     popupMenu.show(tablesTree, e.getX(), e.getY());
-
-                    // }
-                    // }
                 }
 
             }
@@ -2070,23 +1935,19 @@ public class Gui extends JFrame implements ActionListener {
         return projectConfig;
     }
 
-    // for testing
     public MyTableModel getGeneralModel() {
         return generalModel;
     }
 
-    // for testing
     public MyTableModel getZoomModel() {
         zoomModel = tableController.getZoomModel();
         return zoomModel;
     }
 
-    // for testing
     public TableController getTableController() {
         return tableController;
     }
 
-    // for testing
     public MyTableModel getDetailedModel() {
         return detailedModel;
     }
