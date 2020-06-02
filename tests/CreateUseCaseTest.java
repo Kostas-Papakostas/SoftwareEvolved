@@ -1,6 +1,6 @@
 package tests;
 
-import gui.controllers.ProjectConfig;
+import data.configurators.ProjectConfig;
 import gui.mainEngine.Gui;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +28,7 @@ public class CreateUseCaseTest {
                 "Transition-xml:filesHandler/transitions/atlasTransitions.xml";
 
         projectConfig.createProject("lala","filesHandler/datasets/Atlas.txt","filesHandler/input/atlas.csv","filesHandler/output/atlas_Assessment1.txt","filesHandler/output/atlas_Assessment2.txt","filesHandler/transitions/atlasTransitions.xml");
-        testGui.getDataKeeperFromFileController();
+        testGui.getDataKeeper();
         testGui.fillTable();
         testGui.fillTree();
 

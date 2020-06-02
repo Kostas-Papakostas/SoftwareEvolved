@@ -1,4 +1,4 @@
-package gui.controllers;
+package data.configurators;
 
 import data.dataKeeper.GlobalDataKeeper;
 import gui.dialogs.CreateProjectJDialog;
@@ -21,7 +21,7 @@ public class ProjectConfig {
 
     //Needed for Singleton Pattern
     private ProjectConfig() {
-    
+
     }
 
     public static ProjectConfig getInstance() {

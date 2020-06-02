@@ -1,6 +1,6 @@
 package gui.tableComputations;
 
-import gui.controllers.ProjectConfig;
+import data.configurators.ProjectConfig;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 

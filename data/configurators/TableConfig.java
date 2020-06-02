@@ -1,4 +1,4 @@
-package gui.controllers;
+package data.configurators;
 
 import data.dataKeeper.GlobalDataKeeper;
 import data.dataSorters.PldRowSorter;
@@ -7,8 +7,8 @@ import gui.tableElements.tableConstructors.TableConstructionAllSquaresIncluded;
 
 import javax.swing.*;
 
-public class TableController {
-    private static TableController singleInstance = null;
+public class TableConfig {
+    private static TableConfig singleInstance = null;
     private ProjectConfig projectConfig = ProjectConfig.getInstance();
     private GlobalDataKeeper globalDataKeeper;
 
@@ -25,22 +25,20 @@ public class TableController {
     private String[][] finalRowsZoomArea;
     private String[] finalColumnsGeneral;
     private String[][] finalRowsGeneral;
-    //private ArrayList<Integer> selectedRows;
+
     private MyTableModel generalModel;
 
     //Needed for Singleton Pattern
-    private TableController() {
+    private TableConfig() {
     
     }
 
-    public static TableController getInstance() {
+    public static TableConfig getInstance() {
         if(singleInstance == null) {
-            singleInstance = new TableController();
+            singleInstance = new TableConfig();
         }
         return singleInstance;
     }
-
-
 
     /**keeping that**/
     public MyTableModel createFullDetailedLifeTableModel() {
@@ -66,7 +64,7 @@ public class TableController {
         finalRowsZoomArea=finalRowsZoomArea_p;
         finalColumnsZoomArea=finalColumnsZoomArea_p;
 
-        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea_p, projectConfig.getGlobalDataKeeper());
+        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea, projectConfig.getGlobalDataKeeper());
 
         finalRowsZoomArea = sorter.sortRows();
 
@@ -130,5 +128,4 @@ public class TableController {
     public boolean getIsLevelised() {
         return isLevelised;
     }
-
 }

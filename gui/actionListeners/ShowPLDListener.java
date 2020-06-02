@@ -1,7 +1,7 @@
 package gui.actionListeners;
 
-import gui.controllers.ProjectConfig;
-import gui.controllers.TableController;
+import data.configurators.ProjectConfig;
+import data.configurators.TableConfig;
 import gui.mainEngine.Gui;
 import gui.tableComputations.GeneralTableGraphicComputation;
 import gui.tableElements.tableConstructors.TableConstructionIDU;
@@ -45,15 +45,15 @@ public class ShowPLDListener implements ActionListener {
             // Part of generaleableIDU
             gui.defineButtonsVisibillity(true);
             
-            TableController tableController = TableController.getInstance();
-            gui.setZoomModel(tableController.createZoomTableModel(rows, columns));
+            TableConfig tableConfig = TableConfig.getInstance();
+            gui.setZoomModel(tableConfig.createZoomTableModel(rows, columns));
 
             gui.paintGeneralTableIDU(gui.getZoomModel());
             gui.setRowHeight(GeneralTableGraphicComputation.getInstance().getRowHeight());
             gui.setColumnWidth(GeneralTableGraphicComputation.getInstance().getColumnWidth());
 
-            gui.setFinalRowsZoomArea(tableController.getFinalRowsZoomArea());
-            gui.setFinalColumnsZoomArea(tableController.getFinalColumnsZoomArea());
+            gui.setFinalRowsZoomArea(tableConfig.getFinalRowsZoomArea());
+            gui.setFinalColumnsZoomArea(tableConfig.getFinalColumnsZoomArea());
             
             gui.fillTree();
         } else {

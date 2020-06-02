@@ -1,9 +1,10 @@
 package gui.actionListeners;
 
+import data.configurators.ProjectConfig;
+import gui.mainEngine.Gui;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import gui.controllers.ProjectConfig;
-import gui.mainEngine.Gui;
 
 public abstract class ProjectTemplateListener implements ActionListener{
     protected ProjectConfig projectConfig = ProjectConfig.getInstance();

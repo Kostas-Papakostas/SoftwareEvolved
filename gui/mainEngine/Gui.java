@@ -5,11 +5,12 @@ package gui.mainEngine;
 import data.dataKeeper.GlobalDataKeeper;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import gui.actionListeners.*;
-import gui.controllers.ProjectConfig;
-import gui.controllers.TableController;
+import data.configurators.ProjectConfig;
+import data.configurators.TableConfig;
 import gui.dialogs.EnlargeTable;
 import gui.tableComputations.DetailedTableGraphicComputation;
 import gui.tableComputations.GeneralTableGraphicComputation;
+import gui.tableComputations.ZoomTableGraphicComputation;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 import gui.tableElements.tableConstructors.*;
@@ -76,22 +77,8 @@ public class Gui extends JFrame implements ActionListener {
     private String[] firstLevelUndoColumnsZoomArea = null;
     private String[][] firstLevelUndoRowsZoomArea = null;
 
-    private String currentProject = null;
-    protected String project = null;
-
     private Integer[] segmentSize = new Integer[4];
     private Integer[] segmentSizeZoomArea = new Integer[4];
-
-    private Float timeWeight = null;
-    private Float changeWeight = null;
-    private Double birthWeight = null;
-    private Double deathWeight = null;
-    private Double changeWeightCl = null;
-
-    private Integer numberOfPhases = null;
-    private Integer numberOfClusters = null;
-    private Boolean preProcessingTime = null;
-    private Boolean preProcessingChange = null;
 
     private ArrayList<String> selectedFromTree = new ArrayList<String>();
 
@@ -132,10 +119,11 @@ public class Gui extends JFrame implements ActionListener {
     private JMenuItem mntmInfo;
 
     protected ProjectConfig projectConfig = ProjectConfig.getInstance();
-    protected TableController tableController = TableController.getInstance();
+    protected TableConfig tableConfig = TableConfig.getInstance();
 
-    private GeneralTableGraphicComputation generalTableToConstruct = GeneralTableGraphicComputation.getInstance();
-    public DetailedTableGraphicComputation detailedTableToConstruct = DetailedTableGraphicComputation.getInstance();
+    private GeneralTableGraphicComputation generalTableFrameConstruction = GeneralTableGraphicComputation.getInstance();
+    public DetailedTableGraphicComputation detailedTableFrameConstruction = DetailedTableGraphicComputation.getInstance();
+    private ZoomTableGraphicComputation zoomTableFrameConstruction = ZoomTableGraphicComputation.getInstance();
 
     protected ProjectInfoListener infoListener = new ProjectInfoListener();
     protected LoadProjectListener loadListener = new LoadProjectListener();
@@ -394,6 +382,7 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    /*button UI stuff no need to change*/
     private void createInfoJMenuItem(JMenuBar menuBar) {
         mnProject = new JMenu("Project");
         menuBar.add(mnProject);
@@ -449,12 +438,13 @@ public class Gui extends JFrame implements ActionListener {
         mntmEditProject.addActionListener(editListener);
         mnFile.add(mntmEditProject);
     }
+    /************************/
 
     public void paintGeneralTableIDU(MyTableModel myTable) {
         final IDUTableRenderer renderer = new IDUTableRenderer(Gui.this, finalRowsZoomArea, globalDataKeeper,
                 segmentSize);
 
-        final JvTable generalTable = generalTableToConstruct.makeGeneralTableIDU(myTable, rowHeight, columnWidth,
+        final JvTable generalTable = generalTableFrameConstruction.makeGeneralTableIDU(myTable, rowHeight, columnWidth,
                 wholeCol);
 
         generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -687,31 +677,10 @@ public class Gui extends JFrame implements ActionListener {
         zoomOutButton.setVisible(isVisible);
         showThisToPopup.setVisible(isVisible);
     }
-    
-    public void getDataKeeper() {
-        globalDataKeeper = projectConfig.getGlobalDataKeeper();
-    }
 
     public void makeGeneralTablePhases() {
-        /*
-         * uniformlyDistributedButton.setVisible(true);
-         * 
-         * notUniformlyDistributedButton.setVisible(true);
-         * 
-         * int numberOfColumns = finalRows[0].length; int numberOfRows =
-         * finalRows.length;
-         */
         selectedRows = new ArrayList<Integer>();
-        /*
-         * String[][] rows = new String[numberOfRows][numberOfColumns];
-         * 
-         * for (int i = 0; i < numberOfRows; i++) {
-         * 
-         * rows[i][0] = finalRows[i][0];
-         * 
-         * }
-         */
-        generalModel = tableController.createGeneralTableModel(finalRows, finalColumns);// new
+        generalModel = tableConfig.createGeneralTableModel(finalRows, finalColumns);// new
                                                                                         // MyTableModel(finalColumns,
                                                                                         // rows);
 
@@ -932,16 +901,16 @@ public class Gui extends JFrame implements ActionListener {
                 System.out.println("Column index selected " + wholeCol + " " + name);
                 generalTable.repaint();
                 if (showingPld) {
-                    zoomModel = tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
+                    zoomModel = tableConfig.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
 //                    generalTable = generalTableConstruction.makeGeneralTableIDU(zoomModel, rowHeight, columnWidth, wholeCol);
 
                     // generalTable =
-                    // tableController.makeGeneralTableIDU(tableController.createZoomTableModel(finalRowsZoomArea,
+                    // tableConfig.makeGeneralTableIDU(tableConfig.createZoomTableModel(finalRowsZoomArea,
                     // finalColumnsZoomArea, rowHeight, columnWidth),rowHeight,rowHeight,wholeCol);
                     paintGeneralTableIDU(zoomModel);
                     // makeGeneralTableIDU();
-                    rowHeight = generalTableToConstruct.getRowHeight();
-                    columnWidth = generalTableToConstruct.getColumnWidth();
+                    rowHeight = generalTableFrameConstruction.getRowHeight();
+                    columnWidth = generalTableFrameConstruction.getColumnWidth();
                 }
             }
         });
@@ -961,18 +930,18 @@ public class Gui extends JFrame implements ActionListener {
                             wholeCol = -1;
                             generalTable.repaint();
                             if (showingPld) {
-                                zoomModel = tableController.createZoomTableModel(finalRowsZoomArea,
+                                zoomModel = tableConfig.createZoomTableModel(finalRowsZoomArea,
                                         finalColumnsZoomArea);
                                 // generalTable =
-                                // tableController.makeGeneralTableIDU(tableController.createZoomTableModel(finalRowsZoomArea,
+                                // tableConfig.makeGeneralTableIDU(tableConfig.createZoomTableModel(finalRowsZoomArea,
                                 // finalColumnsZoomArea, rowHeight, columnWidth),
                                 // rowHeight,columnWidth,wholeCol);
 
                                 paintGeneralTableIDU(zoomModel);
                                 // makeGeneralTableIDU();
 
-                                rowHeight = generalTableToConstruct.getRowHeight();
-                                columnWidth = generalTableToConstruct.getColumnWidth();
+                                rowHeight = generalTableFrameConstruction.getRowHeight();
+                                columnWidth = generalTableFrameConstruction.getColumnWidth();
                             }
                         }
                     });
@@ -1019,8 +988,7 @@ public class Gui extends JFrame implements ActionListener {
         lifeTimePanel.add(tmpScrollPane);
 
     }
-    
-    
+
     private void showSelectionToZoomArea(int selectedColumn) {
 
         TableConstructionZoomArea table = new TableConstructionZoomArea(globalDataKeeper, tablesSelected,
@@ -1071,7 +1039,6 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
-    
     private void makeZoomAreaTable() {
         showingPld = false;
         int numberOfColumns = finalRowsZoomArea[0].length;
@@ -1087,8 +1054,10 @@ public class Gui extends JFrame implements ActionListener {
 
         zoomModel = new MyTableModel(finalColumnsZoomArea, rowsZoom);
 
-        final JvTable zoomTable = new JvTable(zoomModel);
+        final JvTable zoomTable = zoomTableFrameConstruction.makeZoomTable(zoomModel,20,20);//new JvTable(zoomModel);
 
+
+        /*
         zoomTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         zoomTable.setShowGrid(false);
@@ -1105,7 +1074,7 @@ public class Gui extends JFrame implements ActionListener {
                 zoomTable.getColumnModel().getColumn(i).setMinWidth(20);
             }
         }
-
+        */
         zoomTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 
             private static final long serialVersionUID = 1L;
@@ -1294,9 +1263,10 @@ public class Gui extends JFrame implements ActionListener {
 
     private void makeZoomAreaTableForCluster() {
         showingPld = false;
+        undoButton.setVisible(true);
+
         int numberOfColumns = finalRowsZoomArea[0].length;
         int numberOfRows = finalRowsZoomArea.length;
-        undoButton.setVisible(true);
 
         final String[][] rowsZoom = new String[numberOfRows][numberOfColumns];
 
@@ -1306,8 +1276,10 @@ public class Gui extends JFrame implements ActionListener {
         }
 
         zoomModel = new MyTableModel(finalColumnsZoomArea, rowsZoom);
-        final JvTable zoomTable = new JvTable(zoomModel);
 
+        final JvTable zoomTable = zoomTableFrameConstruction.makeZoomTable(zoomModel,70,10);//new JvTable(zoomModel);
+
+        /*
         zoomTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         zoomTable.setShowGrid(false);
@@ -1324,7 +1296,7 @@ public class Gui extends JFrame implements ActionListener {
                 zoomTable.getColumnModel().getColumn(i).setMinWidth(70);
             }
         }
-
+        */
         zoomTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 
             private static final long serialVersionUID = 1L;
@@ -1355,7 +1327,7 @@ public class Gui extends JFrame implements ActionListener {
                     if (isSelected) {
 
                         // Refactored: EXTRACT METHOD AND MOVE METHOD
-                        finalRowsZoomArea = tableController.getFinalRowsZoomArea();
+                        finalRowsZoomArea = tableConfig.getFinalRowsZoomArea();
                         String description = globalDataKeeper
                                 .constructDescriptionZoomAreaClusterRow(finalRowsZoomArea[row][0]);
                         descriptionText.setText(description);
@@ -1373,7 +1345,7 @@ public class Gui extends JFrame implements ActionListener {
                         if (!table.getColumnName(column).contains("Table name")) {
 
                             // Refactored: EXTRACT METHOD AND MOVE METHOD
-                            finalRowsZoomArea = tableController.getFinalRowsZoomArea();
+                            finalRowsZoomArea = tableConfig.getFinalRowsZoomArea();
                             description = globalDataKeeper.constructDescriptionZoomAreaClusterCell(
                                     table.getColumnName(column), tmpValue, finalRowsZoomArea[row][0]);
                             descriptionText.setText(description);
@@ -1537,6 +1509,7 @@ public class Gui extends JFrame implements ActionListener {
         lifeTimePanel.add(tmpScrollPaneZoomArea);
     }
 
+    /**nothing to do here*/
     public static class RowListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent event) {
             if (event.getValueIsAdjusting()) {
@@ -1556,75 +1529,14 @@ public class Gui extends JFrame implements ActionListener {
             }
         }
     }
+    /*********/
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
 
     }
 
-    public void fillTable() {
-        TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
-        final String[] columns = table.constructColumns();
-        final String[][] rows = table.constructRows();
-        segmentSizeZoomArea = table.getSegmentSize();
-
-        finalColumnsZoomArea = columns;
-        finalRowsZoomArea = rows;
-        tabbedPane.setSelectedIndex(0);
-        zoomModel = tableController.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
-
-        paintGeneralTableIDU(zoomModel);
-
-        finalRowsZoomArea = tableController.getFinalRowsZoomArea();
-        finalColumnsZoomArea = tableController.getFinalColumnsZoomArea();
-
-        timeWeight = (float) 0.5;
-        changeWeight = (float) 0.5;
-        preProcessingTime = false;
-        preProcessingChange = false;
-        if (globalDataKeeper.getAllPPLTransitions().size() < 56) {
-            numberOfPhases = 40;
-        } else {
-            numberOfPhases = 56;
-        }
-        numberOfClusters = 14;
-
-        System.out.println(timeWeight + " " + changeWeight);
-
-        PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectConfig, timeWeight, changeWeight,
-                preProcessingTime, preProcessingChange);
-
-        Double b = new Double(0.3);
-        Double d = new Double(0.3);
-        Double c = new Double(0.3);
-
-        mainEngine.parseInput();
-        System.out.println("\n\n\n");
-        mainEngine.extractPhases(numberOfPhases);
-
-        mainEngine.connectTransitionsWithPhases(globalDataKeeper);
-        globalDataKeeper.setPhaseCollectors(mainEngine.getPhaseCollectors());
-        TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalDataKeeper, b, d, c);
-        mainEngine2.extractClusters(numberOfClusters);
-        globalDataKeeper.setClusterCollectors(mainEngine2.getClusterCollectors());
-        mainEngine2.print();
-
-        if (globalDataKeeper.getPhaseCollectors().size() != 0) {
-            TableConstructionWithClusters tableP = new TableConstructionWithClusters(globalDataKeeper);
-            final String[] columnsP = tableP.constructColumns();
-            final String[][] rowsP = tableP.constructRows();
-            segmentSize = tableP.getSegmentSize();
-            finalColumns = columnsP;
-            finalRows = rowsP;
-            tabbedPane.setSelectedIndex(0);
-            makeGeneralTablePhases();
-            fillClustersTree();
-        }
-        System.out.println("Schemas:" + globalDataKeeper.getAllPPLSchemas().size());
-        System.out.println("Transitions:" + globalDataKeeper.getAllPPLTransitions().size());
-        System.out.println("Tables:" + globalDataKeeper.getAllPPLTables().size());
-    }
-
+    /* no use for this one*/
     public void optimize() throws IOException {
 
         String tableInfo = "Birth Weight:" + "\tDeath Weight:" + "\tChange Weight:" + "\tTotal Cohesion:"
@@ -1636,6 +1548,7 @@ public class Gui extends JFrame implements ActionListener {
 
                 double wc = 1.0 - (wb + wd);
                 TableClusteringMainEngine tableClusteringEngine = new TableClusteringMainEngine(globalDataKeeper, wb, wd, wc);
+                Integer numberOfClusters=14;
                 tableClusteringEngine.extractClusters(numberOfClusters);
                 globalDataKeeper.setClusterCollectors(tableClusteringEngine.getClusterCollectors());
 
@@ -1668,6 +1581,7 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    /* no use for this one*/
     public void getExternalValidityReport() throws IOException {
 
         String validityInfo = "Birth Weight:" + "\tDeath Weight:" + "\tChange Weight:" + "\n";
@@ -1720,6 +1634,70 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    public void fillTable() {
+        TableConstructionIDU table = new TableConstructionIDU(globalDataKeeper);
+        final String[] columns = table.constructColumns();
+        final String[][] rows = table.constructRows();
+        segmentSizeZoomArea = table.getSegmentSize();
+
+        finalColumnsZoomArea = columns;
+        finalRowsZoomArea = rows;
+        tabbedPane.setSelectedIndex(0);
+        zoomModel = tableConfig.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
+
+        paintGeneralTableIDU(zoomModel);
+
+        finalRowsZoomArea = tableConfig.getFinalRowsZoomArea();
+        finalColumnsZoomArea = tableConfig.getFinalColumnsZoomArea();
+
+        Float timeWeight = (float) 0.5;
+        Float changeWeight = (float) 0.5;
+        Integer numberOfPhases;
+        boolean preProcessingTime = false;
+        boolean preProcessingChange = false;
+        if (globalDataKeeper.getAllPPLTransitions().size() < 56) {
+            numberOfPhases = 40;
+        } else {
+            numberOfPhases = 56;
+        }
+        Integer numberOfClusters = 14;
+
+        System.out.println(timeWeight + " " + changeWeight);
+
+        PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectConfig, timeWeight, changeWeight,
+                preProcessingTime, preProcessingChange);
+
+        Double b = new Double(0.3);
+        Double d = new Double(0.3);
+        Double c = new Double(0.3);
+
+        mainEngine.parseInput();
+        System.out.println("\n\n\n");
+        mainEngine.extractPhases(numberOfPhases);
+
+        mainEngine.connectTransitionsWithPhases(globalDataKeeper);
+        globalDataKeeper.setPhaseCollectors(mainEngine.getPhaseCollectors());
+        TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalDataKeeper, b, d, c);
+        mainEngine2.extractClusters(numberOfClusters);
+        globalDataKeeper.setClusterCollectors(mainEngine2.getClusterCollectors());
+        mainEngine2.print();
+
+        if (globalDataKeeper.getPhaseCollectors().size() != 0) {
+            TableConstructionWithClusters tableP = new TableConstructionWithClusters(globalDataKeeper);
+            final String[] columnsP = tableP.constructColumns();
+            final String[][] rowsP = tableP.constructRows();
+            segmentSize = tableP.getSegmentSize();
+            finalColumns = columnsP;
+            finalRows = rowsP;
+            tabbedPane.setSelectedIndex(0);
+            makeGeneralTablePhases();
+            fillClustersTree();
+        }
+        System.out.println("Schemas:" + globalDataKeeper.getAllPPLSchemas().size());
+        System.out.println("Transitions:" + globalDataKeeper.getAllPPLTransitions().size());
+        System.out.println("Tables:" + globalDataKeeper.getAllPPLTables().size());
+    }
+
     public void fillTree() {
 
         TreeConstructionGeneral tc = new TreeConstructionGeneral(globalDataKeeper);
@@ -1736,14 +1714,6 @@ public class Gui extends JFrame implements ActionListener {
 
         PPLSchema temp = ((PPLSchema) globalDataKeeper.getAllPPLSchemas().values().toArray()[0]);
         PPLSchema temp2 = ((PPLSchema) globalDataKeeper.getAllPPLSchemas().values().toArray()[1]);
-
-        System.out.println("lilili  " + temp);
-        System.out.println("lilili  " + temp2);
-
-        System.out.println("lalalalalala" + temp.getTableAt(0).getName());
-        System.out.println("lalalalalala" + temp.getTableAt(1).getName());
-        System.out.println("lalalalalala" + temp.getTableAt(2).getName());
-        System.out.println("lalalalalala" + temp.getTableAt(3).getName());
 
         tablesTree.addMouseListener(new MouseAdapter() {
             @Override
@@ -1861,12 +1831,9 @@ public class Gui extends JFrame implements ActionListener {
                     final JPopupMenu popupMenu = new JPopupMenu();
                     JMenuItem showDetailsItem = new JMenuItem("Show This into the Table");
                     showDetailsItem.addActionListener(new ActionListener() {
-
                         @Override
                         public void actionPerformed(ActionEvent e) {
-
                             LifeTimeTable.repaint();
-
                         }
                     });
                     popupMenu.add(showDetailsItem);
@@ -1891,6 +1858,12 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+
+    /*getters/setters*/
+    public void getDataKeeper() {
+        globalDataKeeper = projectConfig.getGlobalDataKeeper();
+    }
+
     public void setDescription(String descr) {
         descriptionText.setText(descr);
     }
@@ -1899,12 +1872,12 @@ public class Gui extends JFrame implements ActionListener {
         return selectedColumn;
     }
 
-    public String getCurrentProject() {
+    /*public String getCurrentProject() {
         return currentProject;
-    }
+    }*/
 
-    public DetailedTableGraphicComputation getDetailedTableToConstruct() {
-        return detailedTableToConstruct;
+    public DetailedTableGraphicComputation getDetailedTableFrameConstruction() {
+        return detailedTableFrameConstruction;
     }
 
     public int getWholeCol() {
@@ -1940,12 +1913,12 @@ public class Gui extends JFrame implements ActionListener {
     }
 
     public MyTableModel getZoomModel() {
-        zoomModel = tableController.getZoomModel();
+        zoomModel = tableConfig.getZoomModel();
         return zoomModel;
     }
 
-    public TableController getTableController() {
-        return tableController;
+    public TableConfig getTableConfig() {
+        return tableConfig;
     }
 
     public MyTableModel getDetailedModel() {

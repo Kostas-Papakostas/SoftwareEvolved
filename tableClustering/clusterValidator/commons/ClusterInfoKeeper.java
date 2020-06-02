@@ -1,19 +1,15 @@
 package tableClustering.clusterValidator.commons;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
-
 import data.dataPPL.pplSQLSchema.PPLTable;
 import tableClustering.clusterExtractor.commons.Cluster;
-import tableClustering.clusterValidator.clusterValidityMetrics.externalEvaluation.externalClusterMetrics.ClusterEntropyMetric;
-import tableClustering.clusterValidator.clusterValidityMetrics.externalEvaluation.externalClusterMetrics.ClusterFMeasureMetric;
-import tableClustering.clusterValidator.clusterValidityMetrics.externalEvaluation.externalClusterMetrics.ClusterPrecisionMetric;
-import tableClustering.clusterValidator.clusterValidityMetrics.externalEvaluation.externalClusterMetrics.ClusterRecallMetric;
-import tableClustering.clusterValidator.clusterValidityMetrics.externalEvaluation.externalClusterMetrics.ExternalClusterMetric;
+import tableClustering.clusterValidator.clusterValidityMetrics.externalEvaluation.externalClusterMetrics.*;
 import tableClustering.clusterValidator.clusterValidityMetrics.internalEvaluation.internalClusterMetrics.ClusterCohesionMetric;
 import tableClustering.clusterValidator.clusterValidityMetrics.internalEvaluation.internalClusterMetrics.ClusterSeparationMetric;
 import tableClustering.clusterValidator.clusterValidityMetrics.internalEvaluation.internalClusterMetrics.InternalClusterMetrics;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 public class ClusterInfoKeeper {
@@ -52,9 +48,9 @@ public class ClusterInfoKeeper {
 		double y=0;
 		double z=0;
 		for(Map.Entry<String,PPLTable> pplTab:tables.entrySet()){
-			x = x +pplTab.getValue().getBirthVersionID();
+			x = x+pplTab.getValue().getBirthVersionID();
 			y = y+pplTab.getValue().getDeathVersionID();
-			z= z+pplTab.getValue().getTotalChanges();
+			z = z+pplTab.getValue().getTotalChanges();
 		}
 		
 		x= x/tables.size();

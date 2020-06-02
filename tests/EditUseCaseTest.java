@@ -1,19 +1,19 @@
 
 package tests;
 
-import gui.controllers.ProjectConfig;
+import data.configurators.ProjectConfig;
 import gui.mainEngine.Gui;
 import gui.tableElements.commons.MyTableModel;
-//import org.junit.jupiter.api.Test;
-
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+//import org.junit.jupiter.api.Test;
 
 /**
  * used on Idea
@@ -38,7 +38,7 @@ public class EditUseCaseTest {
         File file = new File("filesHandler/inis/Atlas.ini");
         projectConfig.editProject(true, file);
 
-        testGui.getDataKeeperFromFileController();
+        testGui.getDataKeeper();
         testGui.fillTable();
         testGui.fillTree();
 

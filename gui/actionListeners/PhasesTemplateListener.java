@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import data.dataKeeper.GlobalDataKeeper;
-import gui.controllers.ProjectConfig;
+import data.configurators.ProjectConfig;
 import gui.dialogs.ParametersJDialog;
 import gui.mainEngine.Gui;
 import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;

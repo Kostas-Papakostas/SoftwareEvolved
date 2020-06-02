@@ -1,13 +1,7 @@
 package tableClustering.clusterValidator.engine;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-
+import data.dataKeeper.GlobalDataKeeper;
+import data.dataPPL.pplSQLSchema.PPLTable;
 import tableClustering.clusterExtractor.commons.Cluster;
 import tableClustering.clusterValidator.clusterValidityMetrics.externalEvaluation.externalTotalMetrics.ExternalTotalMetrics;
 import tableClustering.clusterValidator.clusterValidityMetrics.externalEvaluation.externalTotalMetrics.TotalEntropyMetric;
@@ -17,8 +11,14 @@ import tableClustering.clusterValidator.clusterValidityMetrics.internalEvaluatio
 import tableClustering.clusterValidator.commons.Centroid;
 import tableClustering.clusterValidator.commons.ClassOfObjects;
 import tableClustering.clusterValidator.commons.ClusterInfoKeeper;
-import data.dataKeeper.GlobalDataKeeper;
-import data.dataPPL.pplSQLSchema.PPLTable;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 /* Refactor! Problem: Long method, Duplicated Code */
 public class ClusterValidatorMainEngine {
@@ -159,41 +159,37 @@ public class ClusterValidatorMainEngine {
 			toReturn = toReturn + "Class "+ (j+1)+"\t";
 		}
 		toReturn = toReturn+"\n"+"Precision"+"\n";
-		for(int i=0; i<clusterInfoKeepers.size(); i++){
-			
-			toReturn=toReturn+"Cluster "+i+"\t";
-			ArrayList<Double> precisions = clusterInfoKeepers.get(i).getPrecisions();
-			for(int j=0; j<precisions.size(); j++){
-				toReturn = toReturn + precisions.get(j)+"\t";
-			}
-			toReturn = toReturn +"\n";
-		}
-		toReturn = toReturn+"Recall"+"\n";
-		for(int i=0; i<clusterInfoKeepers.size(); i++){
-			
-			toReturn=toReturn+"Cluster "+i+"\t";
-			ArrayList<Double> recalls = clusterInfoKeepers.get(i).getRecalls();
-			for(int j=0; j<recalls.size(); j++){
-				toReturn = toReturn + recalls.get(j)+"\t";
-			}
-			toReturn = toReturn +"\n";
-		}
-		toReturn = toReturn+"F-Measure"+"\n";
-		for(int i=0; i<clusterInfoKeepers.size(); i++){
-			
-			toReturn=toReturn+"Cluster "+i+"\t";
-			ArrayList<Double> fMeasures = clusterInfoKeepers.get(i).getFmeasures();
-			for(int j=0; j<fMeasures.size(); j++){
-				toReturn = toReturn + fMeasures.get(j)+"\t";
-			}
-			toReturn = toReturn +"\n";
-		}
-		
-			
-		
+
+		toReturn = returnStringForClusterInfo(toReturn,0)+"Recall"+"\n";
+
+		toReturn = returnStringForClusterInfo(toReturn,1)+"F-Measure"+"\n";
+
+		toReturn = returnStringForClusterInfo(toReturn,2);
+
+
 		//System.out.println(toReturn);
 		return toReturn;
 	}
-	
-	
+
+	private String returnStringForClusterInfo(String toReturn, int case_p) {
+		for(int i=0; i<clusterInfoKeepers.size(); i++){
+			toReturn=toReturn+"Cluster "+i+"\t";
+			ArrayList<Double> measures = null;
+			switch (case_p) {
+				case 0:
+					measures = clusterInfoKeepers.get(i).getPrecisions();
+				case 1:
+					measures = clusterInfoKeepers.get(i).getRecalls();
+				case 2:
+					measures = clusterInfoKeepers.get(i).getFmeasures();
+			}
+			for(int j=0; j<measures.size(); j++){
+				toReturn = toReturn + measures.get(j)+"\t";
+			}
+			toReturn = toReturn +"\n";
+		}
+		return toReturn;
+	}
+
+
 }

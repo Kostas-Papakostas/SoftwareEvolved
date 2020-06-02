@@ -4,19 +4,19 @@ package tests;
 
 //import org.junit.Test;
 
-import gui.controllers.ProjectConfig;
+import data.configurators.ProjectConfig;
 import gui.mainEngine.Gui;
 import gui.tableElements.commons.MyTableModel;
-//import org.junit.jupiter.api.Test;
-
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+//import org.junit.jupiter.api.Test;
 
 //import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -42,12 +42,12 @@ public class LoadUseCaseTest {
 
         //currentProject = projectConfig.loadProjectAction(returnVal==JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
 
-        testGui.getDataKeeperFromFileController();
+        testGui.getDataKeeper();
         System.out.println("rataata"+project);
         testGui.fillTable();
         testGui.fillTree();
 
-        MyTableModel fakeDetailedModel = testGui.getTableController().createFullDetailedLifeTableModel();
+        MyTableModel fakeDetailedModel = testGui.getTableConfig().createFullDetailedLifeTableModel();
         fakeDetailedModel.dumpData(pathToRefactoredFile);
         
         try {
@@ -78,7 +78,7 @@ public class LoadUseCaseTest {
 
         //currentProject = projectConfig.loadProjectAction(returnVal==JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
 
-        testGui.getDataKeeperFromFileController();
+        testGui.getDataKeeper();
         System.out.println("rataata"+project);
         testGui.fillTable();
         testGui.fillTree();
@@ -113,8 +113,7 @@ public class LoadUseCaseTest {
 
         //currentProject = projectConfig.loadProjectAction(returnVal==JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
 
-        testGui.getDataKeeperFromFileController();
-        System.out.println("rataata"+project);
+        testGui.getDataKeeper();
         testGui.fillTable();
         testGui.fillTree();
 

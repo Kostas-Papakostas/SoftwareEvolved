@@ -1,6 +1,6 @@
 package gui.actionListeners;
 
-import gui.controllers.TableController;
+import data.configurators.TableConfig;
 import gui.mainEngine.Gui;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
@@ -16,7 +16,7 @@ import java.awt.event.ActionListener;
 public class ShowFullDetailedLifetimeTableListener extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
     private Gui gui;
-    private TableController tableController = TableController.getInstance();
+    private TableConfig tableConfig = TableConfig.getInstance();
 
     public void listenToGui(Gui gui_p){
         this.gui=gui_p;
@@ -24,8 +24,8 @@ public class ShowFullDetailedLifetimeTableListener extends JFrame implements Act
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        MyTableModel detailedModel = tableController.createFullDetailedLifeTableModel();
-        JvTable tmpLifeTimeTable = gui.getDetailedTableToConstruct().makeDetailedTable(tableController.getIsLevelised(),detailedModel);
+        MyTableModel detailedModel = tableConfig.createFullDetailedLifeTableModel();
+        JvTable tmpLifeTimeTable = gui.getDetailedTableFrameConstruction().makeDetailedTable(tableConfig.getIsLevelised(),detailedModel);
         gui.getTabbedPane().setSelectedIndex(0);
 
         paintDetailedTable(true);
@@ -61,9 +61,9 @@ public class ShowFullDetailedLifetimeTableListener extends JFrame implements Act
     }
     
     private void paintDetailedTable(final boolean levelized) {
-        JvTable tmpLifeTimeTable = gui.detailedTableToConstruct.getTmpLifeTimeTable();
+        JvTable tmpLifeTimeTable = gui.detailedTableFrameConstruction.getTmpLifeTimeTable();
         tmpLifeTimeTable.setName("LifeTimeTable");
-        gui.setSegmentSizeDetailedTable(tableController.getSegmentSizeDetailedTable());
+        gui.setSegmentSizeDetailedTable(tableConfig.getSegmentSizeDetailedTable());
         tmpLifeTimeTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 
             private static final long serialVersionUID = 1L;

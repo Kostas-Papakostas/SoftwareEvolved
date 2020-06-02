@@ -1,6 +1,6 @@
 package gui.actionListeners;
 
-import gui.controllers.ProjectConfig;
+import data.configurators.ProjectConfig;
 import gui.dialogs.ProjectInfoDialog;
 import gui.mainEngine.Gui;
 
