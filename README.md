@@ -10,4 +10,9 @@ Long blocks of code extracted in gui to smaller methods</br>
 Gui class methods moved to Table and File controllers</br>
 new tests created</br>
 Other methods extracted in gui</br>
-Added Action Listeners classes.
+Added Action Listeners classes.</br>
+
+2/6 update:</br>
+Renamed package controllers into configurators and moved it into data package, as part of back end</br>
+Removed duplicated code by using template methods</br>
+changed some fields' names and other polishing stuff</br>
