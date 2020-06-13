@@ -5,18 +5,10 @@ import gui.tableElements.commons.MyTableModel;
 
 public class ZoomTableConfig implements TablesInterface{
     private static ZoomTableConfig singleInstance = null;
-    private ProjectConfig projectConfig = ProjectConfig.getInstance();
-
-
-    private Integer[] segmentSizeZoomArea = new Integer[4];
-
-    protected MyTableModel zoomModel = null;
-
     private boolean isLevelised = false;
-
     private String[] finalColumnsZoomArea;
     private String[][] finalRowsZoomArea;
-
+    protected MyTableModel zoomModel = null;
 
     //Needed for Singleton Pattern
     private ZoomTableConfig() {
@@ -33,24 +25,17 @@ public class ZoomTableConfig implements TablesInterface{
     public MyTableModel createTableModel(String[][] finalRowsZoomArea_p, String[] finalColumnsZoomArea_p){
         finalRowsZoomArea=finalRowsZoomArea_p;
         finalColumnsZoomArea=finalColumnsZoomArea_p;
-
-        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea, projectConfig.getGlobalDataKeeper());
-
+        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea, ProjectConfig.getGlobalDataKeeper());
         finalRowsZoomArea = sorter.sortRows();
-
         int numberOfColumns = finalRowsZoomArea[0].length;
         int numberOfRows = finalRowsZoomArea.length;
-
         String[][] aelrows = new String[numberOfRows][numberOfColumns];
 
         for (int i = 0; i < numberOfRows; i++) {
-
             aelrows[i][0] = finalRowsZoomArea[i][0];
-
         }
 
         zoomModel = new MyTableModel(finalColumnsZoomArea, aelrows);
-
         return zoomModel;
     }
 

@@ -1,10 +1,7 @@
 package gui.mainEngine;
 
-//try to extract relationship beetween gui and pplSchema and pplTransition
-
 import data.configurators.*;
 import data.dataKeeper.GlobalDataKeeper;
-import data.dataPPL.pplSQLSchema.PPLSchema;
 import gui.actionListeners.*;
 import gui.dialogs.EnlargeTable;
 import gui.tableComputations.DetailedTableGraphicComputation;
@@ -390,7 +387,7 @@ public class Gui extends JFrame implements ActionListener {
         menuBar.add(mnProject);
 
         mntmInfo = new JMenuItem("Info");
-        infoListener.listenToGUI(Gui.this);
+        infoListener.listenToGUI();
         mntmInfo.addActionListener(infoListener);
         mnProject.add(mntmInfo);
     }
@@ -1713,9 +1710,6 @@ public class Gui extends JFrame implements ActionListener {
             }
         });
 
-        PPLSchema temp = ((PPLSchema) globalDataKeeper.getAllPPLSchemas().values().toArray()[0]);
-        PPLSchema temp2 = ((PPLSchema) globalDataKeeper.getAllPPLSchemas().values().toArray()[1]);
-
         tablesTree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -1862,7 +1856,7 @@ public class Gui extends JFrame implements ActionListener {
 
     /*getters/setters*/
     public void getDataKeeper() {
-        globalDataKeeper = projectConfig.getGlobalDataKeeper();
+        globalDataKeeper = ProjectConfig.getGlobalDataKeeper();
     }
 
     public void setDescription(String descr) {
@@ -1872,10 +1866,6 @@ public class Gui extends JFrame implements ActionListener {
     public int getSelectedColumn() {
         return selectedColumn;
     }
-
-    /*public String getCurrentProject() {
-        return currentProject;
-    }*/
 
     public DetailedTableGraphicComputation getDetailedTableFrameConstruction() {
         return detailedTableFrameConstruction;

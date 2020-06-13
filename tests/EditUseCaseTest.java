@@ -12,29 +12,21 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
-
 //import org.junit.jupiter.api.Test;
-
-/**
- * used on Idea
- */
 //import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**used on idea*/
+
 
 public class EditUseCaseTest {
-
     Gui testGui = new Gui();
     private ProjectConfig projectConfig = ProjectConfig.getInstance();
 
     @Test
     public void testEdit_generalModel(){
-
         String file1str = null;
         String file2str = null;
         String pathToOriginalFile = "./Dump Files Original/Load Use Case/generalModel_Atlas.txt";
         String pathToRefactoredFile = "./Dump Files Refactored/Load Use Case/generalModel_Atlas.txt";
-
         File file = new File("filesHandler/inis/Atlas.ini");
         projectConfig.editProject(true, file);
 

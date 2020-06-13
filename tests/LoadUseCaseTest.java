@@ -37,16 +37,11 @@ public class LoadUseCaseTest {
         final String pathToRefactoredFile = "./Dump Files Refactored/Load Use Case/detailedModel_Atlas.txt";
 
         File file = new File("filesHandler/inis/Atlas.ini");
-
         String project = projectConfig.loadProjectAction(true, file);
-
-        //currentProject = projectConfig.loadProjectAction(returnVal==JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
-
         testGui.getDataKeeper();
         System.out.println("rataata"+project);
         testGui.fillTable();
         testGui.fillTree();
-
         MyTableModel fakeDetailedModel = testGui.getDetailedTableConfig().createFullDetailedLifeTableModel();
         fakeDetailedModel.dumpData(pathToRefactoredFile);
         
@@ -71,18 +66,12 @@ public class LoadUseCaseTest {
         String file2str = null;
         String pathToOriginalFile = "./Dump Files Original/Load Use Case/generalModel_Atlas.txt";
         String pathToRefactoredFile = "./Dump Files Refactored/Load Use Case/generalModel_Atlas.txt";
-
-
         File file = new File("filesHandler/inis/Atlas.ini");
         String project = projectConfig.loadProjectAction(true, file);
-
-        //currentProject = projectConfig.loadProjectAction(returnVal==JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
-
         testGui.getDataKeeper();
         System.out.println("rataata"+project);
         testGui.fillTable();
         testGui.fillTree();
-
         MyTableModel fakeGeneralModel = testGui.getGeneralModel();
         fakeGeneralModel.dumpData(pathToRefactoredFile);
         
@@ -97,7 +86,7 @@ public class LoadUseCaseTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        
         assertEquals(file1str, file2str);
     }
 
@@ -107,16 +96,12 @@ public class LoadUseCaseTest {
         String file2str = null;
         String pathToOriginalFile = "./Dump Files Original/Load Use Case/zoomModel_Atlas.txt";
         String pathToRefactoredFile = "./Dump Files Refactored/Load Use Case/zoomModel_Atlas.txt";
-
         File file = new File("filesHandler/inis/Atlas.ini");
         String project = projectConfig.loadProjectAction(true, file);
-
-        //currentProject = projectConfig.loadProjectAction(returnVal==JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
 
         testGui.getDataKeeper();
         testGui.fillTable();
         testGui.fillTree();
-
         MyTableModel fakeZoomModel = testGui.getZoomModel();
         fakeZoomModel.dumpData(pathToRefactoredFile);
         

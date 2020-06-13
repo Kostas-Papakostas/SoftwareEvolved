@@ -98,14 +98,13 @@ public class ProjectConfig {
         createProjectDialog.setVisible(true);
 
         if (createProjectDialog.getConfirmation()) {
-
             createProjectDialog.setVisible(false);
             File file = createProjectDialog.getFile();
             System.out.println(file.toString());
-            //TODO some kind of test? It the same with load project
             loadProjectAction(true, file);
             return true;
         }
+        
         return false;
     }
     
@@ -125,7 +124,6 @@ public class ProjectConfig {
                 e1.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-
             }
 
             System.out.println(projectName);
@@ -139,7 +137,6 @@ public class ProjectConfig {
                 createProjectDialog.setVisible(false);
                 file = createProjectDialog.getFile();
                 System.out.println(file.toString());
-                //TODO check if is correct
                 loadProjectAction(isApproved, file);
             }
 

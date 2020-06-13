@@ -7,17 +7,13 @@ import gui.tableElements.tableConstructors.TableConstructionAllSquaresIncluded;
 import javax.swing.*;
 
 public class DetailedTableConfig {
-
     private static DetailedTableConfig singleInstance = null;
     private ProjectConfig projectConfig = ProjectConfig.getInstance();
     private GlobalDataKeeper globalDataKeeper;
-
-    private Integer[] segmentSizeZoomArea = new Integer[4];
-
-    protected Integer[] segmentSizeDetailedTable = new Integer[3];
-
-    protected MyTableModel detailedModel = null;
     private boolean isLevelised = false;
+    protected Integer[] segmentSizeDetailedTable = new Integer[3];
+    protected MyTableModel detailedModel = null;
+    
 
     private DetailedTableConfig() {
 
@@ -32,14 +28,13 @@ public class DetailedTableConfig {
 
     public MyTableModel createFullDetailedLifeTableModel() {
         if (!(projectConfig.getCurrentProject() == null)) {
-            globalDataKeeper = projectConfig.getGlobalDataKeeper();
+            globalDataKeeper = ProjectConfig.getGlobalDataKeeper();
             TableConstructionAllSquaresIncluded table = new TableConstructionAllSquaresIncluded(globalDataKeeper);
             final String[] columns = table.constructColumns();
             final String[][] rows = table.constructRows();
             segmentSizeDetailedTable = table.getSegmentSize();
             detailedModel = new MyTableModel(columns, rows);
             isLevelised=true;
-            //makeDetailedTable(columns, rows, true);
         } else {
             JOptionPane.showMessageDialog(null, "Select a Project first");
             isLevelised = false;

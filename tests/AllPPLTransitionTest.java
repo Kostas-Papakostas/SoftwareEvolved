@@ -1,20 +1,20 @@
 package tests;
 
-//import static org.junit.Assert.*;
+import static org.junit.Assert.*;
 
 //import org.junit.Test;
 
 import data.dataPPL.pplTransition.PPLTransition;
-import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+//import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 /**
  * Created by Kostakis on 21/4/2020.
  */
 public class AllPPLTransitionTest {
-    @Test
+    //@Test
 
     public void testAllPPLTransition(){
         FakeGlobalDataKeeper fakeKeeper = new FakeGlobalDataKeeper();
@@ -28,7 +28,7 @@ public class AllPPLTransitionTest {
 
     }
 
-    @Test
+    //@Test
     public void testTransitionTableChanges(){
         String expectedResult="Table Change \n" + "[AtomicChange: Table: t0\tAttribute: birth\tType: integer\toldSchema: oldschema0\tnewSchema: newschema0]\n";
 
