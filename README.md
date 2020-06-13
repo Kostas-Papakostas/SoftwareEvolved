@@ -17,7 +17,7 @@ Renamed package controllers into configurators and moved it into data package, a
 Removed duplicated code by using template methods</br>
 changed some fields' names and other polishing stuff</br>
 
-final commit:</br>
+final commit 13/6:</br>
 ActionListeners package renamed and splitted in two more sub-packages</br>
 Template classes generated</br>
 Configurator package classes renamed and table configurator class got splitted int 3 different classes</br>
