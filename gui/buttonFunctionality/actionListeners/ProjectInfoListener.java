@@ -1,4 +1,4 @@
-package gui.actionListeners;
+package gui.buttonFunctionality.actionListeners;
 
 import data.configurators.ProjectConfigurator;
 import gui.dialogs.ProjectInfoDialog;

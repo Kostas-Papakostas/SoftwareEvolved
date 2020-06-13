@@ -1,10 +1,9 @@
 package tests;
 
-import static org.junit.Assert.*;
-
-//import org.junit.Test;
-
 import data.dataPPL.pplTransition.PPLTransition;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 //import org.junit.jupiter.api.Test;
 
 //import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,8 +13,7 @@ import data.dataPPL.pplTransition.PPLTransition;
  * Created by Kostakis on 21/4/2020.
  */
 public class AllPPLTransitionTest {
-    //@Test
-
+    @Test
     public void testAllPPLTransition(){
         FakeGlobalDataKeeper fakeKeeper = new FakeGlobalDataKeeper();
         fakeKeeper.setData();

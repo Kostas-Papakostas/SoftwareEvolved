@@ -1,4 +1,4 @@
-package gui.actionListeners.listenerTemplates;
+package gui.buttonFunctionality.listenerTemplates;
 
 import data.configurators.ProjectConfigurator;
 import gui.mainEngine.Gui;

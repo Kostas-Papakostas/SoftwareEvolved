@@ -2,7 +2,7 @@ package gui.mainEngine;
 
 import data.configurators.*;
 import data.dataKeeper.GlobalDataKeeper;
-import gui.actionListeners.*;
+import gui.buttonFunctionality.actionListeners.*;
 import gui.dialogs.EnlargeTable;
 import gui.tableComputations.DetailedTableGraphicComputation;
 import gui.tableComputations.GeneralTableGraphicComputation;

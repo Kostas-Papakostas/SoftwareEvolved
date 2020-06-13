@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.11" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
-  <class id="1" language="java" name="gui.actionListeners.CreateProjectListener" project="PlutarchParallelLives" 
+  <class id="1" language="java" name="gui.buttonsFunctionality.actionListeners.CreateProjectListener" project="PlutarchParallelLives"
     file="/PlutarchParallelLives/src/gui/actionListeners/CreateProjectListener.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="117" width="194" x="142" y="2620"/>    
@@ -11,7 +11,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="gui.actionListeners.LoadProjectListener" project="PlutarchParallelLives" 
+  <class id="2" language="java" name="gui.buttonsFunctionality.actionListeners.LoadProjectListener" project="PlutarchParallelLives"
     file="/PlutarchParallelLives/src/gui/actionListeners/LoadProjectListener.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="135" width="194" x="376" y="2620"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -67,7 +67,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="gui.actionListeners.EditProjectListener" project="PlutarchParallelLives" 
+  <class id="8" language="java" name="gui.buttonsFunctionality.actionListeners.EditProjectListener" project="PlutarchParallelLives"
     file="/PlutarchParallelLives/src/gui/actionListeners/EditProjectListener.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-13" y="2677"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -87,7 +87,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="gui.actionListeners.ShowPLDListener" project="PlutarchParallelLives" 
+  <class id="10" language="java" name="gui.buttonsFunctionality.actionListeners.ShowPLDListener" project="PlutarchParallelLives"
     file="/PlutarchParallelLives/src/gui/actionListeners/ShowPLDListener.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-37" y="2450"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -96,7 +96,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="11" language="java" name="gui.actionListeners.ShowPhasesPLD" project="PlutarchParallelLives" 
+  <class id="11" language="java" name="gui.buttonsFunctionality.actionListeners.ShowPhasesPLD" project="PlutarchParallelLives"
     file="/PlutarchParallelLives/src/gui/actionListeners/ShowPhasesPLD.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="215" y="2459"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -105,7 +105,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="gui.actionListeners.ShowFullDetailedLifetimeTableListener" 
+  <class id="12" language="java" name="gui.buttonsFunctionality.actionListeners.ShowFullDetailedLifetimeTableListener"
     project="PlutarchParallelLives" 
     file="/PlutarchParallelLives/src/gui/actionListeners/ShowFullDetailedLifetimeTableListener.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -116,7 +116,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="13" language="java" name="gui.actionListeners.ShowPhasesWithClustersPLDListener" 
+  <class id="13" language="java" name="gui.buttonsFunctionality.actionListeners.ShowPhasesWithClustersPLDListener"
     project="PlutarchParallelLives" 
     file="/PlutarchParallelLives/src/gui/actionListeners/ShowPhasesWithClustersPLDListener.java" binary="false" 
     corner="BOTTOM_RIGHT">    

@@ -1,141 +1,181 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.11" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
-  <class id="1" language="java" name="gui.actionListeners.CreateProjectListener" project="PlutarchParallelLives" 
-    file="/PlutarchParallelLives/src/gui/actionListeners/CreateProjectListener.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="860" y="946"/>    
+  <class id="1" language="java" name="gui.buttonFunctionality.actionListeners.ShowPhasesWithClustersPLDListener" 
+    project="PlutarchParallelLives" 
+    file="/PlutarchParallelLives/src/gui/buttonFunctionality/actionListeners/ShowPhasesWithClustersPLDListener.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="641" y="726"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="gui.actionListeners.LoadProjectListener" project="PlutarchParallelLives" 
-    file="/PlutarchParallelLives/src/gui/actionListeners/LoadProjectListener.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="167" y="941"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="3" language="java" name="data.configurators.ProjectConfig" project="PlutarchParallelLives"
-    file="/PlutarchParallelLives/src/gui/controllers/FileController.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="865" y="1412"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="4" language="java" name="data.configurators.TableConfig" project="PlutarchParallelLives"
-    file="/PlutarchParallelLives/src/gui/controllers/TableController.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="224" y="1397"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="5" language="java" name="gui.mainEngine.Gui" project="PlutarchParallelLives" 
+  <class id="2" language="java" name="gui.mainEngine.Gui" project="PlutarchParallelLives" 
     file="/PlutarchParallelLives/src/gui/mainEngine/Gui.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="516" y="777"/>    
+    <position height="-1" width="-1" x="1285" y="147"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="gui.actionListeners.EditProjectListener" project="PlutarchParallelLives" 
-    file="/PlutarchParallelLives/src/gui/actionListeners/EditProjectListener.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="498" y="1311"/>    
+  <class id="3" language="java" name="gui.buttonFunctionality.actionListeners.CreateProjectListener" 
+    project="PlutarchParallelLives" 
+    file="/PlutarchParallelLives/src/gui/buttonFunctionality/actionListeners/CreateProjectListener.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="117" width="170" x="1442" y="608"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <association id="7">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="8" name="gui"/>      
-      <multiplicity id="9" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="10">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="11" name="fileController"/>      
-      <multiplicity id="12" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
+  <class id="4" language="java" name="gui.buttonFunctionality.actionListeners.ProjectInfoListener" 
+    project="PlutarchParallelLives" 
+    file="/PlutarchParallelLives/src/gui/buttonFunctionality/actionListeners/ProjectInfoListener.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="898" y="191"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="gui.buttonFunctionality.actionListeners.EditProjectListener" 
+    project="PlutarchParallelLives" 
+    file="/PlutarchParallelLives/src/gui/buttonFunctionality/actionListeners/EditProjectListener.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="117" width="170" x="1652" y="608"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="gui.buttonFunctionality.listenerTemplates.PhasesTemplateListener" 
+    project="PlutarchParallelLives" 
+    file="/PlutarchParallelLives/src/gui/buttonFunctionality/listenerTemplates/PhasesTemplateListener.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="279" width="337" x="659" y="289"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="gui.buttonFunctionality.actionListeners.LoadProjectListener" 
+    project="PlutarchParallelLives" 
+    file="/PlutarchParallelLives/src/gui/buttonFunctionality/actionListeners/LoadProjectListener.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="117" width="170" x="1862" y="608"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="gui.buttonFunctionality.actionListeners.ShowLifetimeTableListener" 
+    project="PlutarchParallelLives" 
+    file="/PlutarchParallelLives/src/gui/buttonFunctionality/actionListeners/ShowLifetimeTableListener.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="248" x="1036" y="289"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="gui.buttonFunctionality.actionListeners.ShowPLDListener" 
+    project="PlutarchParallelLives" 
+    file="/PlutarchParallelLives/src/gui/buttonFunctionality/actionListeners/ShowPLDListener.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="153" width="204" x="1324" y="289"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="gui.buttonFunctionality.listenerTemplates.ProjectTemplateListener" 
+    project="PlutarchParallelLives" 
+    file="/PlutarchParallelLives/src/gui/buttonFunctionality/listenerTemplates/ProjectTemplateListener.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="194" x="1568" y="289"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="gui.buttonFunctionality.actionListeners.ShowPhasesPLDListener" 
+    project="PlutarchParallelLives" 
+    file="/PlutarchParallelLives/src/gui/buttonFunctionality/actionListeners/ShowPhasesPLDListener.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1054" y="717"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <generalization id="12">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
   <association id="13">    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="14" name="fileController"/>      
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="14" name="gui"/>      
       <multiplicity id="15" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="16">    
-    <end type="SOURCE" refId="1" navigable="false">      
+    <end type="SOURCE" refId="6" navigable="false">      
       <attribute id="17" name="gui"/>      
       <multiplicity id="18" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="19">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="20" name="fileController"/>      
-      <multiplicity id="21" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="22">    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="23" name="singleInstance"/>      
-      <multiplicity id="24" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="25">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="26" name="singleInstance"/>      
-      <multiplicity id="27" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="28">    
+  <generalization id="19">    
     <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="3"/>  
-  </dependency>  
-  <dependency id="29">    
-    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="20">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <dependency id="21">    
+    <end type="SOURCE" refId="2"/>    
     <end type="TARGET" refId="4"/>  
   </dependency>  
-  <association id="30">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="31" name="fileController"/>      
-      <multiplicity id="32" minimum="0" maximum="1"/>    
+  <association id="22">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="23" name="gui"/>      
+      <multiplicity id="24" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="33">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="34" name="gui"/>      
-      <multiplicity id="35" minimum="0" maximum="1"/>    
+  <generalization id="25">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <association id="26">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="27" name="gui"/>      
+      <multiplicity id="28" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <generalization id="29">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    
