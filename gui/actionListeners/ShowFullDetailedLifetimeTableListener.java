@@ -14,7 +14,6 @@ import java.awt.event.ActionListener;
 public class ShowFullDetailedLifetimeTableListener extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
     private Gui gui;
-    //private TableConfig tableConfig = TableConfig.getInstance();
     private DetailedTableConfig detailedTableConfig = DetailedTableConfig.getInstance();
 
     public void listenToGui(Gui gui_p){
@@ -23,7 +22,6 @@ public class ShowFullDetailedLifetimeTableListener extends JFrame implements Act
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //MyTableModel detailedModel = tableConfig.createFullDetailedLifeTableModel();
         MyTableModel detailedModel = detailedTableConfig.createFullDetailedLifeTableModel();
         JvTable tmpLifeTimeTable = gui.getDetailedTableFrameConstruction().makeDetailedGraphicTable(detailedModel, detailedTableConfig.getIsLevelised());
         gui.getTabbedPane().setSelectedIndex(0);
@@ -61,7 +59,7 @@ public class ShowFullDetailedLifetimeTableListener extends JFrame implements Act
     }
     
     private void paintDetailedTable(final boolean levelized) {
-        JvTable tmpLifeTimeTable = gui.detailedTableFrameConstruction.getTmpLifeTimeTable();
+        JvTable tmpLifeTimeTable = gui.getDetailedTableFrameConstruction().getTmpLifeTimeTable();
         tmpLifeTimeTable.setName("LifeTimeTable");
         gui.setSegmentSizeDetailedTable(detailedTableConfig.getSegmentSizeDetailedTable());
         tmpLifeTimeTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {

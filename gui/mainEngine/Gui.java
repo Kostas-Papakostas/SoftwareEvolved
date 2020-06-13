@@ -37,7 +37,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/* Refactor! Problem: Large Class, Long Method, Switch Statements, Comments, Duplicated Code */
 public class Gui extends JFrame implements ActionListener {
 
     /**
@@ -62,8 +61,6 @@ public class Gui extends JFrame implements ActionListener {
     private JScrollPane tmpScrollPaneZoomArea = new JScrollPane();
 
     private static ArrayList<Integer> selectedRows = new ArrayList<Integer>();
-
-    protected GlobalDataKeeper globalDataKeeper = null;
 
     private String[] finalColumns = null;
     private String[][] finalRows = null;
@@ -107,22 +104,22 @@ public class Gui extends JFrame implements ActionListener {
     private int columnWidth = 1;
 
     private ArrayList<String> tablesSelected = new ArrayList<String>();
-
     private boolean showingPld = false;
 
     private JButton undoButton;
     private JMenu mnProject;
     private JMenuItem mntmInfo;
-
+    
+    private GeneralTableGraphicComputation generalTableFrameConstruction = GeneralTableGraphicComputation.getInstance();
+    private DetailedTableGraphicComputation detailedTableFrameConstruction = DetailedTableGraphicComputation.getInstance();
+    private ZoomTableGraphicComputation zoomTableFrameConstruction = ZoomTableGraphicComputation.getInstance();
+    
+    protected GlobalDataKeeper globalDataKeeper = null;
     protected ProjectConfig projectConfig = ProjectConfig.getInstance();
     protected TableConfig tableConfig = TableConfig.getInstance();
     protected GeneralTableConfig generalTableConfig = GeneralTableConfig.getInstance();
     protected ZoomTableConfig zoomTableConfig = ZoomTableConfig.getInstance();
     protected DetailedTableConfig detailedTableConfig = DetailedTableConfig.getInstance();
-
-    private GeneralTableGraphicComputation generalTableFrameConstruction = GeneralTableGraphicComputation.getInstance();
-    public DetailedTableGraphicComputation detailedTableFrameConstruction = DetailedTableGraphicComputation.getInstance();
-    private ZoomTableGraphicComputation zoomTableFrameConstruction = ZoomTableGraphicComputation.getInstance();
 
     protected ProjectInfoListener infoListener = new ProjectInfoListener();
     protected LoadProjectListener loadListener = new LoadProjectListener();
