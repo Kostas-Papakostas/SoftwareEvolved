@@ -18,7 +18,7 @@ public class TreeConstructionPhases implements TreeConstruction {
 	private GlobalDataKeeper dataKeeper=null;
 
 	public TreeConstructionPhases(GlobalDataKeeper dataKeeper) {
-		this.dataKeeper=dataKeeper;
+		this.dataKeeper = dataKeeper;
 	}
 	
 	@Override
@@ -32,18 +32,18 @@ public class TreeConstructionPhases implements TreeConstruction {
 		
 		for(int i=0; i<phases.size(); i++){
 			
-			DefaultMutableTreeNode a=new DefaultMutableTreeNode("Phase "+i);
-			top.add(a);
-			TreeMap<Integer,PPLTransition> transitions=phases.get(i).getPhasePPLTransitions();
+			DefaultMutableTreeNode mutableTreeNode = new DefaultMutableTreeNode("Phase "+i);
+			top.add(mutableTreeNode);
+			TreeMap<Integer,PPLTransition> transitions = phases.get(i).getPhasePPLTransitions();
 			
 			for(Map.Entry<Integer, PPLTransition> tr:transitions.entrySet()){
-				DefaultMutableTreeNode a1=new DefaultMutableTreeNode(tr.getKey());
-				ArrayList<TableChange> tableChanges=tr.getValue().getTableChanges();
+				DefaultMutableTreeNode nestedMutableTreeNode = new DefaultMutableTreeNode(tr.getKey());
+				ArrayList<TableChange> tableChanges = tr.getValue().getTableChanges();
 				for(int j=0; j<tableChanges.size(); j++){
-					DefaultMutableTreeNode a2=new DefaultMutableTreeNode(tableChanges.get(j).getAffectedTableName());
-					a1.add(a2);
+					DefaultMutableTreeNode nestedMutableTreeNode2 = new DefaultMutableTreeNode(tableChanges.get(j).getAffectedTableName());
+					nestedMutableTreeNode.add(nestedMutableTreeNode2);
 				}
-				a.add(a1);
+				mutableTreeNode.add(nestedMutableTreeNode);
 
 				schemas.put(tr.getValue().getOldVersionName(),dataKeeper.getAllPPLSchemas().get(tr.getValue().getOldVersionName()));
 				schemas.put(tr.getValue().getNewVersionName(),dataKeeper.getAllPPLSchemas().get(tr.getValue().getNewVersionName()));

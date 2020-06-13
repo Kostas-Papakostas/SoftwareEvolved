@@ -25,13 +25,13 @@ public class TreeConstructionPhasesWithClusters implements TreeConstruction {
 		
 		for(int i=0; i<clusters.size(); i++){
 			
-			DefaultMutableTreeNode a=new DefaultMutableTreeNode("Cluster "+i);
-			top.add(a);
+			DefaultMutableTreeNode mutableTreeNode=new DefaultMutableTreeNode("Cluster "+i);
+			top.add(mutableTreeNode);
 			ArrayList<String> tables=clusters.get(i).getNamesOfTables();
 			
 			for(String tableName:tables){
-				DefaultMutableTreeNode a1=new DefaultMutableTreeNode(tableName);
-				a.add(a1);
+				DefaultMutableTreeNode nestedMutableTreeNode=new DefaultMutableTreeNode(tableName);
+				mutableTreeNode.add(nestedMutableTreeNode);
 				
 			}
 			

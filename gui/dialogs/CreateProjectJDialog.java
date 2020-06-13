@@ -11,12 +11,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-/* Refactor! Problem: Long Method, Switch Statements */
-public class CreateProjectJDialog extends JDialog {
 
-	/**
-	 * 
-	 */
+public class CreateProjectJDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	protected JTextField textFieldProjectName;
@@ -29,10 +25,6 @@ public class CreateProjectJDialog extends JDialog {
 	protected boolean confirm=false;
 	protected JButton okButton;
 
-
-	/**
-	 * Launch the application.
-	 */
 	
 	public CreateProjectJDialog(String projectName,String datasetTxt,String inputCsv,String ass1,String ass2,String transXml) {
 		

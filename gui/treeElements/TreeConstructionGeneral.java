@@ -25,13 +25,13 @@ public class TreeConstructionGeneral {
 		
 		for (Map.Entry<String,PPLSchema> pplSc : schemas.entrySet()) {
 			
-			DefaultMutableTreeNode a = new DefaultMutableTreeNode(pplSc.getKey());
-		    top.add(a);
+			DefaultMutableTreeNode mutableTreeNode = new DefaultMutableTreeNode(pplSc.getKey());
+		    top.add(mutableTreeNode);
 		    TreeMap<String, PPLTable> tables = pplSc.getValue().getTables();
 		    
 			for (Map.Entry<String,PPLTable> pplT : tables.entrySet()) {
-				DefaultMutableTreeNode a1 = new DefaultMutableTreeNode(pplT.getKey());
-				a.add(a1);
+				DefaultMutableTreeNode nestedMutableTreeNode = new DefaultMutableTreeNode(pplT.getKey());
+				mutableTreeNode.add(nestedMutableTreeNode);
 			}
 		    
 		}
