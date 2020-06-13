@@ -10,8 +10,8 @@ public class PPLSchema {
 	private String name;
 	private TreeMap<String, PPLTable> tables;
 
-	public PPLSchema(TreeMap<String, PPLTable> t) {
-		this.tables = t;
+	public PPLSchema(TreeMap<String, PPLTable> treeMap) {
+		this.tables = treeMap;
 	}	
 	
 	public PPLSchema() {
@@ -49,11 +49,11 @@ public class PPLSchema {
 	}
 
 	public int[] getSize() {
-		int attr = 0;
+		int attributesCounter = 0;
 		for (PPLTable t : this.tables.values()) {
-			attr += t.getSize();
+			attributesCounter += t.getSize();
 		}
-		int[] res = {this.tables.size(), attr};
+		int[] res = {this.tables.size(), attributesCounter};
 		return res;
 	}
 

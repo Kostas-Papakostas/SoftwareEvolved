@@ -67,10 +67,10 @@ public class TableChangeConstruction {
 			
 		}
 		
-		for (Map.Entry<String, TableChange> t : allTableChanges.entrySet()) {
+		for (Map.Entry<String, TableChange> tableChange : allTableChanges.entrySet()) {
 
-			allTables.get(t.getKey()).setTableChanges(t.getValue());
-			allTables.get(t.getKey()).setTotalChanges();
+			allTables.get(tableChange.getKey()).setTableChanges(tableChange.getValue());
+			allTables.get(tableChange.getKey()).setTotalChanges();
 
 		}
 		

@@ -74,11 +74,11 @@ public class PPLTablesConstruction {
 	
 	public void matchTableChanges(TreeMap<String,TableChange> allTableChanges){
 		
-		for (Map.Entry<String, TableChange> t : allTableChanges.entrySet()) {
+		for (Map.Entry<String, TableChange> tableChange : allTableChanges.entrySet()) {
 			
-			TableChange tmpTableChange = t.getValue();
+			TableChange tmpTableChange = tableChange.getValue();
 						
-			allPPLTables.get(t.getKey()).setTableChanges(tmpTableChange);
+			allPPLTables.get(tableChange.getKey()).setTableChanges(tmpTableChange);
 			
 
 				

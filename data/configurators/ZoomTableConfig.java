@@ -23,19 +23,19 @@ public class ZoomTableConfig implements TablesInterface{
     }
 
     public MyTableModel createTableModel(String[][] finalRowsZoomArea_p, String[] finalColumnsZoomArea_p){
-        finalRowsZoomArea=finalRowsZoomArea_p;
-        finalColumnsZoomArea=finalColumnsZoomArea_p;
+        finalRowsZoomArea = finalRowsZoomArea_p;
+        finalColumnsZoomArea = finalColumnsZoomArea_p;
         PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea, ProjectConfig.getGlobalDataKeeper());
         finalRowsZoomArea = sorter.sortRows();
         int numberOfColumns = finalRowsZoomArea[0].length;
         int numberOfRows = finalRowsZoomArea.length;
-        String[][] aelrows = new String[numberOfRows][numberOfColumns];
+        String[][] tempRows = new String[numberOfRows][numberOfColumns];
 
         for (int i = 0; i < numberOfRows; i++) {
-            aelrows[i][0] = finalRowsZoomArea[i][0];
+            tempRows[i][0] = finalRowsZoomArea[i][0];
         }
 
-        zoomModel = new MyTableModel(finalColumnsZoomArea, aelrows);
+        zoomModel = new MyTableModel(finalColumnsZoomArea, tempRows);
         return zoomModel;
     }
 

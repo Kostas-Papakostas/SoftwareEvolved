@@ -13,11 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-/* Refactor! Problem: Data Class */
 
 public class GlobalDataKeeper {
-    // Refactor: Implemented Singleton Pattern
-    protected TreeMap<String, PPLSchema> allPPLSchemas = null; // ATTENTION::HAS BEEN CHANGED TO PROTECTED
+    protected TreeMap<String, PPLSchema> allPPLSchemas = null;
     private TreeMap<String, PPLTable> allTables = null;
     private ArrayList<AtomicChange> atomicChanges = null;
     private TreeMap<String, TableChange> tableChanges = null;
@@ -155,7 +153,6 @@ public class GlobalDataKeeper {
         return this.clusterCollectors;
     }
 
-    // Extracted methods area
     public String constructDescriptionZoomAreaColumn(String tableName) {
         String description = "Transition ID:" + tableName + "\n";
         description = description + "Old Version Name:"
@@ -263,7 +260,7 @@ public class GlobalDataKeeper {
         return description;
     }
 
-    public String constructDescriptionPLDCell(String tableName, int row, int column, String tmpValue,
+    public String constructDescriptionPLDCell(String tableName, int row, int column, String tempValue,
             String clusterID) {
         String description;
         description = clusterID + "\n";
@@ -275,11 +272,11 @@ public class GlobalDataKeeper {
                 + phaseCollectors.get(0).getPhases().get(column - 1).getStartPos() + "\n";
         description = description + "Last Transition ID:"
                 + phaseCollectors.get(0).getPhases().get(column - 1).getEndPos() + "\n\n";
-        description = description + "Total Changes For This Phase:" + tmpValue + "\n";
+        description = description + "Total Changes For This Phase:" + tempValue + "\n";
         return description;
     }
 
-    public String constructDescriptionPLDPhasesCell(String tableName, int column, String tmpValue) {
+    public String constructDescriptionPLDPhasesCell(String tableName, int column, String tempValue) {
         String description;
         description = tableName + "\n";
         description = description + "First Transition ID:"
@@ -291,11 +288,11 @@ public class GlobalDataKeeper {
         description = description + "Birth Version ID:" + allTables.get(tableName).getBirthVersionID() + "\n";
         description = description + "Death Version Name:" + allTables.get(tableName).getDeath() + "\n";
         description = description + "Death Version ID:" + allTables.get(tableName).getDeathVersionID() + "\n";
-        description = description + "Total Changes For This Phase:" + tmpValue + "\n";
+        description = description + "Total Changes For This Phase:" + tempValue + "\n";
         return description;
     }
 
-    public String constructDescriptionZoomAreaPhasesColumn(final String[][] rowsZoom, String tableName, int column) {
+    public String constructDescriptionZoomAreaPhasesColumn(final String[][] rowsAtZoomArea, String tableName, int column) {
         String description = "Transition ID:" + tableName + "\n";
         description = description + "Old Version Name:"
                 + allPPLTransitions.get(Integer.parseInt(tableName)).getOldVersionName() + "\n";
@@ -303,15 +300,15 @@ public class GlobalDataKeeper {
                 + allPPLTransitions.get(Integer.parseInt(tableName)).getNewVersionName() + "\n";
 
         description = description + "Transition Changes:"
-                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfClusterChangesForOneTr(rowsZoom) + "\n";
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfClusterChangesForOneTr(rowsAtZoomArea) + "\n";
         description = description + "Additions:"
-                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfClusterAdditionsForOneTr(rowsZoom)
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfClusterAdditionsForOneTr(rowsAtZoomArea)
                 + "\n";
         description = description + "Deletions:"
-                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfClusterDeletionsForOneTr(rowsZoom)
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfClusterDeletionsForOneTr(rowsAtZoomArea)
                 + "\n";
         description = description + "Updates:"
-                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfClusterUpdatesForOneTr(rowsZoom) + "\n";
+                + allPPLTransitions.get(Integer.parseInt(tableName)).getNumberOfClusterUpdatesForOneTr(rowsAtZoomArea) + "\n";
         return description;
     }
 
@@ -384,7 +381,7 @@ public class GlobalDataKeeper {
         return description;
     }
 
-    public String constructDescriptionZoomAreaClusterCell(String transitionName, String tmpValue, String tableName) {
+    public String constructDescriptionZoomAreaClusterCell(String transitionName, String tempValue, String tableName) {
         String description;
         description = "Transition " + transitionName + "\n";
 
@@ -398,7 +395,7 @@ public class GlobalDataKeeper {
         description = description + "Birth Version ID:" + allTables.get(tableName).getBirthVersionID() + "\n";
         description = description + "Death Version Name:" + allTables.get(tableName).getDeath() + "\n";
         description = description + "Death Version ID:" + allTables.get(tableName).getDeathVersionID() + "\n";
-        description = description + "Total Changes For This Phase:" + tmpValue + "\n";
+        description = description + "Total Changes For This Phase:" + tempValue + "\n";
         return description;
     }
 }

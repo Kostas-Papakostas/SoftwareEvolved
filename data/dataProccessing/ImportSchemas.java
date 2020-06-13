@@ -41,18 +41,18 @@ public class ImportSchemas {
 	@SuppressWarnings("static-access")
 	public void loadDataset() throws IOException{
 
-		BufferedReader br = new BufferedReader(new FileReader(filepath));
-		File f = new File(filepath);
-		String dataset = (f.getName().split("\\."))[0];
-		String d = f.getParent();
-		f = new File(d);
-		String path = f.getAbsolutePath() + File.separator + dataset;
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(filepath));
+		File file = new File(filepath);
+		String dataset = (file.getName().split("\\."))[0];
+		String parentFile = file.getParent();
+		file = new File(parentFile);
+		String path = file.getAbsolutePath() + File.separator + dataset;
 
 		ArrayList<String> sAllSchemas = new ArrayList<String>();
 		String line;
 		
 		while(true) {
-			line = br.readLine();
+			line = bufferedReader.readLine();
 			if (line == null) 
 				break;
 			sAllSchemas.add(line);
@@ -93,13 +93,13 @@ public class ImportSchemas {
 			trs.add(tmpTransitionList);
 
 		}
-		br.close();
+		bufferedReader.close();
 		makeTransitions(trs);
 		
 	}
 
 
-	public  void makeTransitions(Transitions tl) throws IOException {
+	public  void makeTransitions(Transitions transitions) throws IOException {
 		try {
 
 
@@ -107,7 +107,7 @@ public class ImportSchemas {
 			JAXBContext jaxbContext = JAXBContext.newInstance(Update.class,Deletion.class, Insersion.class, TransitionList.class, Transitions.class);
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			jaxbMarshaller.marshal(tl, new FileOutputStream(transitionsFile));
+			jaxbMarshaller.marshal(transitions, new FileOutputStream(transitionsFile));
 
 
 			//***********************************************

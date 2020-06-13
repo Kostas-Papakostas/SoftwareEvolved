@@ -4,8 +4,6 @@ import gui.tableElements.commons.MyTableModel;
 
 public class GeneralTableConfig implements TablesInterface{
     private static GeneralTableConfig singleInstance = null;
-    private String[] finalColumnsGeneral;
-    private String[][] finalRowsGeneral;
     private MyTableModel generalModel;
 
     private GeneralTableConfig() {
@@ -20,9 +18,7 @@ public class GeneralTableConfig implements TablesInterface{
     }
 
 
-    public MyTableModel createTableModel(String[][] finalRowsGeneral_p, String[] finalColumnsGeneral_p){
-        finalRowsGeneral=finalRowsGeneral_p;
-        finalColumnsGeneral=finalColumnsGeneral_p;
+    public MyTableModel createTableModel(String[][] finalRowsGeneral, String[] finalColumnsGeneral){
         int numberOfColumns = finalRowsGeneral[0].length;
         int numberOfRows = finalRowsGeneral.length;
         String[][] rows = new String[numberOfRows][numberOfColumns];

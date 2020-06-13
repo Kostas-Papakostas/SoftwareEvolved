@@ -13,8 +13,6 @@ public class TableConfig{
     private GlobalDataKeeper globalDataKeeper;
     private String[] finalColumnsZoomArea;
     private String[][] finalRowsZoomArea;
-    private String[] finalColumnsGeneral;
-    private String[][] finalRowsGeneral;
     private MyTableModel generalModel;
     private boolean isLevelised = false;
     
@@ -52,26 +50,22 @@ public class TableConfig{
         return detailedModel;
     }
 
-    public MyTableModel createZoomTableModel(String[][] finalRowsZoomArea_p, String[] finalColumnsZoomArea_p){
-        finalRowsZoomArea=finalRowsZoomArea_p;
-        finalColumnsZoomArea=finalColumnsZoomArea_p;
+    public MyTableModel createZoomTableModel(String[][] finalRowsZoomArea, String[] finalColumnsZoomArea){
         PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea, ProjectConfig.getGlobalDataKeeper());
         finalRowsZoomArea = sorter.sortRows();
         int numberOfColumns = finalRowsZoomArea[0].length;
         int numberOfRows = finalRowsZoomArea.length;
-        String[][] aelrows = new String[numberOfRows][numberOfColumns];
+        String[][] tempRows = new String[numberOfRows][numberOfColumns];
 
         for (int i = 0; i < numberOfRows; i++) {
-            aelrows[i][0] = finalRowsZoomArea[i][0];
+            tempRows[i][0] = finalRowsZoomArea[i][0];
         }
 
-        zoomModel = new MyTableModel(finalColumnsZoomArea, aelrows);
+        zoomModel = new MyTableModel(finalColumnsZoomArea, tempRows);
         return zoomModel;
     }
 
-    public MyTableModel createGeneralTableModel(String[][] finalRowsGeneral_p, String[] finalColumnsGeneral_p){
-        finalRowsGeneral=finalRowsGeneral_p;
-        finalColumnsGeneral=finalColumnsGeneral_p;
+    public MyTableModel createGeneralTableModel(String[][] finalRowsGeneral, String[] finalColumnsGeneral){
         int numberOfColumns = finalRowsGeneral[0].length;
         int numberOfRows = finalRowsGeneral.length;
         String[][] rows = new String[numberOfRows][numberOfColumns];
