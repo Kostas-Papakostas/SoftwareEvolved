@@ -1,6 +1,5 @@
 package gui.tableComputations;
 
-import data.configurators.ProjectConfig;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 
@@ -9,8 +8,6 @@ import javax.swing.*;
 public class DetailedTableGraphicComputation extends TableComputation{
 
     private static DetailedTableGraphicComputation singleInstance;
-    private ProjectConfig projectConfig = ProjectConfig.getInstance();
-
     private JvTable tmpLifeTimeTable;
 
     public static DetailedTableGraphicComputation getInstance() {
@@ -21,9 +18,7 @@ public class DetailedTableGraphicComputation extends TableComputation{
     }
 
     public JvTable makeDetailedGraphicTable(MyTableModel detailedModel, final boolean levelized) {
-
         tmpLifeTimeTable = new JvTable(detailedModel);
-
         tmpLifeTimeTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         if (levelized == true) {

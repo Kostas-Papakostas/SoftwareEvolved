@@ -9,9 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GeneralTableGraphicComputation extends TableComputation{
-
     private static GeneralTableGraphicComputation singleInstance;
-    private ProjectConfig projectConfig = ProjectConfig.getInstance();
 
     public static GeneralTableGraphicComputation getInstance() {
         if(singleInstance == null) {
@@ -54,9 +52,9 @@ public class GeneralTableGraphicComputation extends TableComputation{
 
         int start = -1;
         int end = -1;
-        if (projectConfig.getGlobalDataKeeper().getPhaseCollectors() != null && wholeCol != -1 && wholeCol != 0) {
-            start = projectConfig.getGlobalDataKeeper().getPhaseCollectors().get(0).getPhases().get(wholeCol - 1).getStartPos();
-            end = projectConfig.getGlobalDataKeeper().getPhaseCollectors().get(0).getPhases().get(wholeCol - 1).getEndPos();
+        if (ProjectConfig.getGlobalDataKeeper().getPhaseCollectors() != null && wholeCol != -1 && wholeCol != 0) {
+            start = ProjectConfig.getGlobalDataKeeper().getPhaseCollectors().get(0).getPhases().get(wholeCol - 1).getStartPos();
+            end = ProjectConfig.getGlobalDataKeeper().getPhaseCollectors().get(0).getPhases().get(wholeCol - 1).getEndPos();
         }
 
         if (wholeCol != -1) {
