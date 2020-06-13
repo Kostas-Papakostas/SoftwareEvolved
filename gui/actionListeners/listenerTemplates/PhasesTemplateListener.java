@@ -16,15 +16,15 @@ public abstract class PhasesTemplateListener implements ActionListener {
     protected ProjectConfig projectConfig = ProjectConfig.getInstance();
     
     protected abstract ParametersJDialog getParametersJDialog();
-    protected abstract PhaseAnalyzerMainEngine getMainEngine(ParametersJDialog jD);
-    protected abstract void extractClusters(ParametersJDialog jD);
+    protected abstract PhaseAnalyzerMainEngine getMainEngine(ParametersJDialog jDialog);
+    protected abstract void extractClusters(ParametersJDialog jDialog);
     protected abstract void constructTable();
     protected abstract String[] getTableColumns();
     protected abstract String[][] getTableRows();
     protected abstract void fillTree();
     
-    public void listenToGui(Gui gui_p){
-        gui=gui_p;
+    public void listenToGui(Gui gui){
+        this.gui = gui;
     }
 
     @Override
@@ -33,27 +33,27 @@ public abstract class PhasesTemplateListener implements ActionListener {
 
         if (!(project == null)) {
             gui.setWholeCol(-1);
-            ParametersJDialog jD = getParametersJDialog();
+            ParametersJDialog jDialog = getParametersJDialog();
 
-            jD.setModal(true);
+            jDialog.setModal(true);
 
-            jD.setVisible(true);
+            jDialog.setVisible(true);
 
-            if (jD.getConfirmation()) {
-                System.out.println(jD.getTimeWeight() + " " + jD.getChangeWeight());
+            if (jDialog.getConfirmation()) {
+                System.out.println(jDialog.getTimeWeight() + " " + jDialog.getChangeWeight());
 
-                PhaseAnalyzerMainEngine mainEngine = getMainEngine(jD);
+                PhaseAnalyzerMainEngine mainEngine = getMainEngine(jDialog);
 
                 mainEngine.parseInput();
                 System.out.println("\n\n\n");
-                mainEngine.extractPhases(jD.getNumberOfPhases());
+                mainEngine.extractPhases(jDialog.getNumberOfPhases());
 
                 globalDataKeeper = ProjectConfig.getGlobalDataKeeper();
                 mainEngine.connectTransitionsWithPhases(globalDataKeeper);
 
                 globalDataKeeper.setPhaseCollectors(mainEngine.getPhaseCollectors());
                 
-                extractClusters(jD);
+                extractClusters(jDialog);
                 
                 if (globalDataKeeper.getPhaseCollectors().size() != 0) {
                     constructTable();

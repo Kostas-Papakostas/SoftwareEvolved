@@ -9,12 +9,12 @@ public class LoadProjectListener extends ProjectTemplateListener {
    
     @Override
     protected void openFile() {
-        File dir = new File("filesHandler/inis");
-        JFileChooser fcOpen1 = new JFileChooser();
-        fcOpen1.setCurrentDirectory(dir);
-        int returnVal = fcOpen1.showDialog(gui, "Open");
-        projectConfig.loadProjectAction(returnVal == JFileChooser.APPROVE_OPTION, fcOpen1.getSelectedFile());
-        isApproved = returnVal == JFileChooser.APPROVE_OPTION;
+        File file = new File("filesHandler/inis");
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(file);
+        int returnValue = fileChooser.showDialog(gui, "Open");
+        projectConfig.loadProjectAction(returnValue == JFileChooser.APPROVE_OPTION, fileChooser.getSelectedFile());
+        isApproved = returnValue == JFileChooser.APPROVE_OPTION;
     }
 
     @Override

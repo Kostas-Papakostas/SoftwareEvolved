@@ -15,16 +15,16 @@ public class ShowPhasesWithClustersPLDListener extends PhasesTemplateListener {
     }
 
     @Override
-    protected PhaseAnalyzerMainEngine getMainEngine(ParametersJDialog jD) {
-        return new PhaseAnalyzerMainEngine(gui.getProjectConfig(), jD.getTimeWeight(), 
-                jD.getChangeWeight(), jD.getPreProcessingTime(), jD.getPreProcessingChange());
+    protected PhaseAnalyzerMainEngine getMainEngine(ParametersJDialog jDialog) {
+        return new PhaseAnalyzerMainEngine(gui.getProjectConfig(), jDialog.getTimeWeight(), 
+                jDialog.getChangeWeight(), jDialog.getPreProcessingTime(), jDialog.getPreProcessingChange());
     }
 
     @Override
-    protected void extractClusters(ParametersJDialog jD) {
+    protected void extractClusters(ParametersJDialog jDialog) {
         TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalDataKeeper,
-                jD.geBirthWeight(), jD.getDeathWeight(), jD.getChangeWeightCluster());
-        mainEngine2.extractClusters(jD.getNumberOfClusters());
+                jDialog.geBirthWeight(), jDialog.getDeathWeight(), jDialog.getChangeWeightCluster());
+        mainEngine2.extractClusters(jDialog.getNumberOfClusters());
         globalDataKeeper.setClusterCollectors(mainEngine2.getClusterCollectors());
         mainEngine2.print();
     }

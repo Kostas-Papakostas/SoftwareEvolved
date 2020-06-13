@@ -16,8 +16,8 @@ public class ShowPLDListener implements ActionListener {
     private GlobalDataKeeper globalDataKeeper;
     private ProjectConfig projectConfig = ProjectConfig.getInstance();
     
-    public void listenToGUI(Gui gui_p){
-        this.gui=gui_p;
+    public void listenToGUI(Gui gui){
+        this.gui = gui;
     }
 
     @Override

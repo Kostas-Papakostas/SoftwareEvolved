@@ -14,10 +14,10 @@ public class ShowPhasesPLD extends PhasesTemplateListener {
     }
 
     @Override
-    protected PhaseAnalyzerMainEngine getMainEngine(ParametersJDialog jD) {
+    protected PhaseAnalyzerMainEngine getMainEngine(ParametersJDialog jDialog) {
         return new PhaseAnalyzerMainEngine(projectConfig,
-                jD.getTimeWeight(), jD.getChangeWeight(), 
-                jD.getPreProcessingTime(), jD.getPreProcessingChange());
+                jDialog.getTimeWeight(), jDialog.getChangeWeight(), 
+                jDialog.getPreProcessingTime(), jDialog.getPreProcessingChange());
     }
 
     @Override

@@ -14,8 +14,8 @@ public abstract class ProjectTemplateListener implements ActionListener{
     protected abstract void openFile();
     protected abstract void setWholeCol();
     
-    public void listenToGui(Gui gui_p){
-        this.gui = gui_p;
+    public void listenToGui(Gui gui){
+        this.gui = gui;
     }
     
     @Override
