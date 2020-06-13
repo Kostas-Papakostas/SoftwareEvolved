@@ -1,5 +1,6 @@
 package gui.actionListeners;
 
+import gui.actionListeners.listenerTemplates.PhasesTemplateListener;
 import gui.dialogs.ParametersJDialog;
 import gui.tableElements.tableConstructors.TableConstructionPhases;
 import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;
@@ -49,7 +50,3 @@ public class ShowPhasesPLD extends PhasesTemplateListener {
         return table.constructRows();
     }
 }
-
-
-
-

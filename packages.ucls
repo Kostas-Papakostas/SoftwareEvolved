@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.11" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
-  associations="true" dependencies="false" nesting-relationships="true">  
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <package id="1" language="java" name="gui.dialogs" project="PlutarchParallelLives" 
+    file="/PlutarchParallelLives/src/gui/dialogs" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="363" y="231"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="gui.mainEngine" project="PlutarchParallelLives" 
+    file="/PlutarchParallelLives/src/gui/mainEngine" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="575" y="450"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="3" language="java" name="gui.dialogs.actionListeners" project="PlutarchParallelLives" 
+    file="/PlutarchParallelLives/src/gui/dialogs/actionListeners" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="177" x="745" y="210"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <dependency id="4">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="5">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="6">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

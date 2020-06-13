@@ -33,8 +33,8 @@ public class LoadUseCaseTest {
     public void testDumpData_detailedModel(){
         String file1str = null;
         String file2str = null;
-        String pathToOriginalFile = "./Dump Files Original/Load Use Case/detailedModel_Atlas.txt";
-        String pathToRefactoredFile = "./Dump Files Refactored/Load Use Case/detailedModel_Atlas.txt";
+        final String pathToOriginalFile = "./Dump Files Original/Load Use Case/detailedModel_Atlas.txt";
+        final String pathToRefactoredFile = "./Dump Files Refactored/Load Use Case/detailedModel_Atlas.txt";
 
         File file = new File("filesHandler/inis/Atlas.ini");
 
@@ -47,7 +47,7 @@ public class LoadUseCaseTest {
         testGui.fillTable();
         testGui.fillTree();
 
-        MyTableModel fakeDetailedModel = testGui.getTableConfig().createFullDetailedLifeTableModel();
+        MyTableModel fakeDetailedModel = testGui.getDetailedTableConfig().createFullDetailedLifeTableModel();
         fakeDetailedModel.dumpData(pathToRefactoredFile);
         
         try {

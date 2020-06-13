@@ -1,22 +1,21 @@
 package gui.actionListeners;
 
-import data.configurators.TableConfig;
+import data.configurators.DetailedTableConfig;
 import gui.mainEngine.Gui;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-
-import java.awt.Color;
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ShowFullDetailedLifetimeTableListener extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
     private Gui gui;
-    private TableConfig tableConfig = TableConfig.getInstance();
+    //private TableConfig tableConfig = TableConfig.getInstance();
+    private DetailedTableConfig detailedTableConfig = DetailedTableConfig.getInstance();
 
     public void listenToGui(Gui gui_p){
         this.gui=gui_p;
@@ -24,8 +23,9 @@ public class ShowFullDetailedLifetimeTableListener extends JFrame implements Act
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        MyTableModel detailedModel = tableConfig.createFullDetailedLifeTableModel();
-        JvTable tmpLifeTimeTable = gui.getDetailedTableFrameConstruction().makeDetailedTable(tableConfig.getIsLevelised(),detailedModel);
+        //MyTableModel detailedModel = tableConfig.createFullDetailedLifeTableModel();
+        MyTableModel detailedModel = detailedTableConfig.createFullDetailedLifeTableModel();
+        JvTable tmpLifeTimeTable = gui.getDetailedTableFrameConstruction().makeDetailedGraphicTable(detailedModel, detailedTableConfig.getIsLevelised());
         gui.getTabbedPane().setSelectedIndex(0);
 
         paintDetailedTable(true);
@@ -63,7 +63,7 @@ public class ShowFullDetailedLifetimeTableListener extends JFrame implements Act
     private void paintDetailedTable(final boolean levelized) {
         JvTable tmpLifeTimeTable = gui.detailedTableFrameConstruction.getTmpLifeTimeTable();
         tmpLifeTimeTable.setName("LifeTimeTable");
-        gui.setSegmentSizeDetailedTable(tableConfig.getSegmentSizeDetailedTable());
+        gui.setSegmentSizeDetailedTable(detailedTableConfig.getSegmentSizeDetailedTable());
         tmpLifeTimeTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 
             private static final long serialVersionUID = 1L;

@@ -20,7 +20,7 @@ public class DetailedTableGraphicComputation extends TableComputation{
         return singleInstance;
     }
 
-    public JvTable makeDetailedTable(final boolean levelized, MyTableModel detailedModel) {
+    public JvTable makeDetailedGraphicTable(MyTableModel detailedModel, final boolean levelized) {
 
         tmpLifeTimeTable = new JvTable(detailedModel);
 

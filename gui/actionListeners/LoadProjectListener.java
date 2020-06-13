@@ -1,9 +1,11 @@
 package gui.actionListeners;
 
+import gui.actionListeners.listenerTemplates.ProjectTemplateListener;
+
 import javax.swing.*;
 import java.io.File;
 
-public class LoadProjectListener extends ProjectTemplateListener{
+public class LoadProjectListener extends ProjectTemplateListener {
    
     @Override
     protected void openFile() {

@@ -1,14 +1,13 @@
 package gui.actionListeners;
 
 import data.configurators.ProjectConfig;
-import data.configurators.TableConfig;
+import data.configurators.ZoomTableConfig;
+import data.dataKeeper.GlobalDataKeeper;
 import gui.mainEngine.Gui;
 import gui.tableComputations.GeneralTableGraphicComputation;
 import gui.tableElements.tableConstructors.TableConstructionIDU;
 
-
 import javax.swing.*;
-import data.dataKeeper.GlobalDataKeeper;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -45,16 +44,20 @@ public class ShowPLDListener implements ActionListener {
             // Part of generaleableIDU
             gui.defineButtonsVisibillity(true);
             
-            TableConfig tableConfig = TableConfig.getInstance();
-            gui.setZoomModel(tableConfig.createZoomTableModel(rows, columns));
+            //TableConfig tableConfig = TableConfig.getInstance();
+            ZoomTableConfig zoomTableConfig = ZoomTableConfig.getInstance();
+            //gui.setZoomModel(tableConfig.createZoomTableModel(rows, columns));
+            gui.setZoomModel(zoomTableConfig.createTableModel(rows, columns));
 
             gui.paintGeneralTableIDU(gui.getZoomModel());
             gui.setRowHeight(GeneralTableGraphicComputation.getInstance().getRowHeight());
             gui.setColumnWidth(GeneralTableGraphicComputation.getInstance().getColumnWidth());
 
-            gui.setFinalRowsZoomArea(tableConfig.getFinalRowsZoomArea());
-            gui.setFinalColumnsZoomArea(tableConfig.getFinalColumnsZoomArea());
-            
+            //gui.setFinalRowsZoomArea(tableConfig.getFinalRowsZoomArea());
+            gui.setFinalRowsZoomArea(zoomTableConfig.getFinalRowsZoomArea());
+            //gui.setFinalColumnsZoomArea(tableConfig.getFinalColumnsZoomArea());
+            gui.setFinalColumnsZoomArea(zoomTableConfig.getFinalColumnsZoomArea());
+
             gui.fillTree();
         } else {
             JOptionPane.showMessageDialog(null, "Select a Project first");

@@ -2,11 +2,10 @@ package gui.mainEngine;
 
 //try to extract relationship beetween gui and pplSchema and pplTransition
 
+import data.configurators.*;
 import data.dataKeeper.GlobalDataKeeper;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import gui.actionListeners.*;
-import data.configurators.ProjectConfig;
-import data.configurators.TableConfig;
 import gui.dialogs.EnlargeTable;
 import gui.tableComputations.DetailedTableGraphicComputation;
 import gui.tableComputations.GeneralTableGraphicComputation;
@@ -120,6 +119,9 @@ public class Gui extends JFrame implements ActionListener {
 
     protected ProjectConfig projectConfig = ProjectConfig.getInstance();
     protected TableConfig tableConfig = TableConfig.getInstance();
+    protected GeneralTableConfig generalTableConfig = GeneralTableConfig.getInstance();
+    protected ZoomTableConfig zoomTableConfig = ZoomTableConfig.getInstance();
+    protected DetailedTableConfig detailedTableConfig = DetailedTableConfig.getInstance();
 
     private GeneralTableGraphicComputation generalTableFrameConstruction = GeneralTableGraphicComputation.getInstance();
     public DetailedTableGraphicComputation detailedTableFrameConstruction = DetailedTableGraphicComputation.getInstance();
@@ -444,7 +446,7 @@ public class Gui extends JFrame implements ActionListener {
         final IDUTableRenderer renderer = new IDUTableRenderer(Gui.this, finalRowsZoomArea, globalDataKeeper,
                 segmentSize);
 
-        final JvTable generalTable = generalTableFrameConstruction.makeGeneralTableIDU(myTable, rowHeight, columnWidth,
+        final JvTable generalTable = generalTableFrameConstruction.makeGeneralGraphicTable(myTable, rowHeight, columnWidth,
                 wholeCol);
 
         generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -680,9 +682,8 @@ public class Gui extends JFrame implements ActionListener {
 
     public void makeGeneralTablePhases() {
         selectedRows = new ArrayList<Integer>();
-        generalModel = tableConfig.createGeneralTableModel(finalRows, finalColumns);// new
-                                                                                        // MyTableModel(finalColumns,
-                                                                                        // rows);
+        //generalModel = tableConfig.createGeneralTableModel(finalRows, finalColumns);
+        generalModel = generalTableConfig.createTableModel(finalRows,finalColumns);
 
         final JvTable generalTable = new JvTable(generalModel);
 
@@ -901,7 +902,7 @@ public class Gui extends JFrame implements ActionListener {
                 System.out.println("Column index selected " + wholeCol + " " + name);
                 generalTable.repaint();
                 if (showingPld) {
-                    zoomModel = tableConfig.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
+                    zoomModel = zoomTableConfig.createTableModel(finalRowsZoomArea, finalColumnsZoomArea);
 //                    generalTable = generalTableConstruction.makeGeneralTableIDU(zoomModel, rowHeight, columnWidth, wholeCol);
 
                     // generalTable =
@@ -930,7 +931,7 @@ public class Gui extends JFrame implements ActionListener {
                             wholeCol = -1;
                             generalTable.repaint();
                             if (showingPld) {
-                                zoomModel = tableConfig.createZoomTableModel(finalRowsZoomArea,
+                                zoomModel = zoomTableConfig.createTableModel(finalRowsZoomArea,
                                         finalColumnsZoomArea);
                                 // generalTable =
                                 // tableConfig.makeGeneralTableIDU(tableConfig.createZoomTableModel(finalRowsZoomArea,
@@ -1054,7 +1055,7 @@ public class Gui extends JFrame implements ActionListener {
 
         zoomModel = new MyTableModel(finalColumnsZoomArea, rowsZoom);
 
-        final JvTable zoomTable = zoomTableFrameConstruction.makeZoomTable(zoomModel,20,20);//new JvTable(zoomModel);
+        final JvTable zoomTable = zoomTableFrameConstruction.makeZoomGraphicTable(zoomModel,20,20);//new JvTable(zoomModel);
 
 
         /*
@@ -1277,7 +1278,7 @@ public class Gui extends JFrame implements ActionListener {
 
         zoomModel = new MyTableModel(finalColumnsZoomArea, rowsZoom);
 
-        final JvTable zoomTable = zoomTableFrameConstruction.makeZoomTable(zoomModel,70,10);//new JvTable(zoomModel);
+        final JvTable zoomTable = zoomTableFrameConstruction.makeZoomGraphicTable(zoomModel,70,10);//new JvTable(zoomModel);
 
         /*
         zoomTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -1327,7 +1328,7 @@ public class Gui extends JFrame implements ActionListener {
                     if (isSelected) {
 
                         // Refactored: EXTRACT METHOD AND MOVE METHOD
-                        finalRowsZoomArea = tableConfig.getFinalRowsZoomArea();
+                        finalRowsZoomArea = zoomTableConfig.getFinalRowsZoomArea();
                         String description = globalDataKeeper
                                 .constructDescriptionZoomAreaClusterRow(finalRowsZoomArea[row][0]);
                         descriptionText.setText(description);
@@ -1345,7 +1346,7 @@ public class Gui extends JFrame implements ActionListener {
                         if (!table.getColumnName(column).contains("Table name")) {
 
                             // Refactored: EXTRACT METHOD AND MOVE METHOD
-                            finalRowsZoomArea = tableConfig.getFinalRowsZoomArea();
+                            finalRowsZoomArea = zoomTableConfig.getFinalRowsZoomArea();
                             description = globalDataKeeper.constructDescriptionZoomAreaClusterCell(
                                     table.getColumnName(column), tmpValue, finalRowsZoomArea[row][0]);
                             descriptionText.setText(description);
@@ -1643,12 +1644,12 @@ public class Gui extends JFrame implements ActionListener {
         finalColumnsZoomArea = columns;
         finalRowsZoomArea = rows;
         tabbedPane.setSelectedIndex(0);
-        zoomModel = tableConfig.createZoomTableModel(finalRowsZoomArea, finalColumnsZoomArea);
+        zoomModel = zoomTableConfig.createTableModel(finalRowsZoomArea, finalColumnsZoomArea);
 
         paintGeneralTableIDU(zoomModel);
 
-        finalRowsZoomArea = tableConfig.getFinalRowsZoomArea();
-        finalColumnsZoomArea = tableConfig.getFinalColumnsZoomArea();
+        finalRowsZoomArea = zoomTableConfig.getFinalRowsZoomArea();
+        finalColumnsZoomArea = zoomTableConfig.getFinalColumnsZoomArea();
 
         Float timeWeight = (float) 0.5;
         Float changeWeight = (float) 0.5;
@@ -1913,12 +1914,12 @@ public class Gui extends JFrame implements ActionListener {
     }
 
     public MyTableModel getZoomModel() {
-        zoomModel = tableConfig.getZoomModel();
+        zoomModel = zoomTableConfig.getZoomModel();
         return zoomModel;
     }
 
-    public TableConfig getTableConfig() {
-        return tableConfig;
+    public DetailedTableConfig getDetailedTableConfig() {
+        return detailedTableConfig;
     }
 
     public MyTableModel getDetailedModel() {

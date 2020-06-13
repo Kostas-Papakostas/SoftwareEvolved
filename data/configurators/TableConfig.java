@@ -7,7 +7,7 @@ import gui.tableElements.tableConstructors.TableConstructionAllSquaresIncluded;
 
 import javax.swing.*;
 
-public class TableConfig {
+public class TableConfig{
     private static TableConfig singleInstance = null;
     private ProjectConfig projectConfig = ProjectConfig.getInstance();
     private GlobalDataKeeper globalDataKeeper;
@@ -105,9 +105,7 @@ public class TableConfig {
         return generalModel;
     }
 
-    public MyTableModel getGeneralModel(){
-        return generalModel;
-    }
+
 
     public MyTableModel getZoomModel() {
         return zoomModel;

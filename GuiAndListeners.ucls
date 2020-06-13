@@ -20,7 +20,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="gui.controllers.ProjectConfig" project="PlutarchParallelLives"
+  <class id="3" language="java" name="data.configurators.ProjectConfig" project="PlutarchParallelLives"
     file="/PlutarchParallelLives/src/gui/controllers/FileController.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="865" y="1412"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -29,7 +29,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="gui.controllers.TableController" project="PlutarchParallelLives" 
+  <class id="4" language="java" name="data.configurators.TableConfig" project="PlutarchParallelLives"
     file="/PlutarchParallelLives/src/gui/controllers/TableController.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="224" y="1397"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

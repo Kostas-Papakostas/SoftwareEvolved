@@ -8,7 +8,7 @@ import gui.tableElements.tableRenderers.IDUHeaderTableRenderer;
 import javax.swing.*;
 import java.awt.*;
 
-public class GeneralTableGraphicComputation extends  TableComputation{
+public class GeneralTableGraphicComputation extends TableComputation{
 
     private static GeneralTableGraphicComputation singleInstance;
     private ProjectConfig projectConfig = ProjectConfig.getInstance();
@@ -20,8 +20,7 @@ public class GeneralTableGraphicComputation extends  TableComputation{
         return singleInstance;
     }
 
-
-    public final JvTable makeGeneralTableIDU(MyTableModel zoomModel_p, int rowHeight, int columnWidth, int wholeCol) {
+    public final JvTable makeGeneralGraphicTable(MyTableModel zoomModel_p, int rowHeight, int columnWidth, int wholeCol) {
         JvTable generalTable = new JvTable(zoomModel_p);
         generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 

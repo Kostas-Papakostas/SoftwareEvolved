@@ -17,7 +17,7 @@ public class ZoomTableGraphicComputation extends TableComputation{
         return singleInstance;
     }
 
-    public final JvTable makeZoomTable(MyTableModel zoomModel, int minWidth, int maxWidth){
+    public final JvTable makeZoomGraphicTable(MyTableModel zoomModel, int minWidth, int maxWidth){
         final JvTable zoomTable = new JvTable(zoomModel);
 
         zoomTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

@@ -2,7 +2,7 @@ package gui.tableComputations;
 
 import gui.tableElements.commons.JvTable;
 
-abstract class TableComputation {
+abstract class TableComputation{
     protected int rowHeight;
     protected int columnWidth;
 
