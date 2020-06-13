@@ -3,21 +3,21 @@ package data.configurators;
 import data.dataSorters.PldRowSorter;
 import gui.tableElements.commons.MyTableModel;
 
-public class ZoomTableConfig implements TablesInterface{
-    private static ZoomTableConfig singleInstance = null;
+public class ZoomTableConfigurator implements TablesInterface{
+    private static ZoomTableConfigurator singleInstance = null;
     private boolean isLevelised = false;
     private String[] finalColumnsZoomArea;
     private String[][] finalRowsZoomArea;
     protected MyTableModel zoomModel = null;
 
     //Needed for Singleton Pattern
-    private ZoomTableConfig() {
+    private ZoomTableConfigurator() {
 
     }
 
-    public static ZoomTableConfig getInstance() {
+    public static ZoomTableConfigurator getInstance() {
         if(singleInstance == null) {
-            singleInstance = new ZoomTableConfig();
+            singleInstance = new ZoomTableConfigurator();
         }
         return singleInstance;
     }
@@ -25,7 +25,7 @@ public class ZoomTableConfig implements TablesInterface{
     public MyTableModel createTableModel(String[][] finalRowsZoomArea_p, String[] finalColumnsZoomArea_p){
         finalRowsZoomArea = finalRowsZoomArea_p;
         finalColumnsZoomArea = finalColumnsZoomArea_p;
-        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea, ProjectConfig.getGlobalDataKeeper());
+        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea, ProjectConfigurator.getGlobalDataKeeper());
         finalRowsZoomArea = sorter.sortRows();
         int numberOfColumns = finalRowsZoomArea[0].length;
         int numberOfRows = finalRowsZoomArea.length;

@@ -2,17 +2,17 @@ package data.configurators;
 
 import gui.tableElements.commons.MyTableModel;
 
-public class GeneralTableConfig implements TablesInterface{
-    private static GeneralTableConfig singleInstance = null;
+public class GeneralTableConfigurator implements TablesInterface{
+    private static GeneralTableConfigurator singleInstance = null;
     private MyTableModel generalModel;
 
-    private GeneralTableConfig() {
+    private GeneralTableConfigurator() {
 
     }
 
-    public static GeneralTableConfig getInstance() {
+    public static GeneralTableConfigurator getInstance() {
         if(singleInstance == null) {
-            singleInstance = new GeneralTableConfig();
+            singleInstance = new GeneralTableConfigurator();
         }
         return singleInstance;
     }

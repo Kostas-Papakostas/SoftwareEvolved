@@ -7,9 +7,9 @@ import gui.tableElements.tableConstructors.TableConstructionAllSquaresIncluded;
 
 import javax.swing.*;
 
-public class TableConfig{
-    private static TableConfig singleInstance = null;
-    private ProjectConfig projectConfig = ProjectConfig.getInstance();
+public class TableConfigurator{
+    private static TableConfigurator singleInstance = null;
+    private ProjectConfigurator projectConfig = ProjectConfigurator.getInstance();
     private GlobalDataKeeper globalDataKeeper;
     private String[] finalColumnsZoomArea;
     private String[][] finalRowsZoomArea;
@@ -21,20 +21,20 @@ public class TableConfig{
     protected MyTableModel zoomModel = null;
 
     //Needed for Singleton Pattern
-    private TableConfig() {
+    private TableConfigurator() {
     
     }
 
-    public static TableConfig getInstance() {
+    public static TableConfigurator getInstance() {
         if(singleInstance == null) {
-            singleInstance = new TableConfig();
+            singleInstance = new TableConfigurator();
         }
         return singleInstance;
     }
 
     public MyTableModel createFullDetailedLifeTableModel() {
         if (!(projectConfig.getCurrentProject() == null)) {
-            globalDataKeeper = ProjectConfig.getGlobalDataKeeper();
+            globalDataKeeper = ProjectConfigurator.getGlobalDataKeeper();
             TableConstructionAllSquaresIncluded table = new TableConstructionAllSquaresIncluded(globalDataKeeper);
             final String[] columns = table.constructColumns();
             final String[][] rows = table.constructRows();
@@ -51,7 +51,7 @@ public class TableConfig{
     }
 
     public MyTableModel createZoomTableModel(String[][] finalRowsZoomArea, String[] finalColumnsZoomArea){
-        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea, ProjectConfig.getGlobalDataKeeper());
+        PldRowSorter sorter = new PldRowSorter(finalRowsZoomArea, ProjectConfigurator.getGlobalDataKeeper());
         finalRowsZoomArea = sorter.sortRows();
         int numberOfColumns = finalRowsZoomArea[0].length;
         int numberOfRows = finalRowsZoomArea.length;
