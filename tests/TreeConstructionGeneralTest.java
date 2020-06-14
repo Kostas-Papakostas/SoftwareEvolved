@@ -1,12 +1,15 @@
 package tests;
 
 import gui.treeElements.TreeConstructionGeneral;
+import org.junit.Test;
+
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
+
+import static org.junit.Assert.assertEquals;
+
 //import static org.junit.jupiter.api.Assertions.assertEquals;
 //import org.junit.jupiter.api.Test;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Kostakis on 20/4/2020.

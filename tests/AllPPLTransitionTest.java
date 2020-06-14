@@ -4,9 +4,6 @@ import data.dataPPL.pplTransition.PPLTransition;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-//import org.junit.jupiter.api.Test;
-
-//import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 /**
@@ -26,7 +23,7 @@ public class AllPPLTransitionTest {
 
     }
 
-    //@Test
+    @Test
     public void testTransitionTableChanges(){
         String expectedResult="Table Change \n" + "[AtomicChange: Table: t0\tAttribute: birth\tType: integer\toldSchema: oldschema0\tnewSchema: newschema0]\n";
 
@@ -34,7 +31,6 @@ public class AllPPLTransitionTest {
         fakeKeeper.setData();
 
         PPLTransition pplTransition = (PPLTransition) fakeKeeper.getAllPPLTransitions().get(0);
-
 
         System.out.println(pplTransition.getTableChanges().get(0).toString());
         assertEquals(pplTransition.getTableChanges().get(0).toString(), expectedResult);

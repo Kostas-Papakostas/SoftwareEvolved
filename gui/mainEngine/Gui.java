@@ -108,7 +108,6 @@ public class Gui extends JFrame implements ActionListener {
     
     protected GlobalDataKeeper globalDataKeeper = null;
     protected ProjectConfigurator projectConfig = ProjectConfigurator.getInstance();
-    protected TableConfigurator tableConfig = TableConfigurator.getInstance();
     protected GeneralTableConfigurator generalTableConfig = GeneralTableConfigurator.getInstance();
     protected ZoomTableConfigurator zoomTableConfig = ZoomTableConfigurator.getInstance();
     protected DetailedTableConfigurator detailedTableConfig = DetailedTableConfigurator.getInstance();
